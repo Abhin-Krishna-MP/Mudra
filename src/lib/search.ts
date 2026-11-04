@@ -8,13 +8,32 @@ export interface Searchable {
 
 /** Spelling variants and transliterations. Both sides are normalised before comparing. */
 export const ALIASES: Record<string, string> = {
-  teyyam: 'theyyam', theyam: 'theyyam', theyyem: 'theyyam',
-  kathakkali: 'kathakali', kadhakali: 'kathakali',
-  kasavu: 'kasavu', kasavoo: 'kasavu', kasavuu: 'kasavu',
-  kannadi: 'kannadi', kanadi: 'kannadi',
-  nettipattam: 'nettipattam', netti: 'nettipattam',
-  kalamezhuthu: 'kalamezhuthu', kalamezhuthum: 'kalamezhuthu', kalam: 'kalamezhuthu',
-  kaikottikali: 'kaikottikali', thiruvathira: 'kaikottikali',
+  // Theyyam
+  teyyam: 'theyyam', theyam: 'theyyam', theyyem: 'theyyam', teyam: 'theyyam', theyyam: 'theyyam',
+  // Kathakali
+  kathakkali: 'kathakali', kadhakali: 'kathakali', kathkali: 'kathakali',
+  // Kasavu / Kerala saree
+  kasavu: 'kasavu', kasavoo: 'kasavu', kasavuu: 'kasavu', kasaavu: 'kasavu',
+  // Aranmula Kannadi (metal mirror) — kannadi variants only; aranmula is a place name, not a variant
+  kannadi: 'kannadi', kanadi: 'kannadi', kannadimirror: 'kannadi',
+  // Nettipattam (caparisoned elephant headgear)
+  nettipattam: 'nettipattam', netti: 'nettipattam', nettipatanam: 'nettipattam',
+  // Kalamezhuthu (ritual floor drawing)
+  kalamezhuthu: 'kalamezhuthu', kalamezhuthum: 'kalamezhuthu', kalam: 'kalamezhuthu', kalamazhuthu: 'kalamezhuthu',
+  // Kaikottikali / Thiruvathira
+  kaikottikali: 'kaikottikali', thiruvathira: 'kaikottikali', thiruvathirakali: 'kaikottikali',
+  // Mohiniyattam
+  mohiniyattam: 'mohiniyattam', mohiniattam: 'mohiniyattam', mohiniaattam: 'mohiniyattam',
+  // Kudiyattam / Koodiyattam
+  kudiyattam: 'kudiyattam', koodiyattam: 'kudiyattam', kutiyattam: 'kudiyattam',
+  // Kerala mural painting
+  mural: 'mural', keralamural: 'mural', muralpaintings: 'mural',
+  // Coir / Coconut fibre craft
+  coir: 'coir', koir: 'coir', coconutfibre: 'coir', coconutcoir: 'coir',
+  // Panchavadyam (percussion ensemble)
+  panchavadyam: 'panchavadyam', panchari: 'panchavadyam', panchamelam: 'panchavadyam',
+  // Ottanthullal
+  ottanthullal: 'ottanthullal', ottamthullal: 'ottanthullal', thullal: 'ottanthullal',
 };
 
 export const normalise = (s: string) =>
