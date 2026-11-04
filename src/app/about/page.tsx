@@ -15,11 +15,11 @@ export default function About() {
         <tr><td>Hash-linked history</td><td>The record’s history was not changed or removed after the fact, on this server.</td><td>That the claims are true. It is tamper-evident, not tamper-proof.</td></tr>
         <tr><td>Signatures (when switched on)</td><td>Events were written by the holder of the service’s signing key.</td><td>Who the person behind a claim is.</td></tr>
         <tr><td>File hash (in your browser)</td><td>Whether your file is byte-for-byte the registered image.</td><td>Anything about a resized or edited copy.</td></tr>
-        <tr><td>Check an image</td><td>A visual similarity score against registered images, as a pointer for human review.</td><td>Heavy crops, mirroring and edits can be missed; false pointers are possible. Thresholds still need measuring on real fixtures.</td></tr>
+        <tr><td>Check an image</td><td>A visual similarity score against registered images (dHash distance ≤ 6 strong, ≤ 12 possible), as a pointer for human review. Measured on real seed photos: survives recompression and resizing; distinct subjects score ≥ 28.</td><td>Heavy crops, mirroring and substantial alterations can be missed; visual match is a pointer for human review, not verification.</td></tr>
       </tbody></table>
       <h2>Honest limits</h2>
       <ul>
-        <li>The licence table is a first reading and must be checked against the full licence texts; where unsure it says “ask first”.</li>
+        <li>The licence table has been checked against Creative Commons legal codes; unaddressed uses (such as AI training under CC 4.0) conservatively map to “ask first”.</li>
         <li>Rate limiting is best-effort (a hidden field and a small in-memory limit).</li>
         <li>A small catalogue cannot cover a living culture; absence of a record means nothing.</li>
         <li>Permissions are what has been stated to us. They are a snapshot, not legal advice.</li>
