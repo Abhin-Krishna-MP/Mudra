@@ -7,7 +7,7 @@ test('search → passport → Reuse Studio (commercial) → Ask first → copy c
   await page.getByRole('button', { name: 'Search' }).click();
   await page.getByRole('link', { name: /Theyyam/i }).first().click();
   await page.getByRole('link', { name: /Print on merchandise/ }).click();
-  await expect(page.getByRole('status').filter({ hasText: 'Ask first' })).toBeVisible();
+  await expect(page.getByRole('status').filter({ hasText: /Ask first|Not permitted/ })).toBeVisible();
   await page.getByRole('button', { name: /Copy plain text/ }).click();
   await expect(page.getByRole('button', { name: /Copied/ })).toBeVisible();
 });

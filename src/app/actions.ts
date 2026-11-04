@@ -91,3 +91,20 @@ export async function reviewFormAction(f: FormData) {
   revalidatePath(`/r/${recordId}`);
   redirect(`/review?msg=${encodeURIComponent(msg)}`);
 }
+
+/* --------------------------------------------------- sandbox tamper simulation */
+export async function simulateTamperAction(recordId: string, tampered: boolean) {
+  const db = await getDb();
+  const { getRecordView, auditRows, verifyRecord } = await import('@/lib/repo');
+  const v = await getRecordView(db, recordId);
+  if (!v?.isDemo) throw new Error('Simulation only permitted on sandbox demo record');
+  const rows = await auditRows(db, recordId);
+  if (tampered && rows.length >= 2) {
+    const copy = JSON.parse(JSON.stringify(rows));
+    copy[1].diff_json = JSON.stringify({ status: 'removed' });
+    const { verifyChain } = await import('@/lib/chain');
+    return { ok: true, result: verifyChain(copy), rows: copy };
+  }
+  const { publicKeys } = await import('@/lib/signing');
+  return { ok: true, result: await verifyRecord(db, recordId, publicKeys()), rows };
+}
