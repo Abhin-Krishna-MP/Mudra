@@ -1,0 +1,48 @@
+{
+  "name": "mudra",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Mudra \u2014 Cultural Passports. ART//CODE 2026 PS-03 \"Credit the Culture\".",
+  "license": "MIT",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "seed": "tsx scripts/seed.ts",
+    "seed:demo": "tsx scripts/seed.ts --with-demo",
+    "create-admin": "tsx scripts/create-admin.ts",
+    "tamper-demo": "tsx scripts/tamper-demo.ts",
+    "gen-key": "tsx scripts/gen-key.ts",
+    "check-secrets": "node scripts/check-secrets.mjs",
+    "check-licences": "tsx scripts/check-licences.ts",
+    "check-seed-floor": "tsx scripts/check-licences.ts --min=10",
+    "contrast": "node scripts/contrast.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "test:e2e": "playwright test",
+    "predeploy": "npm run check-secrets && npm run check-licences && npm run test",
+    "prepare": "node scripts/install-hooks.mjs"
+  },
+  "dependencies": {
+    "next": "^15.5.0",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@libsql/client": "^0.15.0",
+    "@vercel/blob": "^1.0.0",
+    "canonicalize": "^2.0.0",
+    "sharp": ">=0.33.0",
+    "qrcode": "^1.5.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "@types/qrcode": "^1.5.5",
+    "tsx": "^4.19.0",
+    "@playwright/test": "^1.50.0"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}

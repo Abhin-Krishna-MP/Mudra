@@ -1,0 +1,16 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+*.db
+*.db-journal
+data/*.db
+public/uploads/
+*.pem
+*.key
+.DS_Store
+test-results/
+playwright-report/
+.vercel
+.env*

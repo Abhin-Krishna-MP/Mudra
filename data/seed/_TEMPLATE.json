@@ -1,0 +1,20 @@
+{
+  "_README": "Copy this object into records.json (not this file). Write every field yourselves from cited sources. Never invent an artisan, permission, licence or source. If you cannot cite it, drop the record.",
+  "id": "MDR-2026-0001",
+  "title": "",
+  "workType": "ritual | craft | textile | visual | performing | other",
+  "region": "",
+  "language": "",
+  "culturalContext": "Written by you, in your own words (>= 2 sentences).",
+  "contextSources": ["Full citation or URL of source 1"],
+  "sourceUrl": "URL of the page the image/record comes from",
+  "sensitivity": "public | handle_with_care | restricted",
+  "submissionBasis": "creator_submitted | custodian_submitted | compiled_from_public_sources",
+  "licence": "CC0 | PDM | CC-BY-4.0 | CC-BY-SA-4.0 | CC-BY-NC-4.0 | ARR",
+  "licenceSourceNote": "Where the image and its licence come from (Commons file page URL, photographer, date checked).",
+  "attributionRequired": true,
+  "custodian": "Named custodian to contact, only if real and stated in a source",
+  "permissions": { "share": "unspecified", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+  "credits": [ { "name": "", "role": "e.g. Tradition bearers / Performer / Weaver", "collective": true }, { "name": "", "role": "Photographer" } ],
+  "image": { "file": "seed/<file>.jpg  (place the file in public/seed/)", "alt": "Describe what is visible.", "sourceNote": "" }
+}

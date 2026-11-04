@@ -1,0 +1,22 @@
+import { cookies } from 'next/headers';
+import { readSession, signSession } from './auth';
+import type { Actor } from './contracts';
+
+const COOKIE = 'mudra_session';
+function secret(): string {
+  const s = process.env.SESSION_SECRET;
+  if (process.env.NODE_ENV === 'production' && (!s || s.startsWith('dev-only'))) throw new Error('SESSION_SECRET must be set in production');
+  return s || 'dev-only-change-me-dev-only-change-me';
+}
+export async function getActor(): Promise<Actor | null> {
+  const jar = await cookies();
+  const s = readSession(jar.get(COOKIE)?.value, secret());
+  return s ? { role: s.role, name: s.name } : null;
+}
+export async function startSession(u: { id: number; name: string; role: string }) {
+  const jar = await cookies();
+  jar.set(COOKIE, signSession({ uid: u.id, name: u.name, role: u.role, exp: Date.now() + 8 * 3600_000 }, secret()), {
+    httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/', maxAge: 8 * 3600,
+  });
+}
+export async function endSession() { (await cookies()).delete(COOKIE); }
