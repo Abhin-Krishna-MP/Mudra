@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db';
 import { getRecordView, verifyRecord, auditRows } from '@/lib/repo';
 import { publicKeys, signingKey } from '@/lib/signing';
 import VerifyFile from './VerifyFile';
+import TamperSimulation from './TamperSimulation';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Verify a record' };
@@ -35,6 +36,8 @@ export default async function Verify({ params }: { params: Promise<{ id: string 
       <section className="panel" aria-labelledby="c2"><h2 id="c2" style={{ marginTop: 0 }}>2 · Does my file match the registered image?</h2>
         <VerifyFile registeredSha={asset ?? null} />
       </section>
+
+      {v.isDemo && <TamperSimulation recordId={v.id} />}
     </>
   );
 }
