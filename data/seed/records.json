@@ -198,5 +198,124 @@
       "alt": "Traditional Kerala temple wall mural painting at Thodeekalam Temple rendered in natural panchavarna pigments depicting mythological scenes.",
       "sourceNote": "Photo by Vijayakumarblathur on Wikimedia Commons. Licensed under CC BY-SA 4.0."
     }
+  },
+  {
+    "id": "MDR-2026-0007",
+    "title": "Kalamezhuthu ritual floor drawing of Kerala",
+    "workType": "ritual",
+    "region": "Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Kalamezhuthu is a sacred ritual visual tradition of Kerala where multidimensional representations of deities are drawn on consecrated temple floors using five natural powders: rice (white), turmeric (yellow), green leaves (green), burnt husk or charcoal (black), and a lime-turmeric blend (red). The ritual is performed by designated hereditary communities, including the Kurup and Theyyambadi families, accompanied by ritualistic singing known as Kalampattu, concluding with the ceremonial erasure of the drawing.",
+    "contextSources": [
+      "Kerala Council for Historical Research — Intangible Cultural Heritage of Kerala — https://www.kchr.ac.in/",
+      "Sangeet Natak Akademi, New Delhi — Kalamezhuthu documentation — https://sangeetnatak.gov.in/",
+      "Kerala Tourism Department — Kalamezhuthu ritual art of Kerala — https://www.keralatourism.org/artforms/kalamezhuthu/43"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kalampattu.jpg",
+    "sensitivity": "handle_with_care",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Ranjith A V, Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Kalampattu.jpg",
+    "attributionRequired": true,
+    "custodian": "Temple ritual hereditary communities of Kerala",
+    "permissions": { "share": "unspecified", "commercial": "not_permitted", "adapt": "not_permitted", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Kalamezhuthu practitioners and Kurup community of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Ranjith A V", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/kalamezhuthu.jpg",
+      "alt": "Consecrated floor drawing in five natural powders during Kalampattu festival ritual in Kerala.",
+      "sourceNote": "Photo by Ranjith A V on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0008",
+    "title": "Kudiyattam — ancient Sanskrit temple theatre",
+    "workType": "performing",
+    "region": "Kerala",
+    "language": "Sanskrit and Malayalam",
+    "culturalContext": "Kudiyattam (literally 'acting together') is an ancient Sanskrit theatrical tradition native to Kerala with documented roots extending over eighteen hundred years. Traditionally staged within specialized temple theatres known as Koothambalams, Kudiyattam features sophisticated eye movements (netrabhinaya), codified hand gestures (mudras), and percussive accompaniment on the mizhavu drum. Recognized by UNESCO in 2001 as a Masterpiece of the Oral and Intangible Heritage of Humanity, it is preserved by hereditary Chakyar and Nambiar communities alongside contemporary performance institutions.",
+    "contextSources": [
+      "UNESCO Intangible Cultural Heritage — Kutiyattam, Sanskrit Theatre — https://ich.unesco.org/en/RL/kutiyattam-sanskrit-theatre-00117",
+      "Kerala Kalamandalam Deemed to be University for Art and Culture — https://www.kalamandalam.ac.in/",
+      "Mani Madhava Chakyar Smaraka Gurukulam Archives"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Koodiyattam_Performer_Kapila_Venu.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Bobinson K B, Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Koodiyattam_Performer_Kapila_Venu.jpg",
+    "attributionRequired": true,
+    "custodian": "Kudiyattam artist community & Kerala Kalamandalam",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Kudiyattam performance lineage and tradition bearers, Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Bobinson K B", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/kudiyattam.jpg",
+      "alt": "Kudiyattam performer portraying a mythological character with elaborate makeup, ornaments, and facial expression.",
+      "sourceNote": "Photo by Bobinson K B on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0009",
+    "title": "Kaikottikali — traditional folk dance of Kerala",
+    "workType": "performing",
+    "region": "Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Kaikottikali, also widely known as Thiruvathirakali, is a graceful community folk dance performed by women in Kerala during festive occasions, predominantly Onam and the winter festival of Thiruvathira. Dancing in circular formations around a lit brass oil lamp (nilavilakku), performers clad in traditional Kasavu attire clap their hands in rhythmic synchrony to melodic folk verses praising divine and heroic lore. The dance celebrates communal harmony, feminine grace, and seasonal agricultural renewal.",
+    "contextSources": [
+      "Department of Cultural Affairs, Government of Kerala — Performing Arts Directory — https://www.keralaculture.org/",
+      "Kerala Tourism — Thiruvathirakali Folk Dance — https://www.keralatourism.org/artforms/thiruvathirakali/24"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Thiruvathira_dance.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Kottakkalnet, Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Thiruvathira_dance.jpg",
+    "attributionRequired": true,
+    "custodian": "Folk dance communities of Kerala",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Kaikottikali community performers of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Kottakkalnet", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/kaikottikali.jpg",
+      "alt": "Group of dancers in traditional Kerala attire performing rhythmic circular steps around a nilavilakku.",
+      "sourceNote": "Photo by Kottakkalnet on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0010",
+    "title": "Kerala coir craft — traditional coconut fibre weaving",
+    "workType": "craft",
+    "region": "Alappuzha, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Coir craft is an integral traditional agro-cottage industry of coastal Kerala, centred in Alappuzha (Alleppey) and Kollam districts. Extracted from the fibrous outer husk of the coconut palm through natural water-retting in brackish lagoons, the golden fibres are spun into yarn using traditional two-wheel charkhas and hand-woven into mats, floor coverings, and nautical cordage. Kerala coir products hold Geographical Indication (GI) recognition, representing centuries of cooperative artisanal heritage and eco-friendly craftsmanship.",
+    "contextSources": [
+      "Coir Board, Ministry of MSME, Government of India — Coir Heritage & Profile — http://coirboard.gov.in/",
+      "Geographical Indications Registry — Alleppey Coir, GI Application No. 8 — https://ipindia.gov.in/gi.htm",
+      "Central Coir Research Institute, Kalavoor, Alappuzha"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Making_coir_rope_in_Kerala.JPG",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph from Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Making_coir_rope_in_Kerala.JPG",
+    "attributionRequired": true,
+    "custodian": "Alappuzha Coir Weavers' Cooperative Society",
+    "permissions": { "share": "permitted", "commercial": "permitted", "adapt": "permitted", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Coir spinning and weaving artisan cooperatives of coastal Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Wikimedia Commons contributor", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/coir-craft.jpg",
+      "alt": "Artisans spinning natural golden coconut coir fibres into traditional rope in Kerala.",
+      "sourceNote": "Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
   }
 ]
