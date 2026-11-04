@@ -10,3 +10,7 @@
 - 2026-11-04 · A3: Added indexes idx_records_status, idx_records_region, idx_audit_record_seq, idx_flags_status, idx_assets_record to schema (run on startup via CREATE IF NOT EXISTS) · Abhin
 - 2026-11-04 · A7: Extended ALIASES map in search.ts with Mohiniyattam, Kudiyattam, Kerala mural, Coir, Panchavadyam, Ottanthullal variants · Abhin
 - 2026-11-04 · A8: contracts.ts frozen — RecordView has no private fields (reporter_contact, flag text, password_hash not exposed) · Abhin
+- 2026-11-04 · A4 / S4 / S5: Seeded 4 records to Turso: Sandbox demo + 3 real Kerala cultural works (Kathakali, Kasavu handloom, Panchuruli Theyyam) with CC BY-SA 4.0 images & verified source citations · Abhin
+- 2026-11-04 · S3: Creative Commons licence matrix verified against legal codes and dated in docs/permissions-model.md · Abhin + Alin
+- 2026-11-04 · A11: Cryptographic hash chains verified across all live Turso records · Abhin
+- 2026-11-04 · A15: Verified card.png generation with next/og ImageResponse; QR codes and uncropped artwork functional · Abhin
