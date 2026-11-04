@@ -14,3 +14,6 @@
 - 2026-11-04 · S3: Creative Commons licence matrix verified against legal codes and dated in docs/permissions-model.md · Abhin + Alin
 - 2026-11-04 · A11: Cryptographic hash chains verified across all live Turso records · Abhin
 - 2026-11-04 · A15: Verified card.png generation with next/og ImageResponse; QR codes and uncropped artwork functional · Abhin
+- 2026-11-04 · **Gate G2 GREEN** · Search, passport, Reuse Studio, credit card verified with 6 real records on live Turso · Abhin + Alin
+- 2026-11-04 · **Gate G3 GREEN** · Submit, flag, review resolution, timeline, and verify API working on live Turso database; 10 real records seed floor met and verified · Abhin + Alin
+- 2026-11-04 · A18: Interactive in-memory tamper simulation added to verify page for sandbox demo record; tamper-demo script verified · Abhin
