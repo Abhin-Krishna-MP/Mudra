@@ -108,5 +108,95 @@
       "alt": "Panchuruli Theyyam ritual dance artist wearing elaborate crimson and golden headgear with traditional face paint in Kannur, Kerala.",
       "sourceNote": "Photo by Balakrishnan Koyyal on Wikimedia Commons. Licensed under CC BY-SA 4.0."
     }
+  },
+  {
+    "id": "MDR-2026-0004",
+    "title": "Aranmula Kannadi — handcrafted metal alloy mirror",
+    "workType": "craft",
+    "region": "Aranmula, Pathanamthitta, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Aranmula Kannadi is a rare front-surface metal alloy mirror handcrafted in the heritage village of Aranmula in Pathanamthitta district, Kerala. Unlike standard secondary-surface glass mirrors where light reflects from a silvered backing, the Aranmula mirror produces reflection directly from its polished bronze surface, eliminating secondary optical distortion. The secret metallurgical composition of copper and tin has been preserved across generations by a collective of traditional metalsmith families belonging to the Vishwakarma community. It received India's first craft Geographical Indication (GI) status in 2003.",
+    "contextSources": [
+      "Geographical Indications Registry of India — Aranmula Kannadi, GI Application No. 1 — https://ipindia.gov.in/gi.htm",
+      "Kerala State Handloom and Handicrafts Development Corporation — Aranmula Heritage Cluster — https://www.keralahandicrafts.biz/",
+      "British Museum Collection — Specimen of Aranmula Metal Mirror — https://www.britishmuseum.org/collection"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Aranmula_metal_mirror.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Krishnakumarvairassery, Wikimedia Commons, CC BY-SA 3.0 / CC BY-SA 4.0 compatible, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Aranmula_metal_mirror.jpg",
+    "attributionRequired": true,
+    "custodian": "Viswabrahmana Aranmula Metal Mirror Nirman Society, Aranmula",
+    "permissions": { "share": "unspecified", "commercial": "not_permitted", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Aranmula metal mirror artisan community, Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Krishnakumarvairassery", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/aranmula-kannadi.jpg",
+      "alt": "Traditional handmade bronze metal mirror with ornate brass handle frame crafted in Aranmula, Kerala.",
+      "sourceNote": "Photo by Krishnakumarvairassery on Wikimedia Commons. Licensed under CC BY-SA 3.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0005",
+    "title": "Nettipattam — traditional elephant caparison craft",
+    "workType": "craft",
+    "region": "Thrissur, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Nettipattam is an elaborate golden forehead ornament and ceremonial caparison crafted for temple elephants during prominent festival processions (puram) across Kerala, most famously the Thrissur Pooram. The ornament is hand-stitched by skilled artisans onto heavy cotton and woollen felt backings, mounted with hundreds of copper and brass crescent-shaped domes (bubbles or bublos) electroplated with gold. Symbolically, the arrangement represents the pantheon of Hindu cosmology, with the creator Brahma, preserver Vishnu, and destroyer Shiva positioned along the central axis, surrounded by deities of celestial directions.",
+    "contextSources": [
+      "Thrissur Pooram Cultural Archives — Temple Crafts of Central Kerala — https://thrissurpooramfestival.com/",
+      "Department of Cultural Affairs, Government of Kerala — Festival Regalia & Crafts — https://www.keralaculture.org/",
+      "All India Handicrafts Board — Documentation of Metal and Leather Ornaments of Kerala"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nettipattam_of_elephant.JPG",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Ranjithsiji, Wikimedia Commons, CC BY-SA 3.0 / CC BY-SA 4.0 compatible, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Nettipattam_of_elephant.JPG",
+    "attributionRequired": true,
+    "custodian": "Thrissur temple ornament artisans collective",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Nettipattam artisans and leather craftsmen of Thrissur", "role": "Tradition bearers", "collective": true },
+      { "name": "Ranjithsiji", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/nettipattam.jpg",
+      "alt": "Traditional golden elephant forehead caparison (Nettipattam) displaying tiered brass spheres, fringes, and sacred cosmological motifs in Thrissur, Kerala.",
+      "sourceNote": "Photo by Ranjithsiji on Wikimedia Commons. Licensed under CC BY-SA 3.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0006",
+    "title": "Kerala temple mural painting — Thodeekalam",
+    "workType": "visual",
+    "region": "Kannur, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Kerala mural paintings represent an ancient visual art tradition dating from the 8th century CE, preserved on the walls of temples and historic palaces across Kerala. Executed in the fresco-secco method onto lime-plastered laterite surfaces, murals are painted strictly using Panchavarna (five natural mineral and herbal pigments): yellow (yellow ochre), red (red ochre), green (extracted from the leaves of the Neelamari plant or Eravikkara), white (lime), and black (oil-lamp soot). The Thodeekalam Shiva Temple in Kannur features 16th-century murals depicting complex compositions from the epics, characterized by expressive stylized eyes, rhythmic drapery, and traditional iconographic proportions (dhyana slokas).",
+    "contextSources": [
+      "Archaeological Survey of India (ASI) — Thrissur Circle: Protected Monument Thodeekalam Temple — https://asithrissurcircle.gov.in/",
+      "Vasuvandana — Kerala Mural Art and Architecture: Archaeological Documentation",
+      "Institute of Mural Painting, Guruvayur Devaswom — Traditions of Panchavarna Pigments — https://www.guruvayurdevaswom.nic.in/"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Thodeekalam_mural_paintings.jpg",
+    "sensitivity": "handle_with_care",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Vijayakumarblathur, Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Thodeekalam_mural_paintings.jpg",
+    "attributionRequired": true,
+    "custodian": "Thodeekalam Temple Trust & Guruvayur Devaswom Mural School",
+    "permissions": { "share": "unspecified", "commercial": "not_permitted", "adapt": "not_permitted", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Historic mural painters and traditional artists of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Vijayakumarblathur", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/kerala-mural.jpg",
+      "alt": "Traditional Kerala temple wall mural painting at Thodeekalam Temple rendered in natural panchavarna pigments depicting mythological scenes.",
+      "sourceNote": "Photo by Vijayakumarblathur on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
   }
 ]
