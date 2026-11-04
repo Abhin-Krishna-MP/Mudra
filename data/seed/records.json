@@ -81,32 +81,32 @@
   },
   {
     "id": "MDR-2026-0003",
-    "title": "Kalamezhuthu ritual floor drawing",
+    "title": "Theyyam ritual dance of North Malabar — Panchuruli",
     "workType": "ritual",
-    "region": "Kerala",
+    "region": "Kannur, Kerala",
     "language": "Malayalam",
-    "culturalContext": "Kalamezhuthu is a sacred ritual art form native to Kerala where complex representations of deities are drawn on consecrated temple floors using five natural mineral and organic powders: rice (white), turmeric (yellow), powdered green leaves (green), burnt chaff or charcoal (black), and a turmeric-lime mixture (red). Practised by traditional hereditary communities such as the Kurups and Theyyambadis, the ritual culminates in musical chants (Kalampattu) and ceremonial erasure.",
+    "culturalContext": "Theyyam is a sacred ritual dance-form native to the Kolathunadu (North Malabar) region of Kerala, encompassing Kannur and Kasaragod districts. Performers belong to designated traditional communities who undergo strict spiritual vows and ritual preparation before adorning vibrant headgear (mudi), intricate face painting, and sacred ornaments to invoke divine presence. Panchuruli Theyyam represents a fierce protective deity worshipped in ancestral sacred groves (kavus) and village shrines across northern Kerala.",
     "contextSources": [
-      "Kerala Council for Historical Research — Intangible Cultural Heritage of Kerala — https://www.kchr.ac.in/",
-      "Sangeet Natak Akademi, New Delhi — Kalamezhuthu documentation — https://sangeetnatak.gov.in/",
-      "Kerala Tourism Department — Kalamezhuthu ritual art of Kerala — https://www.keralatourism.org/artforms/kalamezhuthu/43"
+      "Kerala Folklore Academy — https://www.keralafolkloreacademy.com/",
+      "District Administration Kannur — Cultural Heritage & Theyyam — https://kannur.nic.in/en/culture-heritage/",
+      "Anthropological Survey of India — Documentation of Theyyam Traditions of Kerala"
     ],
-    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kalampattu_at_Kalathil_Sree_Rudhiramala_Bhagavathy_Temple-12.jpg",
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Theyyam_Panchuruli.jpg",
     "sensitivity": "handle_with_care",
     "submissionBasis": "compiled_from_public_sources",
     "licence": "CC-BY-SA-4.0",
-    "licenceSourceNote": "Photograph by Krizan 2017, Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Kalampattu_at_Kalathil_Sree_Rudhiramala_Bhagavathy_Temple-12.jpg",
+    "licenceSourceNote": "Photograph by Balakrishnan Koyyal (Koyyalkb), Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-04. https://commons.wikimedia.org/wiki/File:Theyyam_Panchuruli.jpg",
     "attributionRequired": true,
-    "custodian": "",
+    "custodian": "Kolathunadu Kavu communities, Kannur",
     "permissions": { "share": "unspecified", "commercial": "not_permitted", "adapt": "not_permitted", "ai_training": "unspecified" },
     "credits": [
-      { "name": "Kalamezhuthu practitioners, Kerala", "role": "Tradition bearers", "collective": true },
-      { "name": "Krizan 2017", "role": "Photographer" }
+      { "name": "Theyyam ritual practitioners and Kavu communities of North Malabar", "role": "Tradition bearers", "collective": true },
+      { "name": "Balakrishnan Koyyal", "role": "Photographer" }
     ],
     "image": {
-      "file": "seed/kalamezhuthu.jpg",
-      "alt": "Floor drawing (kalam) made with five natural powdered pigments during Kalampattu festival at Kalathil Sree Rudhiramala Bhagavathy Temple in Thrissur, Kerala.",
-      "sourceNote": "Photo by Krizan 2017 on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+      "file": "seed/theyyam.jpg",
+      "alt": "Panchuruli Theyyam ritual dance artist wearing elaborate crimson and golden headgear with traditional face paint in Kannur, Kerala.",
+      "sourceNote": "Photo by Balakrishnan Koyyal on Wikimedia Commons. Licensed under CC BY-SA 4.0."
     }
   }
 ]
