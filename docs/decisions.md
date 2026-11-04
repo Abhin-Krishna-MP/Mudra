@@ -6,3 +6,7 @@
 - 2026-11-03 · Capacity band: **TO FILL IN at the Day 1 capacity check** (≥65 / 50–64 / 40–49 / <40 hours each)
 - 2026-11-03 · Starter-code deviations from plan stack (to keep zero-dependency, testable logic): raw SQL via `@libsql/client` instead of Drizzle; HMAC-signed cookie + scrypt instead of iron-session/bcryptjs; in-house fuzzy search with alias map instead of Fuse.js; plain CSS instead of Tailwind/shadcn; `node:test` instead of Vitest; hand-written validation instead of Zod. Revisit only if there is time. · starter build
 - 2026-11-03 · `next/og` card uses its built-in font until an OFL font file is bundled (Alin, Day 3) · starter build
+- 2026-11-04 · **Gate G1 GREEN** · Smoke deploy to Vercel + Turso live. DB: libsql://mudra-abhin-krishna-mp.aws-ap-south-1.turso.io. Blob: TBC (using public/uploads fallback until Blob token set). sharp: verified via build. next/og: verified via build. Ed25519: signing off (unsigned, as planned for Day 2) · Abhin
+- 2026-11-04 · A3: Added indexes idx_records_status, idx_records_region, idx_audit_record_seq, idx_flags_status, idx_assets_record to schema (run on startup via CREATE IF NOT EXISTS) · Abhin
+- 2026-11-04 · A7: Extended ALIASES map in search.ts with Mohiniyattam, Kudiyattam, Kerala mural, Coir, Panchavadyam, Ottanthullal variants · Abhin
+- 2026-11-04 · A8: contracts.ts frozen — RecordView has no private fields (reporter_contact, flag text, password_hash not exposed) · Abhin
