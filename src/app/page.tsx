@@ -16,6 +16,10 @@ const QUICK: { href: string; label: string; icon: IconName }[] = [
   { href: '/submit', label: 'Submit a Record', icon: 'upload' },
 ];
 
+/** Names are the six forms already named in ASSETS_NEEDED.md. No new cultural claims. */
+const FORMS = ['Theyyam', 'Kathakali', 'Kerala murals', 'Handicrafts', 'Folk arts', 'Kalaripayattu'];
+const TICKER_ITEMS = [...FORMS, ...FORMS];
+
 const PILLARS: { word: string; text: string; cta: string; href: string; icon: IconName }[] = [
   { word: 'Discover', text: 'Explore Kerala’s art, craft and cultural expressions.', cta: 'Explore Catalogue', href: '/catalogue', icon: 'book' },
   { word: 'Credit', text: 'See who each work comes from, and credit them.', cta: 'Verify a record', href: '/verify', icon: 'shield' },
@@ -27,9 +31,20 @@ export default async function Home() {
   const shown = all.slice(0, 10);
   return (
     <>
-      <section className="hero" aria-labelledby="hero-h">
+      <section className="hero" aria-labelledby="hero-h" suppressHydrationWarning>
+        <div className="hero-stage" aria-hidden="true">
+          <div className="stage-3d">
+            <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
+            <div className="mist" />
+            <img className="layer l-fig lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
+            <div className="cloth-sheen lt" />
+            <div className="layer d-plate d-bg dk" />
+            <img className="layer d-fig dk" src="/mudra/hero-dark-figure.webp" alt="" decoding="async" />
+          </div>
+        </div>
         <div className="hero-bg" aria-hidden="true" />
         <div className="wrap hero-inner">
+          <span className="ghost-ml" lang="ml" aria-hidden="true">മുദ്ര</span>
           <div className="hero-copy">
             <p className="eyebrow">Kerala’s Living Heritage</p>
             <h1 id="hero-h"><span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span> <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly</em></h1>
@@ -46,14 +61,21 @@ export default async function Home() {
         <nav className="quick" aria-label="What would you like to do?">
           <ul>
             {QUICK.map((q) => (
-              <li key={q.href} data-reveal style={{ '--i': QUICK.indexOf(q) } as React.CSSProperties}><a href={q.href} data-tilt="14"><span className="q-ico"><Icon name={q.icon} size={30} /></span><span>{q.label}</span></a></li>
+              <li key={q.href} data-reveal suppressHydrationWarning style={{ '--i': QUICK.indexOf(q) } as React.CSSProperties}><a href={q.href} data-tilt="14"><span className="q-ico"><Icon name={q.icon} size={30} /></span><span>{q.label}</span></a></li>
             ))}
           </ul>
         </nav>
 
+        <div className="ticker" aria-label="Art forms in the catalogue" role="group">
+          <div className="ticker-track">
+            <ul>{TICKER_ITEMS.map((f, i) => <li key={`${f}-${i}`}>{f}</li>)}</ul>
+            <ul aria-hidden="true">{TICKER_ITEMS.map((f, i) => <li key={`dup-${f}-${i}`}>{f}</li>)}</ul>
+          </div>
+        </div>
+
         <section className="explore" aria-labelledby="explore-h" data-reveal>
           <div className="explore-head">
-            <h2 id="explore-h"><LotusMark size={30} />Explore Kerala’s Cultural Expressions</h2>
+            <h2 id="explore-h"><LotusMark size={30} />Explore Kerala’s Cultural Expressions{all.length > 0 && <span className="count">{all.length} {all.length === 1 ? 'record' : 'records'}</span>}</h2>
             <a className="view-all" href="/catalogue">View All <Icon name="arrow" size={18} /></a>
           </div>
           {shown.length === 0 ? (

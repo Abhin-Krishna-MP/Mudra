@@ -1,7 +1,13 @@
 import './globals.css';
+import './home-upgrade.css';
+import './hero-3d.css';
+import './home-premium.css';
+import './home-premium-plus.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
+import '@fontsource/noto-serif-malayalam';
+import '@fontsource/noto-serif-malayalam/700.css';
 import type { Metadata, Viewport } from 'next';
 import { SITE_NAME, TAGLINE, DISCLAIMER, NOT_FINANCIAL } from '@/lib/copy';
 import { LotusMark, Waves } from '@/components/Ornaments';
@@ -35,7 +41,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head><script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} /></head>
       <body>
         <a className="skip" href="#main">Skip to content</a>
-        <Motion />
         <div className="scroll-bar" aria-hidden="true" />
         <header className="site-header">
           <div className="wrap">
@@ -75,6 +80,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             </div>
           </div>
         </footer>
+        <Motion />
       </body>
     </html>
   );
