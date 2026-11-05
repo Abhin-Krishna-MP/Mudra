@@ -10,11 +10,22 @@ export function ThemeToggle() {
   useEffect(() => {
     setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
   }, []);
-  function flip() {
+  function flip(e: React.MouseEvent<HTMLButtonElement>) {
     const next: Theme = theme === 'dark' ? 'light' : 'dark';
-    setTheme(next);
-    document.documentElement.setAttribute('data-theme', next);
-    try { localStorage.setItem('mudra-theme', next); } catch { /* storage may be blocked; the choice still applies for this visit */ }
+    const apply = () => {
+      setTheme(next);
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('mudra-theme', next); } catch { /* storage may be blocked; the choice still applies for this visit */ }
+    };
+    const root = document.documentElement;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const vt = (document as Document & { startViewTransition?: (cb: () => void) => unknown }).startViewTransition;
+    if (reduce || !vt) { apply(); return; }
+    // The new theme spreads outward from the button like a lamp being lit.
+    const r = e.currentTarget.getBoundingClientRect();
+    root.style.setProperty('--vx', `${Math.round(r.left + r.width / 2)}px`);
+    root.style.setProperty('--vy', `${Math.round(r.top + r.height / 2)}px`);
+    vt.call(document, apply);
   }
   return (
     <button type="button" className="icon-btn theme-toggle" onClick={flip} aria-pressed={theme === 'dark'} aria-label="Dark theme" title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>

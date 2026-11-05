@@ -1,0 +1,74 @@
+/* ==========================================================================
+   MUDRA · LAYERED 3D HERO (light theme)
+   Load AFTER home-upgrade.css. Needs the two images in /public/mudra and the
+   .hero-stage markup (see page.tsx patch). Dark theme keeps the original
+   single image until you cut its layers too.
+
+   Depth model: one preserve-3d stage that the pointer rotates a few degrees.
+   Sky/water sits 140px behind, the Kathakali + sari plate 60px in front, with
+   drifting mist between them, so the layers separate like real depth instead
+   of sliding as a flat picture.
+   ========================================================================== */
+
+.hero-stage { display: none; }
+:root:not([data-theme='dark']) .hero-stage {
+  display: block; position: absolute; inset: 0; z-index: -2; overflow: hidden; pointer-events: none;
+  perspective: 1400px; perspective-origin: 64% 38%;
+}
+.stage-3d {
+  position: absolute; inset: 0 -4% -6% -4%; transform-style: preserve-3d; will-change: transform;
+  transform: rotateY(calc(var(--mx, 0) * -2.4deg)) rotateX(calc(var(--my, 0) * 1.7deg));
+  transition: transform .6s cubic-bezier(.2, .7, .2, 1);
+}
+.hero-stage .layer {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% 0;
+  max-width: none; user-select: none; -webkit-user-drag: none;
+}
+.l-bg  { transform: translate3d(0, calc(var(--sy, 0) * .16px), -140px) scale(1.12); }
+.l-fig {
+  transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96);
+  filter: drop-shadow(0 0 24px rgba(255, 176, 70, .32)) drop-shadow(0 14px 22px rgba(20, 8, 2, .35));
+}
+/* Mist drifting across the water, between the two plates */
+.mist {
+  position: absolute; left: -10%; right: -10%; top: 40%; height: 26%; filter: blur(14px); opacity: .9;
+  transform: translate3d(0, 0, -30px);
+  background:
+    radial-gradient(55% 100% at 28% 50%, rgba(255, 238, 205, .30), transparent 70%),
+    radial-gradient(45% 100% at 74% 55%, rgba(255, 226, 180, .22), transparent 70%);
+}
+
+/* The overlay div keeps only the text-side fade; the lamp-light pool from home-upgrade.css still rides on it */
+:root:not([data-theme='dark']) .hero-bg {
+  background: linear-gradient(90deg, var(--hero-fade) 0%, var(--hero-fade) 22%, transparent 58%), linear-gradient(0deg, rgba(6, 38, 32, .5), transparent 26%);
+  transform: none; transition: none; will-change: auto; z-index: -1;
+}
+
+/* Entrance: after the curtain opens, the plates arrive from different depths */
+@keyframes bg-in  { from { opacity: 0; transform: translate3d(0, 0, -140px) scale(1.24); } to { opacity: 1; transform: translate3d(0, calc(var(--sy, 0) * .16px), -140px) scale(1.12); } }
+@keyframes fig-in { from { opacity: 0; transform: translate3d(90px, 0, 60px) scale(1.02); } to { opacity: 1; transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96); } }
+@keyframes mist-drift { from { transform: translate3d(-4%, 0, -30px); } to { transform: translate3d(4%, 0, -30px); } }
+@keyframes sway { from { transform: rotateY(-2.2deg) rotateX(.7deg); } to { transform: rotateY(2.2deg) rotateX(-.7deg); } }
+html.motion .l-bg  { animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .3s both; }
+html.motion .l-fig { animation: fig-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.3s both; }
+html.motion .mist  { animation: mist-drift 24s ease-in-out infinite alternate; }
+/* Touch screens have no pointer, so the stage sways gently on its own */
+@media (hover: none) { html.motion .stage-3d { animation: sway 14s ease-in-out infinite alternate; } }
+
+@media (max-width: 899px) {
+  :root:not([data-theme='dark']) .hero-stage { inset: 0 0 auto 0; height: 56%; perspective-origin: 80% 30%; }
+  .hero-stage .layer { object-position: 97% 0; }
+  :root:not([data-theme='dark']) .hero-bg {
+    background: linear-gradient(0deg, var(--hero-fade) 0%, var(--hero-fade) 56%, rgba(6, 38, 32, .55) 66%, transparent 80%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage-3d, .hero-stage .layer, .mist { animation: none !important; }
+  .stage-3d { transform: none !important; }
+}
+
+/* Lamp-light pool: keep it on the water so it never washes out the Kathakali's face */
+.hero-bg::after {
+  background: radial-gradient(420px circle at calc(44% + var(--mx, 0) * 18%) calc(58% + var(--my, 0) * 14%), rgba(255, 205, 110, .34), transparent 62%);
+}

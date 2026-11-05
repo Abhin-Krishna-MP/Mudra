@@ -1,0 +1,126 @@
+/* ==========================================================================
+   MUDRA · HOME UPGRADE LAYER (light theme)
+   Append AFTER globals.css (or @import it last). Pure CSS, no new markup, no libs.
+   Everything is scoped to the home page via body:has(.hero) so inner pages
+   (which rely on the green page backdrop) are untouched.
+   One memorable moment: the stage curtain parts on load. Everything else is quiet.
+   ========================================================================== */
+
+/* ---------- 0. Tokens ---------- */
+:root {
+  --paper: #f7eedd;
+  --kasavu: repeating-linear-gradient(90deg, var(--kas-a) 0 14px, var(--kas-b) 14px 18px, var(--kas-a) 18px 26px, #7a4c0c 26px 28px);
+  --curtain-a: #8a2a22;
+  --curtain-b: #4a1311;
+}
+:root:not([data-theme='dark']) {
+  /* Lotus: gold into maroon (was pink, which is outside the palette) */
+  --lotus-a: #fff6dc; --lotus-b: #e9b949; --lotus-c: #8c2c25; --lotus-glow: rgba(233, 185, 73, .38);
+}
+
+/* ---------- 1. Hero framing: show the crown on desktop and the face on phones ---------- */
+.hero-bg {
+  background:
+    linear-gradient(90deg, var(--hero-fade) 0%, var(--hero-fade) 24%, transparent 60%),
+    var(--hero-img) 78% 0% / cover no-repeat,
+    var(--glow),
+    var(--hero-base);
+}
+@media (max-width: 899px) {
+  .hero { min-height: 700px; }
+  .hero-bg {
+    background:
+      linear-gradient(0deg, var(--hero-fade) 0%, var(--hero-fade) 56%, rgba(6, 38, 32, .55) 66%, transparent 80%),
+      var(--hero-img) 97% 0% / auto 54% no-repeat,
+      var(--glow),
+      var(--hero-base);
+  }
+}
+
+/* ---------- 2. A true light page: ivory paper, hero dissolves into it ---------- */
+:root:not([data-theme='dark']) body:has(.hero) {
+  background-color: var(--paper);
+  background-image: var(--paper-grain), repeating-linear-gradient(90deg, rgba(218, 160, 23, .06) 0 1px, transparent 1px 30px);
+  background-attachment: scroll;
+}
+:root:not([data-theme='dark']) .hero {
+  -webkit-mask-image: linear-gradient(#000 calc(100% - 120px), transparent);
+          mask-image: linear-gradient(#000 calc(100% - 120px), transparent);
+}
+/* Sections sit on the paper instead of being stacked cards */
+:root:not([data-theme='dark']) .explore,
+:root:not([data-theme='dark']) .pillars {
+  background: transparent; border: 0; box-shadow: none; border-radius: 0;
+}
+.explore-head {
+  padding-bottom: 14px; margin-bottom: 22px; border-bottom: 4px solid transparent;
+  border-image: var(--kasavu) 1;
+}
+
+/* ---------- 3. Glass quick-action bar (the one floating surface) ---------- */
+:root:not([data-theme='dark']) .quick {
+  background: linear-gradient(180deg, rgba(255, 251, 240, .84), rgba(247, 234, 210, .74));
+  -webkit-backdrop-filter: blur(18px) saturate(1.3); backdrop-filter: blur(18px) saturate(1.3);
+  border: 1px solid rgba(233, 185, 73, .6);
+  box-shadow: 0 26px 50px rgba(40, 18, 6, .28), inset 0 1px 0 rgba(255, 255, 255, .8);
+}
+
+/* ---------- 4. Gallery tiles: artwork framed in an arched niche (artwork is never cropped) ---------- */
+.tile-compact .tile-link {
+  aspect-ratio: 1 / 1.4; border-radius: 999px 999px 18px 18px;
+  background: var(--mat); color: var(--ink); border: 1px solid rgba(233, 185, 73, .75);
+  box-shadow: 0 10px 24px rgba(70, 36, 12, .16), inset 0 0 0 5px var(--surface-2), inset 0 0 0 6px rgba(218, 160, 23, .55);
+}
+.tile-compact .tile-art { inset: 16px 16px 96px; border-radius: 999px 999px 10px 10px; overflow: hidden; }
+.tile-compact .tile-art::before { background: rgba(30, 14, 8, .1); backdrop-filter: blur(18px) saturate(1.05); }
+.tile-compact .tile-art img { object-fit: contain; }
+.tile-compact .tile-shade { display: none; }
+.tile-compact .tile-text { left: 16px; right: 52px; bottom: 14px; }
+.tile-compact .tile-title { color: var(--ink); text-shadow: none; font-size: 1.02rem; }
+.tile-compact .tile-sub { color: var(--muted); }
+.tile-compact .tile-go { right: 14px; bottom: 16px; }
+
+/* ---------- 5. Pillars: foil frames instead of dashed boxes ---------- */
+.face.front::before {
+  inset: 8px; border: 1px solid rgba(218, 160, 23, .55); border-radius: 14px;
+  outline: 1px solid rgba(218, 160, 23, .28); outline-offset: -6px;
+}
+:root:not([data-theme='dark']) .face.front { background: linear-gradient(180deg, #fffdf6, #f8ecd2); }
+
+/* ---------- 6. Gold button: the shine no longer washes out the label ---------- */
+.btn.gold::after { background: linear-gradient(100deg, transparent 38%, rgba(255, 255, 255, .34) 50%, transparent 62%); }
+.btn.gold > * { position: relative; z-index: 1; }
+
+/* ---------- 7. Lamp light: a warm pool that follows the pointer (reuses --mx / --my) ---------- */
+.hero-bg::after {
+  content: ''; position: absolute; inset: 0; pointer-events: none; mix-blend-mode: soft-light;
+  background: radial-gradient(460px circle at calc(62% + var(--mx, 0) * 26%) calc(46% + var(--my, 0) * 30%), rgba(255, 205, 110, .55), transparent 62%);
+}
+
+/* ---------- 8. THE MOMENT: the stage curtain parts, then the headline arrives ---------- */
+@keyframes curtain-l { 0% { transform: translateX(0); } 12% { transform: translateX(1.5%); } 100% { transform: translateX(-102%); visibility: hidden; } }
+@keyframes curtain-r { 0% { transform: translateX(0); } 12% { transform: translateX(-1.5%); } 100% { transform: translateX(102%); visibility: hidden; } }
+html.motion .hero::before,
+html.motion .hero::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 50.6%; z-index: 8; pointer-events: none;
+  will-change: transform;
+  background:
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .30) 0 7px, rgba(255, 255, 255, .06) 7px 11px, transparent 11px 46px),
+    linear-gradient(180deg, var(--curtain-a), var(--curtain-b));
+  box-shadow: 0 0 60px rgba(0, 0, 0, .55);
+}
+html.motion .hero::before { left: 0;  border-right: 9px solid var(--kas-b); animation: curtain-l 1.7s cubic-bezier(.76, 0, .2, 1) .45s forwards; }
+html.motion .hero::after  { right: 0; border-left: 9px solid var(--kas-b);  animation: curtain-r 1.7s cubic-bezier(.76, 0, .2, 1) .45s forwards; }
+/* hold the hero copy back until the curtain is nearly open */
+html.motion .hero .eyebrow { animation-delay: 1.35s; }
+html.motion .hero h1 .w { animation-delay: calc(var(--i, 0) * .14s + 1.45s); }
+html.motion .hero h1 em.w { animation-delay: 1.9s, 2.9s; }
+html.motion .hero .lede { animation-delay: 2.15s; }
+html.motion .hero .cta { animation-delay: 2.3s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero::before, .hero::after { display: none !important; }
+}
+
+/* ---------- 9. Let tile shadows breathe inside the scrolling track ---------- */
+.explore .car-track { padding: 8px 8px 26px; }

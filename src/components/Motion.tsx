@@ -25,9 +25,13 @@ export function Motion() {
       if (seen.has(el)) return; seen.add(el);
       if (io) io.observe(el); else el.classList.add('is-in');
     });
-    scan();
-    const mo = new MutationObserver(scan);
-    mo.observe(document.body, { childList: true, subtree: true });
+    let mo: MutationObserver | null = null;
+    const initTimer = setTimeout(() => {
+      scan();
+      mo = new MutationObserver(scan);
+      mo.observe(document.body, { childList: true, subtree: true });
+      onScroll();
+    }, 0);
 
     // ---- pointer: tilt + hero parallax ----
     let current: HTMLElement | null = null;
@@ -75,10 +79,10 @@ export function Motion() {
       });
     };
     window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
 
     return () => {
-      io?.disconnect(); mo.disconnect();
+      clearTimeout(initTimer);
+      io?.disconnect(); mo?.disconnect();
       document.removeEventListener('pointermove', onMove);
       document.documentElement.removeEventListener('mouseleave', onLeave);
       window.removeEventListener('scroll', onScroll);
