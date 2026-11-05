@@ -15,7 +15,6 @@ export function PageSheet({ title, lede, eyebrow, children, wide, headExtra }: {
             <div className="layer d-fig dk" />
           </div>
         </div>
-        <span className="ghost-ml" lang="ml" aria-hidden="true">മുദ്ര</span>
         <div className="sheet-head-text">
           {eyebrow && <p className="eyebrow-sm">{eyebrow}</p>}
           <h1>{title}</h1>

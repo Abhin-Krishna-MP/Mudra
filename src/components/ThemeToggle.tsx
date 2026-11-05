@@ -5,7 +5,7 @@ import { Icon } from './Icons';
 type Theme = 'light' | 'dark';
 
 /** Sets data-theme on <html> and remembers the choice. Both icons render; CSS shows the right one, so there is no hydration mismatch. */
-export function ThemeToggle() {
+export function ThemeToggle({ className, children }: { className?: string; children?: React.ReactNode } = {}) {
   const [theme, setTheme] = useState<Theme>('light');
   useEffect(() => {
     setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
@@ -28,9 +28,20 @@ export function ThemeToggle() {
     vt.call(document, apply);
   }
   return (
-    <button type="button" className="icon-btn theme-toggle" onClick={flip} aria-pressed={theme === 'dark'} aria-label="Dark theme" title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}>
-      <Icon name="moon" className="ico-moon" size={20} />
-      <Icon name="sun" className="ico-sun" size={20} />
+    <button
+      type="button"
+      className={className ?? "icon-btn theme-toggle"}
+      onClick={flip}
+      aria-pressed={theme === 'dark'}
+      aria-label="Dark theme"
+      title={theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'}
+    >
+      {children ?? (
+        <>
+          <Icon name="moon" className="ico-moon" size={20} />
+          <Icon name="sun" className="ico-sun" size={20} />
+        </>
+      )}
     </button>
   );
 }

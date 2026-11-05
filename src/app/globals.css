@@ -181,8 +181,7 @@ code { font: .85em ui-monospace, SFMono-Regular, Menlo, monospace; }
 }
 
 .brand { display: inline-flex; align-items: center; gap: 12px; color: var(--header-ink); text-decoration: none; margin-right: auto; }
-/* Lotus in header is already pink via SVG gradient; keep it unoverridden */
-.brand .lotus-mark { flex: none; filter: drop-shadow(0 0 8px rgba(233, 30, 99, .35)); }
+.brand .lotus-mark { color: var(--hero-gold); flex: none; }
 .brand-text { display: flex; flex-direction: column; line-height: 1.05; }
 .brand-name { font: 700 1.9rem/1 var(--font-display); letter-spacing: .02em; }
 .brand-tag { font: 500 .75rem/1.2 var(--font-ui); opacity: .78; margin-top: 4px; letter-spacing: .06em; text-transform: uppercase; }
@@ -559,7 +558,7 @@ pre.credit { white-space: pre-wrap; word-break: break-word; background: var(--ma
 .foot a:hover { color: var(--header-active); }
 .foot .brand { margin: 0 0 14px; }
 .foot .brand-name { font-size: 1.5rem; }
-.foot .brand .lotus-mark { filter: drop-shadow(0 0 6px rgba(233, 30, 99, .4)); }
+.foot .brand .lotus-mark { color: var(--hero-gold); }
 
 /* Legal bar */
 .foot-legal {
@@ -795,8 +794,8 @@ html.motion .lamp ellipse[fill='url(#flameG)']:nth-of-type(2n) { animation-durat
 html.motion .lamp ellipse[fill='url(#flameG)']:nth-of-type(3n) { animation-duration: 1.3s; animation-delay: -.9s; }
 html.motion .submit-art .lamp { animation: bob 6s ease-in-out infinite; }
 html.motion .studio .parasol { animation: bob 5s ease-in-out infinite; }
-.brand .lotus-mark { transition: transform .6s cubic-bezier(.2, .7, .2, 1), filter .4s; }
-.brand:hover .lotus-mark { transform: rotateY(180deg) scale(1.08); filter: drop-shadow(0 0 8px rgba(233, 185, 73, .7)); }
+.brand .lotus-mark { transition: filter .4s; }
+.brand:hover .lotus-mark { transform: none; filter: drop-shadow(0 0 8px rgba(233, 185, 73, .7)); }
 
 @media (max-width: 899px) {
   .pillars { grid-template-columns: 1fr; padding: 22px 14px 26px; border-radius: 22px; }

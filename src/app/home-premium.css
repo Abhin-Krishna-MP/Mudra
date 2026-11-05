@@ -134,32 +134,16 @@ html.motion .dk.d-fig { animation: d-fig-in 1.9s var(--ease-out) 1.3s both; }
 :root:not([data-theme='dark']) .hero h1 em.w { background-image: var(--foil-gold); background-size: 220% 100%; }
 :root[data-theme='dark'] .hero h1 em.w { background-image: var(--foil-ember); background-size: 220% 100%; filter: drop-shadow(0 0 18px rgba(255, 110, 30, .45)); }
 
-/* Ghost Malayalam wordmark behind the copy: depth through scale, not clutter */
-.ghost-ml {
-  position: absolute; left: -2%; top: 50%; z-index: -1;
-  font: 700 clamp(9rem, 24vw, 22rem)/1 var(--font-ml);
-  white-space: nowrap; pointer-events: none; user-select: none;
-  color: transparent;
-  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--hero-gold) 55%, transparent);
-  opacity: .62; transform: translate3d(calc(var(--mx, 0) * -22px), calc(-50% + var(--sy, 0) * -.05px), 0);
-  /* Full left-to-right visibility — no mask so all four glyphs show */
-  -webkit-mask-image: linear-gradient(90deg, #000 10%, #000 90%, transparent 100%);
-  mask-image: linear-gradient(90deg, #000 10%, #000 90%, transparent 100%);
-  letter-spacing: .02em;
-}
-:root[data-theme='dark'] .ghost-ml {
-  -webkit-text-stroke-color: color-mix(in srgb, var(--hero-gold) 60%, transparent);
-}
 .hero .eyebrow { display: inline-flex; align-items: center; gap: 14px; }
 .hero .eyebrow::before { content: ''; width: 44px; height: 1px; background: linear-gradient(90deg, transparent, var(--hero-gold)); }
 
 /* Buttons: foil + depth, still AA */
 .hero .btn.gold { background: var(--foil-gold); background-size: 220% 100%; color: #3a1210; border: 0; box-shadow: 0 10px 26px rgba(0, 0, 0, .32), inset 0 1px 0 rgba(255, 255, 255, .65), inset 0 -2px 0 rgba(122, 76, 12, .45); transition: transform .3s var(--ease-out), box-shadow .3s, background-position .8s var(--ease-out); }
-.hero .btn.gold:hover { background-position: 100% 0; transform: translateY(-3px); box-shadow: 0 16px 34px rgba(233, 185, 73, .42), 0 6px 14px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .7); }
+.hero .btn.gold:hover { background-position: 100% 0; transform: none; box-shadow: 0 16px 34px rgba(233, 185, 73, .42), 0 6px 14px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .7); }
 :root[data-theme='dark'] .hero .btn.gold { background: linear-gradient(180deg, #c4590f, #8f3a08); background-size: auto; color: #fff; box-shadow: 0 10px 28px rgba(196, 90, 24, .38), inset 0 1px 0 rgba(255, 200, 150, .5), inset 0 -2px 0 rgba(60, 18, 2, .5); }
-:root[data-theme='dark'] .hero .btn.gold:hover { background: linear-gradient(180deg, #d6641a, #9c400a); box-shadow: 0 16px 38px rgba(240, 137, 74, .45), inset 0 1px 0 rgba(255, 210, 170, .6); }
-.hero .btn.ghost { -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2); background: rgba(255, 250, 235, .12); border: 1.5px solid rgba(251, 219, 175, .6); transition: background .3s, transform .3s var(--ease-out); }
-.hero .btn.ghost:hover { background: rgba(255, 250, 235, .22); transform: translateY(-3px); }
+:root[data-theme='dark'] .hero .btn.gold:hover { background: linear-gradient(180deg, #d6641a, #9c400a); transform: none; box-shadow: 0 16px 38px rgba(240, 137, 74, .45), inset 0 1px 0 rgba(255, 210, 170, .6); }
+.hero .btn.ghost { -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2); background: rgba(255, 250, 235, .12); border: 1.5px solid rgba(251, 219, 175, .6); transition: background .3s; }
+.hero .btn.ghost:hover { background: rgba(255, 250, 235, .22); transform: none; }
 :root[data-theme='dark'] .hero .btn.ghost { background: rgba(20, 10, 6, .45); border-color: rgba(240, 137, 74, .7); }
 
 /* ---------- 4. Glass quick-action bar with a travelling spotlight and a living rim ---------- */
@@ -261,7 +245,6 @@ html.motion .lotus-glow { animation: flame 5.4s ease-in-out infinite; }
     mask-composite: add;
   }
   :root[data-theme='dark'] .hero-bg { background: linear-gradient(0deg, var(--hero-fade) 0%, var(--hero-fade) 56%, rgba(10, 6, 7, .55) 66%, transparent 80%); }
-  .ghost-ml { font-size: 11rem; top: 28%; opacity: .4; }
   .ticker { margin-top: 26px; }
   .hero h1 { font-size: clamp(2.1rem, 9vw, 2.9rem); }
 }

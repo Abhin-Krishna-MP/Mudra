@@ -8,6 +8,7 @@ import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
 import '@fontsource/noto-serif-malayalam';
 import '@fontsource/noto-serif-malayalam/700.css';
+import { PadippuraNavbar } from '@/components/PadippuraNavbar';
 import type { Metadata, Viewport } from 'next';
 import { SITE_NAME, TAGLINE, DISCLAIMER, NOT_FINANCIAL } from '@/lib/copy';
 import { LotusMark, Waves } from '@/components/Ornaments';
@@ -29,8 +30,11 @@ const THEME_BOOT = `try{var t=localStorage.getItem('mudra-theme');if(!t&&window.
 function Brand() {
   return (
     <a className="brand" href="/" aria-label={`Mudra, ${TAGLINE}. Home`}>
-      <LotusMark size={46} />
-      <span className="brand-text"><span className="brand-name">Mudra</span><span className="brand-tag">{TAGLINE}</span></span>
+      <LotusMark size={38} />
+      <span className="brand-text">
+        <span className="brand-name">Mudra</span>
+        <span className="brand-tag">CREDIT THE CULTURE</span>
+      </span>
     </a>
   );
 }
@@ -40,28 +44,17 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
-        {/* Preload hero images to eliminate first-paint lag */}
+        {/* Preload hero images and navbar master artwork to eliminate first-paint lag */}
         <link rel="preload" as="image" href="/mudra/hero-bg.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-figure.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-dark-bg.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-dark-figure.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/navbar-full.webp" fetchPriority="high" />
       </head>
       <body>
         <a className="skip" href="#main">Skip to content</a>
         <div className="scroll-bar" aria-hidden="true" />
-        <header className="site-header">
-          <div className="wrap">
-            <Brand />
-            <NavLinks />
-            <div className="head-actions">
-              <a className="icon-btn hide-sm" href="/catalogue#search" aria-label="Search the catalogue"><Icon name="search" size={21} /></a>
-              <ThemeToggle />
-              <a className="icon-btn avatar hide-sm" href="/review" aria-label="Reviewer sign-in"><Icon name="user" size={20} /></a>
-              <MobileChrome />
-            </div>
-          </div>
-          <div className="kasavu" aria-hidden="true" />
-        </header>
+        <PadippuraNavbar />
         <main id="main">{children}</main>
         <footer className="site-footer">
           <div className="foot-brand-row">

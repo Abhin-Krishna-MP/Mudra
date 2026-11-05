@@ -7,19 +7,13 @@
 export function LotusMark({ size = 44 }: { size?: number }) {
   return (
     <svg className="lotus-mark" width={size} height={size} viewBox="0 0 64 64" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
-      <defs>
-        <linearGradient id="lotusGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f06292" />
-          <stop offset="1" stopColor="#c2185b" />
-        </linearGradient>
-      </defs>
-      <path d="M32 10c-5 6.5-6.5 14-6.5 20.5S28 42 32 46c4-4 6.5-9 6.5-15.5S37 16.5 32 10Z" stroke="url(#lotusGrad)" strokeWidth={2.2} />
-      <path d="M32 46c-9-.5-17.5-5.5-20.5-17 6.5 1.2 11.5 3.2 14 6.5" stroke="url(#lotusGrad)" />
-      <path d="M32 46c9-.5 17.5-5.5 20.5-17-6.5 1.2-11.5 3.2-14 6.5" stroke="url(#lotusGrad)" />
-      <path d="M22.5 43.5c-6.5-.3-12-3.2-15.5-9 3.6.2 6.8 1.1 9.5 2.8" opacity=".75" stroke="#e91e8c" />
-      <path d="M41.5 43.5c6.5-.3 12-3.2 15.5-9-3.6.2-6.8 1.1-9.5 2.8" opacity=".75" stroke="#e91e8c" />
-      <path d="M17 52c5-2.6 10-3.8 15-3.8S42 49.4 47 52" stroke="url(#lotusGrad)" />
-      <path d="M22 57.5c3-1.4 6.5-2.1 10-2.1s7 .7 10 2.1" opacity=".7" stroke="#e91e8c" />
+      <path d="M32 10c-5 6.5-6.5 14-6.5 20.5S28 42 32 46c4-4 6.5-9 6.5-15.5S37 16.5 32 10Z" />
+      <path d="M32 46c-9-.5-17.5-5.5-20.5-17 6.5 1.2 11.5 3.2 14 6.5" />
+      <path d="M32 46c9-.5 17.5-5.5 20.5-17-6.5 1.2-11.5 3.2-14 6.5" />
+      <path d="M22.5 43.5c-6.5-.3-12-3.2-15.5-9 3.6.2 6.8 1.1 9.5 2.8" opacity=".75" />
+      <path d="M41.5 43.5c6.5-.3 12-3.2 15.5-9-3.6.2-6.8 1.1-9.5 2.8" opacity=".75" />
+      <path d="M17 52c5-2.6 10-3.8 15-3.8S42 49.4 47 52" />
+      <path d="M22 57.5c3-1.4 6.5-2.1 10-2.1s7 .7 10 2.1" opacity=".7" />
     </svg>
   );
 }
