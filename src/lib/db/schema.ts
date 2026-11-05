@@ -45,12 +45,6 @@ export const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS idx_credits_record ON credits(record_id)`,
   `CREATE INDEX IF NOT EXISTS idx_flags_record ON flags(record_id)`,
   `CREATE INDEX IF NOT EXISTS idx_assets_sha ON assets(sha256)`,
-  /* A3: additional indexes for common query patterns */
-  `CREATE INDEX IF NOT EXISTS idx_records_status ON records(status)`,
-  `CREATE INDEX IF NOT EXISTS idx_records_region ON records(region)`,
-  `CREATE INDEX IF NOT EXISTS idx_audit_record_seq ON audit_events(record_id, seq)`,
-  `CREATE INDEX IF NOT EXISTS idx_flags_status ON flags(status)`,
-  `CREATE INDEX IF NOT EXISTS idx_assets_record ON assets(record_id)`,
 ];
 
 export async function migrate(db: Db) {
