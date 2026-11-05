@@ -44,7 +44,7 @@ body:has(.hero)::after {
 }
 /* When used as an <img> cut-out (hero-dark-figure.webp) */
 img.dk.d-fig {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% 0;
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% top;
   max-width: none; user-select: none; -webkit-user-drag: none;
 }
 /* When used as a feathered masked div */
@@ -58,7 +58,7 @@ div.dk.d-fig {
   background: linear-gradient(90deg, var(--hero-fade) 0%, var(--hero-fade) 22%, transparent 60%), linear-gradient(0deg, rgba(10, 6, 7, .8), transparent 30%);
   transform: none; transition: none; will-change: auto; z-index: -1;
 }
-:root[data-theme='dark'] .hero { -webkit-mask-image: linear-gradient(#000 calc(100% - 140px), transparent); mask-image: linear-gradient(#000 calc(100% - 140px), transparent); }
+:root[data-theme='dark'] .hero { -webkit-mask-image: linear-gradient(#000 calc(100% - 80px), transparent); mask-image: linear-gradient(#000 calc(100% - 80px), transparent); }
 :root[data-theme='dark'] .mist { background: radial-gradient(55% 100% at 30% 50%, rgba(255, 130, 50, .16), transparent 70%), radial-gradient(45% 100% at 76% 55%, rgba(255, 90, 20, .12), transparent 70%); }
 
 /* Drifting particles on their own composited layer (translateY only, no repaint).
@@ -134,23 +134,16 @@ html.motion .dk.d-fig { animation: d-fig-in 1.9s var(--ease-out) 1.3s both; }
 :root:not([data-theme='dark']) .hero h1 em.w { background-image: var(--foil-gold); background-size: 220% 100%; }
 :root[data-theme='dark'] .hero h1 em.w { background-image: var(--foil-ember); background-size: 220% 100%; filter: drop-shadow(0 0 18px rgba(255, 110, 30, .45)); }
 
-/* Ghost Malayalam wordmark behind the copy: depth through scale, not clutter */
-.ghost-ml {
-  position: absolute; left: -2%; top: 50%; z-index: -1; font: 700 clamp(9rem, 24vw, 22rem)/1 var(--font-ml); white-space: nowrap; pointer-events: none; user-select: none;
-  color: transparent; -webkit-text-stroke: 1.2px color-mix(in srgb, var(--hero-gold) 38%, transparent);
-  opacity: .55; transform: translate3d(calc(var(--mx, 0) * -22px), calc(-50% + var(--sy, 0) * -.05px), 0);
-  -webkit-mask-image: linear-gradient(90deg, #000 20%, transparent 80%); mask-image: linear-gradient(90deg, #000 20%, transparent 80%);
-}
 .hero .eyebrow { display: inline-flex; align-items: center; gap: 14px; }
 .hero .eyebrow::before { content: ''; width: 44px; height: 1px; background: linear-gradient(90deg, transparent, var(--hero-gold)); }
 
 /* Buttons: foil + depth, still AA */
 .hero .btn.gold { background: var(--foil-gold); background-size: 220% 100%; color: #3a1210; border: 0; box-shadow: 0 10px 26px rgba(0, 0, 0, .32), inset 0 1px 0 rgba(255, 255, 255, .65), inset 0 -2px 0 rgba(122, 76, 12, .45); transition: transform .3s var(--ease-out), box-shadow .3s, background-position .8s var(--ease-out); }
-.hero .btn.gold:hover { background-position: 100% 0; transform: translateY(-3px); box-shadow: 0 16px 34px rgba(233, 185, 73, .42), 0 6px 14px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .7); }
+.hero .btn.gold:hover { background-position: 100% 0; transform: none; box-shadow: 0 16px 34px rgba(233, 185, 73, .42), 0 6px 14px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .7); }
 :root[data-theme='dark'] .hero .btn.gold { background: linear-gradient(180deg, #c4590f, #8f3a08); background-size: auto; color: #fff; box-shadow: 0 10px 28px rgba(196, 90, 24, .38), inset 0 1px 0 rgba(255, 200, 150, .5), inset 0 -2px 0 rgba(60, 18, 2, .5); }
-:root[data-theme='dark'] .hero .btn.gold:hover { background: linear-gradient(180deg, #d6641a, #9c400a); box-shadow: 0 16px 38px rgba(240, 137, 74, .45), inset 0 1px 0 rgba(255, 210, 170, .6); }
-.hero .btn.ghost { -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2); background: rgba(255, 250, 235, .12); border: 1.5px solid rgba(251, 219, 175, .6); transition: background .3s, transform .3s var(--ease-out); }
-.hero .btn.ghost:hover { background: rgba(255, 250, 235, .22); transform: translateY(-3px); }
+:root[data-theme='dark'] .hero .btn.gold:hover { background: linear-gradient(180deg, #d6641a, #9c400a); transform: none; box-shadow: 0 16px 38px rgba(240, 137, 74, .45), inset 0 1px 0 rgba(255, 210, 170, .6); }
+.hero .btn.ghost { -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2); background: rgba(255, 250, 235, .12); border: 1.5px solid rgba(251, 219, 175, .6); transition: background .3s; }
+.hero .btn.ghost:hover { background: rgba(255, 250, 235, .22); transform: none; }
 :root[data-theme='dark'] .hero .btn.ghost { background: rgba(20, 10, 6, .45); border-color: rgba(240, 137, 74, .7); }
 
 /* ---------- 4. Glass quick-action bar with a travelling spotlight and a living rim ---------- */
@@ -252,7 +245,6 @@ html.motion .lotus-glow { animation: flame 5.4s ease-in-out infinite; }
     mask-composite: add;
   }
   :root[data-theme='dark'] .hero-bg { background: linear-gradient(0deg, var(--hero-fade) 0%, var(--hero-fade) 56%, rgba(10, 6, 7, .55) 66%, transparent 80%); }
-  .ghost-ml { font-size: 11rem; top: 28%; opacity: .4; }
   .ticker { margin-top: 26px; }
   .hero h1 { font-size: clamp(2.1rem, 9vw, 2.9rem); }
 }
