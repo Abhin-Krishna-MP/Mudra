@@ -1,46 +1,90 @@
 import { getDb } from '@/lib/db';
 import { listRecords } from '@/lib/repo';
-import { searchRecords } from '@/lib/search';
-import { PermissionChips } from '@/components/Permissions';
+import { Icon, type IconName } from '@/components/Icons';
+import { LotusMark } from '@/components/Ornaments';
+import { Carousel } from '@/components/Carousel';
+import { RecordTile } from '@/components/RecordTile';
+import { Petals } from '@/components/Petals';
+import { Lotus3D } from '@/components/Lotus3D';
 
 export const dynamic = 'force-dynamic';
 
-export default async function Home({ searchParams }: { searchParams: Promise<{ q?: string; region?: string; type?: string }> }) {
-  const sp = await searchParams;
+const QUICK: { href: string; label: string; icon: IconName }[] = [
+  { href: '/catalogue', label: 'Cultural Passport', icon: 'book' },
+  { href: '/reuse', label: 'Reuse Studio', icon: 'layers' },
+  { href: '/verify', label: 'Verify Record', icon: 'shield' },
+  { href: '/check', label: 'Check an Image', icon: 'scan' },
+  { href: '/submit', label: 'Submit a Record', icon: 'upload' },
+];
+
+const PILLARS: { word: string; text: string; cta: string; href: string; icon: IconName }[] = [
+  { word: 'Discover', text: 'Explore Kerala’s art, craft and cultural expressions.', cta: 'Explore Catalogue', href: '/catalogue', icon: 'book' },
+  { word: 'Credit', text: 'See who each work comes from, and credit them.', cta: 'Verify a record', href: '/verify', icon: 'shield' },
+  { word: 'Reuse', text: 'Know how you may reuse it, with the creators’ terms.', cta: 'Open Reuse Studio', href: '/reuse', icon: 'layers' },
+];
+
+export default async function Home() {
   const all = await listRecords(await getDb());
-  const regions = [...new Set(all.map((r) => r.region))].sort();
-  const types = [...new Set(all.map((r) => r.workType))].sort();
-  const items = searchRecords(all, sp.q ?? '', { region: sp.region || undefined, workType: sp.type || undefined });
+  const shown = all.slice(0, 10);
   return (
     <>
-      <h1>Know what you may do with a cultural work, before you reuse it.</h1>
-      <p className="muted">Search a record, see who it comes from, and read what the creators and the licence say. Mudra records what is stated; it does not decide who owns what.</p>
-      <form role="search" method="get" className="panel ui" style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fit,minmax(180px,1fr))', alignItems: 'end' }}>
-        <div><label htmlFor="q">Search by title, credited party or ID</label><input id="q" name="q" type="search" defaultValue={sp.q ?? ''} placeholder="e.g. Teyyam or MDR-2026-0001" /></div>
-        <div><label htmlFor="region">Region</label><select id="region" name="region" defaultValue={sp.region ?? ''}><option value="">All regions</option>{regions.map((r) => <option key={r}>{r}</option>)}</select></div>
-        <div><label htmlFor="type">Type of work</label><select id="type" name="type" defaultValue={sp.type ?? ''}><option value="">All types</option>{types.map((r) => <option key={r}>{r}</option>)}</select></div>
-        <button type="submit">Search</button>
-      </form>
-      <p className="ui muted" role="status">{items.length} {items.length === 1 ? 'record' : 'records'}{sp.q ? ` for “${sp.q}”` : ''}</p>
-      {items.length === 0 ? (
-        <div className="panel"><h2>No records found</h2><p>Try a different spelling, or <a href="/">clear the search</a>. Missing something? <a href="/submit">Submit a work</a>.</p></div>
-      ) : (
-        <ul className="grid">
-          {items.map((r) => (
-            <li key={r.id} className="card">
-              <a className="cover" href={`/r/${r.id}`}>
-                <div className="mat">{r.thumbUrl ? <img src={r.thumbUrl} alt={r.alt} loading="lazy" /> : <span className="muted ui">Image withheld</span>}</div>
-              </a>
-              <div className="body">
-                <h3><a href={`/r/${r.id}`}>{r.title}</a></h3>
-                <p className="muted" style={{ margin: 0 }}>{r.id} · {r.region}</p>
-                <p style={{ margin: '4px 0' }}>Credit: {r.primaryCredit || 'not yet credited'}</p>
-                <PermissionChips permissions={r.permissions} />
-              </div>
-            </li>
-          ))}
-        </ul>
-      )}
+      <section className="hero" aria-labelledby="hero-h">
+        <div className="hero-bg" aria-hidden="true" />
+        <Petals />
+        <div className="wrap hero-inner">
+          <div className="hero-copy">
+            <p className="eyebrow">Kerala’s Living Heritage</p>
+            <h1 id="hero-h"><span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span> <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly</em></h1>
+            <p className="lede">A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.</p>
+            <div className="cta">
+              <a className="btn gold" href="/catalogue">Explore Catalogue <Icon name="arrow" size={18} /></a>
+              <a className="btn ghost" href="/reuse"><Icon name="layers" size={18} /> Reuse Studio</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="wrap">
+        <nav className="quick" aria-label="What would you like to do?">
+          <ul>
+            {QUICK.map((q) => (
+              <li key={q.href} data-reveal style={{ '--i': QUICK.indexOf(q) } as React.CSSProperties}><a href={q.href} data-tilt="14"><span className="q-ico"><Icon name={q.icon} size={30} /></span><span>{q.label}</span></a></li>
+            ))}
+          </ul>
+        </nav>
+
+        <section className="explore" aria-labelledby="explore-h" data-reveal>
+          <div className="explore-head">
+            <h2 id="explore-h"><LotusMark size={30} />Explore Kerala’s Cultural Expressions</h2>
+            <a className="view-all" href="/catalogue">View All <Icon name="arrow" size={18} /></a>
+          </div>
+          {shown.length === 0 ? (
+            <p className="muted">No records are published yet. <a href="/submit">Submit a work</a>.</p>
+          ) : (
+            <Carousel label="Cultural expressions">{shown.map((r, i) => <RecordTile key={r.id} r={r} i={i} compact />)}</Carousel>
+          )}
+        </section>
+
+        <section className="pillars" aria-labelledby="pill-h" data-reveal>
+          <Lotus3D />
+          <div className="pillars-body">
+            <p className="eyebrow-line">Credit the Culture</p>
+            <h2 id="pill-h">Three simple steps, every time</h2>
+            <ul className="flipgrid">
+              {PILLARS.map((p, i) => (
+                <li key={p.word} style={{ '--i': i } as React.CSSProperties}>
+                  <a className="flip" href={p.href}>
+                    <span className="flip-in">
+                      <span className="face front" aria-hidden="true"><span className="q-ico"><Icon name={p.icon} size={30} /></span><span className="flip-word">{p.word}</span></span>
+                      <span className="face back"><strong className="flip-word">{p.word}</strong><span>{p.text}</span><span className="flip-go">{p.cta} <Icon name="arrow" size={16} /></span></span>
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      </div>
     </>
   );
 }

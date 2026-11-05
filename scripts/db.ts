@@ -1,7 +1,9 @@
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, existsSync } from 'node:fs';
 import { dirname } from 'node:path';
 import type { Db } from '../src/lib/db/types';
 import { migrate } from '../src/lib/db/schema';
+
+if (existsSync('.env')) process.loadEnvFile('.env');
 
 /** DB for CLI scripts: libSQL/Turso when installed, otherwise node:sqlite on the same file (same SQLite format). */
 export async function scriptDb(): Promise<Db> {

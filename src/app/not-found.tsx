@@ -1,1 +1,1 @@
-export default function NotFound() { return (<div className="panel"><h1>Not found</h1><p>No public record matches this address. <a href="/">Back to the catalogue</a>.</p></div>); }
+export default function NotFound() { return (<div className="wrap page"><div className="panel"><h1>Not found</h1><p>No public record matches this address. <a href="/catalogue">Back to the catalogue</a>.</p></div></div>); }

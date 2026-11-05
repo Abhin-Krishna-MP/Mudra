@@ -32,7 +32,7 @@ export default function TamperSimulation({ recordId }: { recordId: string }) {
   }
 
   return (
-    <section className="panel" aria-labelledby="sim-h" style={{ marginTop: 24, borderStyle: 'dashed' }}>
+    <section className="panel" aria-labelledby="sim-h" style={{ borderStyle: 'dashed' }}>
       <h2 id="sim-h" style={{ marginTop: 0 }}>Interactive tamper simulation (Sandbox only)</h2>
       <p className="muted">
         Try editing an event in memory. The database is never modified. Observe how any changed byte immediately breaks the cryptographic hash chain.

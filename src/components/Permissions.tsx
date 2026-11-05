@@ -20,9 +20,9 @@ export function TwoLayers({ permissions, licence }: { permissions: Record<Capabi
   const lic = LICENCES[licence];
   const CELL = { yes: ['ok', '✓', 'Allowed'], no: ['no', '✕', 'Not allowed'], ask: ['ask', '?', 'Not clearly addressed'] } as const;
   return (
-    <div className="two" style={{ margin: 0 }}>
-      <section className="panel" aria-labelledby="cultural-h" style={{ margin: 0 }}>
-        <h3 id="cultural-h">1 · Cultural permission</h3>
+    <div className="two layers">
+      <section className="panel" aria-labelledby="cultural-h">
+        <h3 id="cultural-h"><span className="step-no" aria-hidden="true">1</span>Cultural permission</h3>
         <p className="hint">What the creators or community have said.</p>
         <ul className="chips">
           {CAPABILITIES.map((c) => (
@@ -30,8 +30,8 @@ export function TwoLayers({ permissions, licence }: { permissions: Record<Capabi
           ))}
         </ul>
       </section>
-      <section className="panel" aria-labelledby="licence-h" style={{ margin: 0 }}>
-        <h3 id="licence-h">2 · File licence</h3>
+      <section className="panel" aria-labelledby="licence-h">
+        <h3 id="licence-h"><span className="step-no" aria-hidden="true">2</span>File licence</h3>
         <p className="hint">What the licence on the image file says: {lic.url ? <a href={lic.url}>{lic.label}</a> : lic.label}.</p>
         <ul className="chips">
           {CAPABILITIES.map((c) => { const [k, i, w] = CELL[lic.cells[c]]; return <li key={c} className={`chip ${k}`}><span aria-hidden="true">{i} </span>{cap(CAP_PHRASE[c])}: {w}</li>; })}
