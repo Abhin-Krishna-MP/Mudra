@@ -119,13 +119,11 @@ html.motion .hero-bg::after { animation: flame 4.6s ease-in-out infinite; }
 /* Entrance for the dark plates (mirrors the light ones) */
 @keyframes d-bg-in  { from { opacity: 0; transform: translate3d(0, 0, -140px) scale(1.24); } to { opacity: 1; transform: translate3d(0, calc(var(--sy, 0) * .16px), -140px) scale(1.12); } }
 @keyframes d-fig-in { from { opacity: 0; transform: translate3d(90px, 0, 70px) scale(1.02); } to { opacity: 1; transform: translate3d(0, calc(var(--sy, 0) * .04px), 70px) scale(.96); } }
-html.motion .dk.d-bg  { animation: d-bg-in 2.4s var(--ease-out) .3s both; }
-html.motion .dk.d-fig { animation: d-fig-in 1.9s var(--ease-out) 1.3s both; }
+html.motion .dk.d-bg  { animation: d-bg-in 2.4s var(--ease-out) .75s both; }
+html.motion .dk.d-fig { animation: d-fig-in 1.9s var(--ease-out) 1.75s both; }
 
 /* Dark theatre curtain: charred cloth with an ember-lit edge (light keeps the maroon silk) */
 :root[data-theme='dark'] { --curtain-a: #2b0e08; --curtain-b: #0b0403; }
-:root[data-theme='dark'].motion .hero::before { border-right-color: #f0894a; }
-:root[data-theme='dark'].motion .hero::after  { border-left-color: #f0894a; }
 
 /* ---------- 3. Headline: a typographic lockup, not a one-word highlight ---------- */
 .hero h1 { font-size: clamp(2.3rem, 4.6vw, 4.1rem); line-height: 1.04; letter-spacing: -.012em; font-weight: 600; }

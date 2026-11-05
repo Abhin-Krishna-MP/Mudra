@@ -49,8 +49,8 @@
 @keyframes fig-in { from { opacity: 0; transform: translate3d(90px, 0, 60px) scale(1.02); } to { opacity: 1; transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96); } }
 @keyframes mist-drift { from { transform: translate3d(-4%, 0, -30px); } to { transform: translate3d(4%, 0, -30px); } }
 @keyframes sway { from { transform: rotateY(-2.2deg) rotateX(.7deg); } to { transform: rotateY(2.2deg) rotateX(-.7deg); } }
-html.motion .l-bg  { animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .3s both; }
-html.motion .l-fig { animation: fig-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.3s both; }
+html.motion .l-bg  { animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .75s both; }
+html.motion .l-fig { animation: fig-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.75s both; }
 html.motion .mist  { animation: mist-drift 24s ease-in-out infinite alternate; }
 /* Touch screens have no pointer, so the stage sways gently on its own */
 @media (hover: none) { html.motion .stage-3d { animation: sway 14s ease-in-out infinite alternate; } }

@@ -31,6 +31,16 @@ export default async function Home() {
   const shown = all.slice(0, 10);
   return (
     <>
+      {/* Full-screen stage curtain: sits above the navbar and every card, parts on load, then removes itself */}
+      <div className="stage-curtain" aria-hidden="true">
+        <div className="cur-panel cur-l" />
+        <div className="cur-panel cur-r" />
+        <div className="cur-mark">
+          <span className="cur-word" lang="ml">മുദ്ര</span>
+          <span className="cur-rule"><i /><b /><i /></span>
+          <span className="cur-sub">Credit the Culture</span>
+        </div>
+      </div>
       <section className="hero" aria-labelledby="hero-h" suppressHydrationWarning>
         <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
           <div className="stage-3d" suppressHydrationWarning>
