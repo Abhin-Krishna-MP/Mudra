@@ -25,13 +25,29 @@ export function Motion() {
       if (seen.has(el)) return; seen.add(el);
       if (io) io.observe(el); else el.classList.add('is-in');
     });
+    // ---- lamp position: map the artwork's lamp wick (image coords) through object-fit: cover onto the stage box ----
+    const placeLamp = () => {
+      const st = document.querySelector<HTMLElement>('.hero .stage-3d'); if (!st) return;
+      const w = st.offsetWidth, h = st.offsetHeight; if (!w || !h) return;
+      const sc = Math.max(w / 1672, h / 941); const iw = 1672 * sc, ih = 941 * sc;
+      const px = window.matchMedia('(max-width: 899px)').matches ? 0.97 : 0.78;
+      st.style.setProperty('--lampx', `${((w - iw) * px + 0.052 * iw).toFixed(1)}px`);
+      st.style.setProperty('--lampy', `${(0.594 * ih).toFixed(1)}px`);
+      // same point in the parent stage's coordinates (the 3D plane is inset -4%), for the dark vignette's lamp-shaped hole
+      const hs = st.parentElement;
+      if (hs) { hs.style.setProperty('--lamphx', `${(parseFloat(st.style.getPropertyValue('--lampx')) + st.offsetLeft).toFixed(1)}px`); hs.style.setProperty('--lamphy', `${(0.594 * ih + st.offsetTop).toFixed(1)}px`); }
+    };
+
     let mo: MutationObserver | null = null;
     const initTimer = setTimeout(() => {
       scan();
-      mo = new MutationObserver(scan);
+      mo = new MutationObserver(() => { scan(); placeLamp(); });
       mo.observe(document.body, { childList: true, subtree: true });
       onScroll();
+      placeLamp();
     }, 0);
+
+    window.addEventListener('resize', placeLamp, { passive: true });
 
     // ---- pointer: tilt + hero parallax ----
     let current: HTMLElement | null = null;
@@ -53,17 +69,49 @@ export function Motion() {
         t.style.setProperty('--gx', `${((px + 0.5) * 100).toFixed(1)}%`); t.style.setProperty('--gy', `${((py + 0.5) * 100).toFixed(1)}%`);
         current = t;
       }
-      const hero = document.querySelector<HTMLElement>('.hero');
-      if (hero) {
-        const hr = hero.getBoundingClientRect();
-        if (e.clientY >= hr.top && e.clientY <= hr.bottom) {
-          hero.style.setProperty('--mx', (((e.clientX / window.innerWidth) - 0.5) * 2).toFixed(3));
-          hero.style.setProperty('--my', ((((e.clientY - hr.top) / hr.height) - 0.5) * 2).toFixed(3));
+      // depth surfaces: the home hero and every inner-page header
+      document.querySelectorAll<HTMLElement>('.hero, .sheet-head.has-depth').forEach((h) => {
+        const hr = h.getBoundingClientRect();
+        const rowIn = e.clientY >= hr.top && e.clientY <= hr.bottom;
+        const inside = rowIn && e.clientX >= hr.left && e.clientX <= hr.right;
+        if (rowIn) {
+          h.style.setProperty('--mx', (((e.clientX / window.innerWidth) - 0.5) * 2).toFixed(3));
+          h.style.setProperty('--my', ((((e.clientY - hr.top) / hr.height) - 0.5) * 2).toFixed(3));
         }
-      }
+        h.classList.toggle('is-over', inside);
+        if (!h.classList.contains('hero')) return;
+        // light: silk glow follows the pointer (position as % of the art plate)
+        const cg = h.querySelector<HTMLElement>('.cloth-glow');
+        if (cg && cg.offsetParent !== null && inside) {
+          const r = cg.getBoundingClientRect();
+          if (r.width > 0) { h.style.setProperty('--cgx', `${(((e.clientX - r.left) / r.width) * 100).toFixed(1)}%`); h.style.setProperty('--cgy', `${(((e.clientY - r.top) / r.height) * 100).toFixed(1)}%`); }
+        }
+        // dark: the lamp flares as the pointer approaches (0 far .. 1 on top of it)
+        const spot = h.querySelector<HTMLElement>('.lamp-spot');
+        if (spot && spot.offsetParent !== null) {
+          let v = 0;
+          if (inside) { const s = spot.getBoundingClientRect(); const t = Math.max(0, 1 - Math.hypot(e.clientX - s.left, e.clientY - s.top) / 380); v = t * t * (3 - 2 * t); }
+          h.style.setProperty('--lamp', v.toFixed(3));
+        }
+      });
+      // hero buttons lean toward the pointer, then spring back
+      document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((b) => {
+        const r = b.getBoundingClientRect(); if (r.width === 0) return;
+        const dx = e.clientX - (r.left + r.width / 2); const dy = e.clientY - (r.top + r.height / 2);
+        const reach = Math.max(r.width, r.height) / 2 + 96;
+        if (Math.hypot(dx, dy) < reach) {
+          const c = (v: number, m: number) => Math.max(-m, Math.min(m, v));
+          b.classList.add('mag-on');
+          b.style.setProperty('--tx', `${c(dx * 0.2, 11).toFixed(1)}px`); b.style.setProperty('--ty', `${c(dy * 0.32, 8).toFixed(1)}px`);
+        } else if (b.classList.contains('mag-on')) { b.classList.remove('mag-on'); b.style.removeProperty('--tx'); b.style.removeProperty('--ty'); }
+      });
     };
     const onMove = (e: PointerEvent) => { if (e.pointerType !== 'mouse') return; last = e; if (!raf) raf = requestAnimationFrame(frame); };
-    const onLeave = () => { reset(current); current = null; };
+    const onLeave = () => {
+      reset(current); current = null;
+      document.querySelectorAll<HTMLElement>('.hero, .sheet-head.has-depth').forEach((h) => { h.classList.remove('is-over'); h.style.setProperty('--lamp', '0'); });
+      document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((b) => { b.classList.remove('mag-on'); b.style.removeProperty('--tx'); b.style.removeProperty('--ty'); });
+    };
     document.addEventListener('pointermove', onMove, { passive: true });
     document.documentElement.addEventListener('mouseleave', onLeave);
 
@@ -86,6 +134,7 @@ export function Motion() {
       document.removeEventListener('pointermove', onMove);
       document.documentElement.removeEventListener('mouseleave', onLeave);
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', placeLamp);
       if (raf) cancelAnimationFrame(raf); if (sraf) cancelAnimationFrame(sraf);
       root.classList.remove('motion');
     };
