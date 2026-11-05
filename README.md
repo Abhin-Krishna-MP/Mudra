@@ -12,9 +12,9 @@ PS-03: people reuse cultural imagery without knowing who it comes from or what i
 
 ## 3. Key Features
 
-**Tier 1 (core)** — catalogue + fuzzy search with spelling aliases [built, tested]; Cultural Passport `/r/[id]` [built]; two-layer permissions [built, tested with 17,496 property test combinations]; Reuse Studio with 6 uses [built, tested]; 4 credit-line formats [built, tested]; credit card PNG with QR [built, tested via next/og]; submit form → pending [built]; report form (+ correction request) [built]; reviewer console (approve / request changes / remove / verify with evidence / resolve) [built, tested on live Turso]; hash-linked history + timeline [built, tested on live Turso]; Verify page with in-browser file hash [built]; About & limits [built]; sourced seed records [10 real records live on Turso + 1 demo sandbox record].
+**Tier 1 (core)** — catalogue + fuzzy search with spelling aliases [built, tested]; Cultural Passport `/r/[id]` [built]; two-layer permissions [built, tested with 17,496 property test combinations]; Reuse Studio with 6 uses [built, tested]; 4 credit-line formats [built, tested]; credit card PNG with QR [built, tested via next/og]; submit form → pending [built]; report form (+ correction request) [built]; reviewer console (approve / request changes / remove / verify with evidence / resolve) [built, tested on live Turso]; hash-linked history + timeline [built, tested on live Turso]; Verify page with in-browser file hash [built]; About & limits [built]; sourced seed records [15 real records live on Turso + 1 demo sandbox record, target 15 met].
 
-**Tier 2** — Check an image (exact hash + dHash "possible match") [built; thresholds unmeasured on real fixtures]; tamper demo `npm run tamper-demo` [built, runs]; Ed25519 signatures [built; off until a key is set]; sensitivity levels (`restricted` hides the image everywhere) [built, tested]; identity seal [in progress].
+**Tier 2** — Check an image (exact hash + dHash "possible match") [built; empirical thresholds measured on real seed photos in tests/imagehash.test.ts: copies ≤ 12, distinct subjects ≥ 28]; tamper demo `npm run tamper-demo` + in-app simulation [built, runs]; Ed25519 signatures [built; optional audit signing with mixed-chain verification]; sensitivity levels (`restricted` hides the image everywhere) [built, tested]; identity seal [built, deterministic SVG seal derived from ID and credits, tested in tests/seal.test.ts].
 
 ## 4. Technology Stack
 Next.js (App Router) + TypeScript · SQLite locally / Turso (libSQL) live · `sharp` · `next/og` + `qrcode` · Node `crypto` (SHA-256, Ed25519) + `canonicalize` · plain CSS · `node:test` + Playwright · Vercel + Turso + Vercel Blob.
@@ -61,14 +61,22 @@ ADMIN_PASSWORD=... npm run create-admin -- you@example.org "Your Name" reviewer
 Flows: search → open a passport → pick a use in the Reuse Studio → copy the credit line / download the card → report a problem → sign in at `/review` to approve, verify or resolve → open `/verify/<id>`.
 
 ## 9. Demonstration Screenshots
-*(Add real screenshots from the live site here: catalogue, passport, Reuse Studio "Ask first", reviewer console, verify page.)*
+
+| Screen | Description |
+| --- | --- |
+| ![Home and Museum Catalogue](docs/screenshots/01-home-catalogue.png) | **Home & Catalogue**: Featured carousel, 3D lotus ornament, live search, and filters. |
+| ![Cultural Passport](docs/screenshots/02-cultural-passport.png) | **Cultural Passport (`/r/[id]`)**: Uncropped artwork mat, deterministic seal, QR code, and tabs. |
+| ![Reuse Studio](docs/screenshots/03-reuse-studio.png) | **Reuse Studio (`/reuse`)**: Interactive dual-layer permission evaluator and one-click credit lines. |
+| ![Verify Page and Tamper Simulation](docs/screenshots/04-verify-tamper.png) | **Verify Page (`/verify/[id]`)**: Real-time SHA-256 hash check, audit timeline, and live tamper simulation. |
+| ![Reviewer Console](docs/screenshots/05-reviewer-console.png) | **Reviewer Console (`/review`)**: Pending review queue, report resolutions, and evidence notes. |
+| ![Check an Image](docs/screenshots/06-check-image.png) | **Check an Image (`/check`)**: Visual similarity lookup for human review using dHash and exact matching. |
 
 ## 10. Team Members
 - **Abhin** — schema, permission engine, audit chain, auth, actions, image pipeline, deploy.
 - **Alin** — design system, catalogue, passport, Reuse Studio, reviewer/timeline/verify UI, accessibility, slides and video.
 
 ## 11. Limitations & Future Scope
-See the in-app About page. In short: permissions are stated snapshots, not legal advice; the history is tamper-evident, not tamper-proof; image matching misses heavy edits; the licence table was checked against CC legal texts; rate limiting is best-effort. Future: identity seal, corrections workflow, private status links, Malayalam labels, community-reviewed records.
+See the in-app About page. In short: permissions are stated snapshots, not legal advice; the history is tamper-evident, not tamper-proof; image matching misses heavy edits; the licence table was checked against CC legal texts; rate limiting is best-effort. Future: community corrections workflow, private status links, Malayalam labels, and museum curation partnerships.
 
 ## 12. License & Attribution
-Code: MIT (see `LICENSE`). Every seed image's source and licence is listed in `data/seed/sources.md`. **AI-tooling disclosure:** AI coding tools were used to write code. No cultural facts, sources, permissions or licences were written by AI; those come from cited sources written and checked by the team.
+Code: MIT (see `LICENSE`). Every seed image's source and licence is listed in `data/seed/sources.md`. **AI-tooling disclosure:** AI coding tools were used to write code. No cultural facts, sources, permissions or licences were written by AI; those come from cited sources written and checked by the team. Correspondence: Organizers at `delta@cce.edu.in` confirmed AI coding assistants are permitted for implementation.

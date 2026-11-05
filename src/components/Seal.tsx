@@ -1,7 +1,29 @@
+import { generateSealSvg } from '@/lib/seal';
 import { LotusMark } from './Ornaments';
 
-/** A stamped seal with rotating lettering. Shown on verified passports; the words are the project's own tagline. */
-export function Seal({ label = 'Verified by a reviewer' }: { label?: string }) {
+interface SealProps {
+  label?: string;
+  id?: string;
+  credits?: { name: string; role?: string }[];
+}
+
+/**
+ * A stamped deterministic identity seal (Tier 2 #4, L13).
+ * Shown on verified passports; derived deterministically from record ID and credits.
+ */
+export function Seal({ label = 'Verified by a reviewer', id, credits }: SealProps) {
+  if (id) {
+    const svgHtml = generateSealSvg({ id, credits, label });
+    return (
+      <div
+        className="seal deterministic-seal"
+        role="img"
+        aria-label={label}
+        dangerouslySetInnerHTML={{ __html: svgHtml }}
+      />
+    );
+  }
+
   return (
     <div className="seal" role="img" aria-label={label}>
       <svg viewBox="0 0 120 120" aria-hidden="true" focusable="false">

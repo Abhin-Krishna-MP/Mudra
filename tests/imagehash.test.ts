@@ -31,6 +31,37 @@ test('resized, recompressed and lightly cropped copies match; unrelated images d
   for (const other of [101, 202, 303]) assert.ok(hamming(a, await dHash(await pattern(other))) > 12, `unrelated ${other}`);
 });
 
+test('empirical dHash threshold verification on real seed photos (Day 5 / A17)', async () => {
+  const { readFileSync } = await import('node:fs');
+  const img1 = readFileSync('public/seed/kathakali-performer.jpg');
+  const img2 = readFileSync('public/seed/theyyam.jpg');
+  const img3 = readFileSync('public/seed/kasavu-saree.jpg');
+  const img4 = readFileSync('public/seed/coir-craft.jpg');
+
+  const h1 = await dHash(img1);
+  const h2 = await dHash(img2);
+  const h3 = await dHash(img3);
+  const h4 = await dHash(img4);
+
+  // 1. Resized and recompressed copies survive within match threshold (<= 12)
+  const meta = await sharp(img1).metadata();
+  const w = meta.width ?? 800;
+  const h = meta.height ?? 600;
+  const resized = await sharp(img1).resize(300).toBuffer();
+  const recompressed = await sharp(img1).jpeg({ quality: 30 }).toBuffer();
+  const cropped = await sharp(img1).extract({ left: 10, top: 10, width: w - 20, height: h - 20 }).toBuffer();
+
+  assert.ok(hamming(h1, await dHash(resized)) <= 12, 'resized copy must match');
+  assert.ok(hamming(h1, await dHash(recompressed)) <= 12, 'recompressed copy must match');
+  assert.ok(hamming(h1, await dHash(cropped)) <= 12, 'lightly cropped copy must match');
+  assert.equal(classify(hamming(h1, await dHash(resized))) !== 'none', true);
+
+  // 2. Unrelated seed photos have distinct structure (empirical distance >= 28)
+  assert.ok(hamming(h1, h2) >= 28, 'Kathakali vs Theyyam');
+  assert.ok(hamming(h1, h3) >= 28, 'Kathakali vs Kasavu');
+  assert.ok(hamming(h2, h4) >= 28, 'Theyyam vs Coir');
+});
+
 test('processImage hashes bytes, rejects non-images and oversize', async () => {
   const buf = await pattern(5);
   const p = await processImage(buf);

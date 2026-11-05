@@ -317,5 +317,155 @@
       "alt": "Artisans spinning natural golden coconut coir fibres into traditional rope in Kerala.",
       "sourceNote": "Wikimedia Commons. Licensed under CC BY-SA 4.0."
     }
+  },
+  {
+    "id": "MDR-2026-0011",
+    "title": "Ottanthullal satirical solo dance-drama",
+    "workType": "performing",
+    "region": "Palakkad, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Ottanthullal is a classical solo performance art of Kerala created in the 18th century by the legendary Malayalam satirist and poet Kunchan Nambiar. Conceived as a populist artistic rebellion against rigid caste hierarchies and high-caste temple theatre codes, Ottanthullal combines energetic rhythmic steps, expressive facial miming, and trenchant socio-political satire rendered in vigorous everyday Malayalam metre. Accompanied by the maddalam drum and ilathalam cymbals, the solo performer sings and enacts dynamic verses critiquing human pretensions and social inequities.",
+    "contextSources": [
+      "Kerala Kalamandalam Deemed to be University for Art and Culture — Ottanthullal Traditions — https://kalamandalam.ac.in/",
+      "Kerala Sangeetha Nataka Akademi — Performing Arts of Kerala — https://www.keralasangeethanatakaakademi.in/",
+      "Department of Cultural Affairs, Government of Kerala — Cultural Heritage Profiles — https://www.keralaculture.org/"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Ottamthullal_kerala.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-4.0",
+    "licenceSourceNote": "Photograph by Bobinson K B on Wikimedia Commons, CC BY 2.0 (compatible with CC BY 4.0), checked 2026-11-05. https://commons.wikimedia.org/wiki/File:Ottamthullal_kerala.jpg",
+    "attributionRequired": true,
+    "custodian": "Kunchan Nambiar Memorial and Kerala Kalamandalam thullal lineages",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Thullal performer lineages and practitioners of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Bobinson K B", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/ottanthullal.jpg",
+      "alt": "Ottanthullal solo performer in vibrant painted green facial makeup, decorated breastplate, and distinctive gilded headgear executing a rhythmic step.",
+      "sourceNote": "Photo by Bobinson K B on Wikimedia Commons. Licensed under CC BY 2.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0012",
+    "title": "Panchavadyam traditional temple percussion orchestra",
+    "workType": "performing",
+    "region": "Thrissur, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Panchavadyam, literally meaning an orchestra of five instruments, is a classical temple percussion ensemble quintessential to the festivals of central Kerala, most famously the Thrissur Pooram. The ensemble orchestrates five acoustic instruments: the timila (hourglass-shaped drum), maddalam (barrel-shaped drum), ilathalam (bronze cymbals), idakka (variable-tension squeeze drum), and kombu (curved brass horn). Governed by rigorous tala cycles and progressive tempo accelerations across five distinct rhythmic stages (kalams), Panchavadyam is an intricate acoustic discipline passed down through hereditary artisan lineages of percussionists.",
+    "contextSources": [
+      "Kerala Sangeetha Nataka Akademi — Traditional Orchestra Archives — https://www.keralasangeethanatakaakademi.in/",
+      "Thrissur Pooram Festival Archives — Temple Orchestra & Tala — https://thrissurpooramfestival.com/",
+      "Sangeet Natak Akademi, New Delhi — Instrumental Traditions of India — https://sangeetnatak.gov.in/"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Panchavadyam.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Challiyan on Wikimedia Commons, CC BY-SA 2.0 (compatible with CC BY-SA 4.0), checked 2026-11-05. https://commons.wikimedia.org/wiki/File:Panchavadyam.jpg",
+    "attributionRequired": true,
+    "custodian": "Temple percussionist samithis and traditional rhythm lineages of Kerala",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Panchavadyam percussionist lineages of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Challiyan", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/panchavadyam.jpg",
+      "alt": "Percussionists in traditional white mundus performing Panchavadyam temple orchestra with timila, maddalam, and bronze cymbals.",
+      "sourceNote": "Photo by Challiyan on Wikimedia Commons. Licensed under CC BY-SA 2.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0013",
+    "title": "Kalaripayattu — ancient martial art of Kerala",
+    "workType": "performing",
+    "region": "Malabar, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Kalaripayattu is one of the oldest continuing martial traditions in the world, originating in medieval Kerala and deeply intertwined with the region's cultural ethos, folklore, and battlefield history. Practiced within a sacred earthen arena known as a kalari, the art integrates physical conditioning, animal-inspired postures (vadivu), unarmed combat (verumkai), wooden weaponry, and metallic weapons such as the urumi (flexible whip-like sword) and sword-and-shield. Beyond combat, Kalaripayattu encompasses kalari chikitsa, a traditional system of orthopedic medicine and marma vital point healing rooted in Ayurveda.",
+    "contextSources": [
+      "Department of Cultural Affairs, Government of Kerala — Kalaripayattu Tradition Directory — https://www.keralaculture.org/",
+      "Kerala Tourism — Martial Lineages & Code — https://keralatourism.org/artforms/kalaripayattu/11",
+      "Archaeological Survey of India — Historical Martial Traditions of the Malabar Coast"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Kalaripayattu_performance_1.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by India1277 on Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-05. https://commons.wikimedia.org/wiki/File:Kalaripayattu_performance_1.jpg",
+    "attributionRequired": true,
+    "custodian": "Traditional Kalari gurukkals and practitioners across Kerala",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Traditional Kalari masters and martial practitioners of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "India1277", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/kalaripayattu.jpg",
+      "alt": "Kalaripayattu martial practitioners demonstrating defensive postures and weaponry inside a training space.",
+      "sourceNote": "Photo by India1277 on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0014",
+    "title": "Mannar bell metal craft and traditional Kerala nilavilakku",
+    "workType": "craft",
+    "region": "Mannar, Alappuzha, Kerala",
+    "language": "Malayalam",
+    "culturalContext": "The bell metal and bronze craft of Mannar in Alappuzha district is one of Kerala's most renowned indigenous metallurgical traditions, celebrated for casting monumental temple vessels (varpu), bells (mani), and ceremonial standing lamps (nilavilakku). Artisans belonging to hereditary metalcasting guilds use ancient lost-wax (cire perdue) and loam-mould casting techniques passed down through generations. The high-tin bronze alloy formulation produces a resonant acoustic timbre and enduring golden sheen without tarnishing rapidly. The nilavilakku lamp holds deep ritual significance across domestic, artistic, and community observances in Kerala.",
+    "contextSources": [
+      "Office of the Development Commissioner for Handicrafts, Ministry of Textiles, Government of India — Bell Metal Cluster Profile — http://handicrafts.nic.in/",
+      "Geographical Indications Registry of India — Traditional Bell Metal Crafts — https://ipindia.gov.in/gi.htm",
+      "Kerala State Handicrafts Development Corporation — Artisanal Bronze Foundries — https://keralahandicrafts.biz/"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:Nilavilakku.JPG",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-4.0",
+    "licenceSourceNote": "Photograph by Vaikoovery on Wikimedia Commons, CC BY 3.0 (compatible with CC BY 4.0), checked 2026-11-05. https://commons.wikimedia.org/wiki/File:Nilavilakku.JPG",
+    "attributionRequired": true,
+    "custodian": "Mannar Bell Metal Artisans' Cooperative and metalcasting lineages of Kerala",
+    "permissions": { "share": "permitted", "commercial": "permitted", "adapt": "permitted", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Mannar bell metal casting artisans and traditional foundries of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Vaikoovery", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/bell-metal.jpg",
+      "alt": "Ornate multi-tiered bronze nilavilakku standing lamp handcrafted by Kerala bell metal artisans.",
+      "sourceNote": "Photo by Vaikoovery on Wikimedia Commons. Licensed under CC BY 3.0."
+    }
+  },
+  {
+    "id": "MDR-2026-0015",
+    "title": "Mohiniyattam — classical dance of Kerala",
+    "workType": "performing",
+    "region": "Kerala",
+    "language": "Malayalam",
+    "culturalContext": "Mohiniyattam is a classical solo dance tradition native to Kerala, characterised by graceful sway, undulating torso movements (atavus), and delicate expressions embodying the lasya (lyrical and feminine) style of classical Indian dance. Rooted in temple dance heritages and later codified during the reign of Maharaja Swathi Thirunal and revivalists at Kerala Kalamandalam, Mohiniyattam performances narrate devotion and spiritual romance. Dancers are traditionally costumed in white or cream Kasavu handloom sarees with gold zari borders and wear jasmine blossoms arranged in an asymmetrical hair bun (chignon).",
+    "contextSources": [
+      "Kerala Kalamandalam — Classical Dance Archives — https://kalamandalam.ac.in/",
+      "Sangeet Natak Akademi, New Delhi — Mohiniyattam Classical Dance Directory — https://sangeetnatak.gov.in/",
+      "Department of Cultural Affairs, Government of Kerala — Performing Arts Traditions — https://www.keralaculture.org/"
+    ],
+    "sourceUrl": "https://commons.wikimedia.org/wiki/File:A_Mohiniyattam_pose_Kerala.jpg",
+    "sensitivity": "public",
+    "submissionBasis": "compiled_from_public_sources",
+    "licence": "CC-BY-SA-4.0",
+    "licenceSourceNote": "Photograph by Ms Sarah Welch on Wikimedia Commons, CC BY-SA 4.0, checked 2026-11-05. https://commons.wikimedia.org/wiki/File:A_Mohiniyattam_pose_Kerala.jpg",
+    "attributionRequired": true,
+    "custodian": "Mohiniyattam artists and Kerala Kalamandalam gurukul lineages",
+    "permissions": { "share": "permitted", "commercial": "unspecified", "adapt": "unspecified", "ai_training": "unspecified" },
+    "credits": [
+      { "name": "Mohiniyattam dance exponents and lineages of Kerala", "role": "Tradition bearers", "collective": true },
+      { "name": "Ms Sarah Welch", "role": "Photographer" }
+    ],
+    "image": {
+      "file": "seed/mohiniyattam.jpg",
+      "alt": "Mohiniyattam dancer dressed in traditional white and gold kasavu attire performing an expressive hasta mudra hand gesture.",
+      "sourceNote": "Photo by Ms Sarah Welch on Wikimedia Commons. Licensed under CC BY-SA 4.0."
+    }
   }
 ]

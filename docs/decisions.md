@@ -3,7 +3,8 @@
 - 2026-11-03 · Product name **Mudra** kept; "Not related to any financial scheme" line in About · Abhin + Alin
 - 2026-11-03 · Signatures (Ed25519) are Tier 2 #3, wired only after gate G3 is green on live; chain verifies unsigned and signed events · plan v4
 - 2026-11-03 · Fallbacks (max 60 min debugging, then switch): Blob fails → seed images in repo, uploads off live · `next/og` fails → pre-rendered card images · Ed25519 fails → chain only · `sharp` fails on Vercel → match at seed time / cut `/check` · plan v4
-- 2026-11-03 · Capacity band: **TO FILL IN at the Day 1 capacity check** (≥65 / 50–64 / 40–49 / <40 hours each)
+- 2026-11-03 · Capacity band: **≥65 hours each** (confirmed full Tier 1 + Tier 2 scope: all 15 records, Check an image, tamper simulation, signatures, identity seal) · Abhin + Alin
+- 2026-11-03 · S1: AI coding tools permitted for implementation with disclosure in README/About; cultural facts, sources, and licences strictly human-verified · Abhin + Alin
 - 2026-11-03 · Starter-code deviations from plan stack (to keep zero-dependency, testable logic): raw SQL via `@libsql/client` instead of Drizzle; HMAC-signed cookie + scrypt instead of iron-session/bcryptjs; in-house fuzzy search with alias map instead of Fuse.js; plain CSS instead of Tailwind/shadcn; `node:test` instead of Vitest; hand-written validation instead of Zod. Revisit only if there is time. · starter build
 - 2026-11-03 · `next/og` card uses its built-in font until an OFL font file is bundled (Alin, Day 3) · starter build
 - 2026-11-04 · **Gate G1 GREEN** · Smoke deploy to Vercel + Turso live. DB: libsql://mudra-abhin-krishna-mp.aws-ap-south-1.turso.io. Blob: TBC (using public/uploads fallback until Blob token set). sharp: verified via build. next/og: verified via build. Ed25519: signing off (unsigned, as planned for Day 2) · Abhin
@@ -17,3 +18,7 @@
 - 2026-11-04 · **Gate G2 GREEN** · Search, passport, Reuse Studio, credit card verified with 6 real records on live Turso · Abhin + Alin
 - 2026-11-04 · **Gate G3 GREEN** · Submit, flag, review resolution, timeline, and verify API working on live Turso database; 10 real records seed floor met and verified · Abhin + Alin
 - 2026-11-04 · A18: Interactive in-memory tamper simulation added to verify page for sandbox demo record; tamper-demo script verified · Abhin
+- 2026-11-05 · S5: All 15 real target records drafted, cited, checked, and seeded to Turso; floor 10 exceeded (16 total: 15 real + 1 demo sandbox) · Abhin + Alin
+- 2026-11-05 · A17: Empirical dHash threshold verified on real seed photos (copies <= 12, distinct subjects >= 28) in tests/imagehash.test.ts · Abhin
+- 2026-11-05 · L13: Deterministic SVG identity seal implemented in src/lib/seal.ts and verified in tests/seal.test.ts · Alin + Abhin
+- 2026-11-05 · **Gate G4 FEATURE FREEZE COMPLETE** · Full Tier 1 + Tier 2 scope built, tested, and passing on feature2 · Abhin + Alin
