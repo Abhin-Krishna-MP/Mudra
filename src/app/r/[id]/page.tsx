@@ -15,6 +15,8 @@ import { Tabs } from '@/components/Tabs';
 import { VerdictCard } from '@/components/VerdictCard';
 import { Icon } from '@/components/Icons';
 import { Seal } from '@/components/Seal';
+import { getStewardsForRecord } from '@/lib/repo-grants';
+import RequestPermissionForm from '@/components/RequestPermissionForm';
 
 export const dynamic = 'force-dynamic';
 
@@ -23,12 +25,14 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   return { title: v ? `${v.title} (${v.id})` : 'Record' };
 }
 
-export default async function Passport({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ use?: string }> }) {
+export default async function Passport({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ use?: string; ask?: string }> }) {
   const { id } = await params;
   const sp = await searchParams;
   const db = await getDb();
   const v = await getRecordView(db, id);
   if (!v) notFound();
+  const stewards = await getStewardsForRecord(db, id);
+  const hasSteward = stewards.length > 0;
   const use = (USE_IDS.includes(sp.use as Use) ? sp.use : 'print_merch') as Use;
   const out = evaluate({ use, licence: v.licence, cultural: v.permissions, attributionRequired: v.attributionRequired, sensitivity: v.sensitivity });
   const credit = allFormats({ title: v.title, credits: v.credits, licence: v.licence, attributionRequired: v.attributionRequired, recordUrl: recordUrl(v.id), recordId: v.id });
@@ -36,6 +40,24 @@ export default async function Passport({ params, searchParams }: { params: Promi
   const qr = await QRCode.toDataURL(recordUrl(v.id), { margin: 1, width: 240, errorCorrectionLevel: 'M' });
   const lic = LICENCES[v.licence];
   const community = v.credits.find((c) => c.collective)?.name ?? v.credits[0]?.name ?? 'Not yet credited';
+
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'CreativeWork',
+    '@id': recordUrl(v.id),
+    name: v.title,
+    description: v.culturalContext.slice(0, 300),
+    creator: v.credits.map((c) => ({
+      '@type': c.collective ? 'Organization' : 'Person',
+      name: c.name,
+      jobTitle: c.role,
+    })),
+    creditText: credit.plain,
+    license: lic.url || undefined,
+    acquireLicensePage: `${recordUrl(v.id)}#studio-h`,
+    usageInfo: `${recordUrl(v.id)}#studio-h`,
+    image: v.asset?.displayUrl ? `${process.env.NEXT_PUBLIC_BASE_URL || ''}${v.asset.displayUrl}` : undefined,
+  };
 
   const tabs = [
     { id: 'about', label: 'About', content: (
@@ -75,6 +97,10 @@ export default async function Passport({ params, searchParams }: { params: Promi
 
   return (
     <div className="wrap page">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <PageSheet title="Cultural Passport" eyebrow={v.id}>
         <article>
           <div className="two passport">
@@ -118,6 +144,12 @@ export default async function Passport({ params, searchParams }: { params: Promi
             <p className="muted">Pick what you want to do. The answer combines both layers and always takes the more careful one.</p>
             <nav aria-label="Choose a use"><ul className="uses">{USE_IDS.map((u) => <li key={u}><a href={`/r/${v.id}?use=${u}#studio-h`} aria-current={u === use ? 'true' : undefined}>{USES[u].label}</a></li>)}</ul></nav>
             <div style={{ marginTop: 16 }}><VerdictCard verdict={out.verdict} useLabel={USES[use].label} guidance={out.guidance} /></div>
+            {out.verdict === 'ask_first' && (
+              <details className="panel ui" style={{ marginTop: 16 }} open={sp.ask === '1'}>
+                <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Request permission from {hasSteward ? 'steward' : 'community contact'}</summary>
+                <RequestPermissionForm recordId={v.id} recordTitle={v.title} useKey={use} hasSteward={hasSteward} />
+              </details>
+            )}
             <div className="two" style={{ marginTop: 14 }}>
               <div className="panel" style={{ margin: 0 }}><h3>Cultural layer</h3><p>{out.cultural.statement}</p></div>
               <div className="panel" style={{ margin: 0 }}><h3>File licence layer</h3><p>{out.licence.statement}</p></div>

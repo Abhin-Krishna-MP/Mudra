@@ -3,20 +3,33 @@
 > ART//CODE 2026 · PS-03 **Credit the Culture** · Team: Abhin + Alin · MIT
 
 ## 1. Project Overview
-Mudra gives every cultural work a public **Cultural Passport**: who it comes from, where the information comes from, and what the creators/community **and** the file licence say you may do with it. The Reuse Studio turns both layers into one plain answer ("Ask first, because the community has not stated whether commercial use is acceptable") plus a ready credit line and a credit card with a QR code. Reviewers approve records and resolve reports; every step is written to a hash-linked history anyone can verify.
+Mudra turns **"ask first"** into a recorded, verifiable answer, and publishes it in a form people and machines can both read.
+
+Every cultural work has a public **Cultural Passport**: who it comes from, where the information comes from, and what the creators/community **and** the file licence say you may do with it. The **Reuse Studio** evaluates both layers into one plain answer. When a use requires asking first, reusers can submit a structured permission request; named cultural stewards grant requests with conditions and sign cryptographic grants (Ed25519 over canonical JSON) that platforms and print services can verify online or offline. For platforms and AI builders, Mudra provides W3C TDMRep signals, schema.org JSON-LD, signed manifests, and a privacy-preserving hash-only lookup API.
 
 Mudra is not a copyright detector and does not establish legal ownership. It records what is stated so people can ask before they reuse. Not related to any financial scheme.
 
 ## 2. Problem Statement
 PS-03: people reuse cultural imagery without knowing who it comes from or what its creators and licence allow. Credit gets lost, communities are not asked, and licence terms are mixed up with cultural wishes.
 
-## 3. Key Features
+## 3. The Core Path: Check → Ask → On Record
 
-**Tier 1 (core)** — catalogue + fuzzy search with spelling aliases [built, tested]; Cultural Passport `/r/[id]` [built]; two-layer permissions [built, tested with 17,496 property test combinations]; Reuse Studio with 6 uses [built, tested]; 4 credit-line formats [built, tested]; credit card PNG with QR [built, tested via next/og]; submit form → pending [built]; report form (+ correction request) [built]; reviewer console (approve / request changes / remove / verify with evidence / resolve) [built, tested on live Turso]; hash-linked history + timeline [built, tested on live Turso]; Verify page with in-browser file hash [built]; About & limits [built]; sourced seed records [15 real records live on Turso + 1 demo sandbox record, target 15 met].
+1. **Check:** A designer or creator drops an image into `/check` or explores `/catalogue`. Mudra checks exact byte hashes and calibrated perceptual dHash visual similarity, displaying the dual-layer Cultural Passport and explaining why a permission verdict is "Ask first".
+2. **Ask:** Reusers click *Request permission* directly in the Reuse Studio, entering project scope and private contact details. Requests are sent directly to the linked community steward (or transparently forwarded if no steward is yet linked). Reusers receive a private status tracking link (`/request/[token]`).
+3. **On Record:** Stewards review requests in their console and issue signed permission grants (RFC 8785 canonical JSON + Ed25519) with explicit validity windows, required credit lines, and conditions. Anyone can verify the grant at `/g/[grantId]` or verify offline with `node scripts/verify-grant.mjs`.
 
-**Tier 2** — Check an image (exact hash + dHash "possible match") [built; empirical thresholds measured on real seed photos in tests/imagehash.test.ts: copies ≤ 12, distinct subjects ≥ 28]; tamper demo `npm run tamper-demo` + in-app simulation [built, runs]; Ed25519 signatures [built; optional audit signing with mixed-chain verification]; sensitivity levels (`restricted` hides the image everywhere) [built, tested]; identity seal [built, deterministic SVG seal derived from ID and credits, tested in tests/seal.test.ts].
+## 4. Key Features
 
-## 4. Technology Stack
+- **Cultural Passports & Dual-Layer Permissions:** Sourced cultural records with separate creator/community permissions and file licences evaluated conservatively (17,496 property test combinations passing).
+- **Ask → Grant Workflow:** 4-field structured request, steward console review, and offline-verifiable signed grants.
+- **Machine-Readable Layer for Platforms:** schema.org `CreativeWork` JSON-LD, W3C TDMRep AI-training opt-out reservation signals (`/.well-known/tdmrep.json`), and `tdm-reservation` HTTP headers.
+- **Hash-Only Platform API & Signed Manifest:** `POST /api/v1/lookup` for platforms (no image uploads required) and `GET /api/v1/manifest.json` with signed dataset snapshots.
+- **Tamper-Evident SHA-256 Audit Chain:** Canonical JSON history with sequential hashing and Ed25519 signing.
+- **Calibrated Perceptual Image Matching:** dHash image matching calibrated on real seed photos (survives resizing and recompression; distinct subjects score $\ge 28$).
+- **Deterministic Identity Seal:** SVG seal deterministically derived from SHA-256 of record ID and credits.
+- **Dynamic 1200×630 Credit Cards:** OpenGraph credit cards generated with uncropped artwork, credit lines, and QR codes.
+
+## 5. Technology Stack
 Next.js (App Router) + TypeScript · SQLite locally / Turso (libSQL) live · `sharp` · `next/og` + `qrcode` · Node `crypto` (SHA-256, Ed25519) + `canonicalize` · plain CSS · `node:test` + Playwright · Vercel + Turso + Vercel Blob.
 
 ## 5. System Architecture
@@ -58,7 +71,13 @@ Reviewer demo login: `reviewer@mudra.demo` / `DemoReviewerPass123!` (demo throwa
 ```bash
 ADMIN_PASSWORD=... npm run create-admin -- you@example.org "Your Name" reviewer
 ```
-Flows: search → open a passport → pick a use in the Reuse Studio → copy the credit line / download the card → report a problem → sign in at `/review` to approve, verify or resolve → open `/verify/<id>`.
+Flows: search → open a passport → pick a use in the Reuse Studio → request permission if needed → steward reviews and issues signed grant → verify grant at `/g/<grantId>`.
+
+### Offline Grant Verification
+Permission grants can be verified completely offline with zero network connectivity:
+```bash
+node scripts/verify-grant.mjs path/to/grant.json path/to/public-key.pem
+```
 
 ## 9. Demonstration Screenshots
 

@@ -14,9 +14,12 @@ export default async function Reuse({ searchParams }: { searchParams: Promise<{ 
   const db = await getDb();
   const list = await listRecords(db);
   const views = (await Promise.all(list.map((r) => getRecordView(db, r.id)))).filter((v): v is NonNullable<typeof v> => !!v);
+  const stewardRows = (await db.execute('SELECT DISTINCT record_id FROM record_stewards')).rows;
+  const stewardRecordIds = new Set(stewardRows.map((r) => String(r.record_id)));
   const works: Work[] = views.map((v) => ({
     id: v.id, title: v.title, licence: v.licence, attributionRequired: v.attributionRequired, sensitivity: v.sensitivity, permissions: v.permissions,
     credit: allFormats({ title: v.title, credits: v.credits, licence: v.licence, attributionRequired: v.attributionRequired, recordUrl: recordUrl(v.id), recordId: v.id }).plain,
+    hasSteward: stewardRecordIds.has(v.id),
   }));
   const initialId = works.some((w) => w.id === sp.work) ? (sp.work as string) : works[0]?.id ?? '';
   const initialUse = (USE_IDS.includes(sp.use as Use) ? sp.use : 'teach') as Use;
