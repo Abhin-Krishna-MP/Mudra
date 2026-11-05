@@ -51,6 +51,43 @@ export const SCHEMA = [
   `CREATE INDEX IF NOT EXISTS idx_audit_record_seq ON audit_events(record_id, seq)`,
   `CREATE INDEX IF NOT EXISTS idx_flags_status ON flags(status)`,
   `CREATE INDEX IF NOT EXISTS idx_assets_record ON assets(record_id)`,
+  /* v1.1: permission request flow */
+  `CREATE TABLE IF NOT EXISTS record_stewards (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    record_id TEXT NOT NULL REFERENCES records(id),
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    UNIQUE(record_id, user_id)
+  )`,
+  `CREATE TABLE IF NOT EXISTS permission_requests (
+    id TEXT PRIMARY KEY,
+    record_id TEXT NOT NULL REFERENCES records(id),
+    use_key TEXT NOT NULL,
+    scope_json TEXT NOT NULL DEFAULT '{}',
+    requester_name TEXT NOT NULL,
+    requester_contact TEXT NOT NULL,
+    status TEXT NOT NULL DEFAULT 'open',
+    decision_note TEXT NOT NULL DEFAULT '',
+    conditions_json TEXT NOT NULL DEFAULT '[]',
+    credit_text TEXT NOT NULL DEFAULT '',
+    valid_from TEXT,
+    valid_until TEXT,
+    token_hash TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    decided_at TEXT
+  )`,
+  `CREATE TABLE IF NOT EXISTS grants (
+    id TEXT PRIMARY KEY,
+    request_id TEXT NOT NULL REFERENCES permission_requests(id),
+    record_id TEXT NOT NULL REFERENCES records(id),
+    payload_json TEXT NOT NULL,
+    signature TEXT NOT NULL,
+    key_id TEXT NOT NULL,
+    created_at TEXT NOT NULL
+  )`,
+  `CREATE INDEX IF NOT EXISTS idx_requests_record ON permission_requests(record_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_requests_token ON permission_requests(token_hash)`,
+  `CREATE INDEX IF NOT EXISTS idx_stewards_record ON record_stewards(record_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_grants_record ON grants(record_id)`,
 ];
 
 export async function migrate(db: Db) {

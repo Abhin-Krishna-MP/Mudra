@@ -272,10 +272,10 @@ export async function getRecordView(db: Db, id: string, opts: { reviewer?: boole
 
 export async function getAsset(db: Db, assetId: string, opts: { reviewer?: boolean } = {}) {
   const r = (await db.execute(
-    `SELECT a.*, r.sensitivity, r.status FROM assets a JOIN records r ON r.id = a.record_id WHERE a.id = ?`, [assetId])).rows[0];
+    `SELECT a.*, r.sensitivity, r.status, r.perm_ai_training FROM assets a JOIN records r ON r.id = a.record_id WHERE a.id = ?`, [assetId])).rows[0];
   if (!r) return null;
   if (!opts.reviewer && (r.status !== 'published' || r.sensitivity === 'restricted')) return null;
-  return { location: r.location as string, mime: r.mime as string };
+  return { location: r.location as string, mime: r.mime as string, permAiTraining: (r.perm_ai_training as string) || 'unspecified' };
 }
 
 export async function auditRows(db: Db, id: string): Promise<AuditRow[]> {

@@ -5,15 +5,18 @@ import { VerdictCard } from '@/components/VerdictCard';
 import { CopyButton } from '@/components/CopyButton';
 import { Icon } from '@/components/Icons';
 import { Parasol } from '@/components/Ornaments';
+import RequestPermissionForm from '@/components/RequestPermissionForm';
 
 export interface Work {
   id: string; title: string; licence: LicenceId; attributionRequired: boolean; sensitivity: Sensitivity;
   permissions: Record<Capability, CulturalState>; credit: string;
+  hasSteward?: boolean;
 }
 
 export default function ReuseStudio({ works, initialId, initialUse }: { works: Work[]; initialId: string; initialUse: Use }) {
   const [id, setId] = useState(initialId);
   const [use, setUse] = useState<Use>(initialUse);
+  const [showRequest, setShowRequest] = useState(false);
   const w = works.find((x) => x.id === id) ?? works[0];
   if (!w) return <p className="muted">No records are published yet. <a href="/submit">Submit a work</a>.</p>;
   const out = evaluate({ use, licence: w.licence, cultural: w.permissions, attributionRequired: w.attributionRequired, sensitivity: w.sensitivity });
@@ -37,9 +40,23 @@ export default function ReuseStudio({ works, initialId, initialUse }: { works: W
         </div>
       </div>
       <div className="btn-row">
-        <CopyButton text={w.credit} label="Copy Credit Line" variant="primary" />
+        {out.verdict === 'ask_first' && (
+          <button type="button" className="btn" onClick={() => setShowRequest(!showRequest)}>
+            {showRequest ? 'Close request form' : 'Request permission'}
+          </button>
+        )}
+        <CopyButton text={w.credit} label="Copy Credit Line" variant={out.verdict === 'ask_first' ? 'secondary' : 'primary'} />
         <a className="btn secondary" href={`/r/${w.id}?use=${use}#studio-h`}>View Full Terms <Icon name="arrow" size={18} /></a>
       </div>
+      {showRequest && out.verdict === 'ask_first' && (
+        <RequestPermissionForm
+          recordId={w.id}
+          recordTitle={w.title}
+          useKey={use}
+          hasSteward={!!w.hasSteward}
+          onCancel={() => setShowRequest(false)}
+        />
+      )}
       <details className="panel" style={{ marginTop: 22 }}>
         <summary style={{ cursor: 'pointer', fontWeight: 600 }}>How this answer was reached</summary>
         <div className="two" style={{ marginTop: 14 }}>

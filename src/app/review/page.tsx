@@ -1,8 +1,10 @@
 import { getDb } from '@/lib/db';
 import { getActor } from '@/lib/session';
 import { listRecords, listFlags } from '@/lib/repo';
+import { listRequestsForSteward } from '@/lib/repo-grants';
 import { reviewFormAction, logoutAction } from '@/app/actions';
 import LoginForm from './LoginForm';
+import RequestsSection from './RequestsSection';
 import { PageSheet } from '@/components/PageSheet';
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +18,7 @@ export default async function Review({ searchParams }: { searchParams: Promise<{
   const records = await listRecords(db, { reviewer: true });
   const rows = (await db.execute("SELECT id, status, verification_level, disputed, title FROM records WHERE status != 'removed' ORDER BY (status = 'pending') DESC, created_at DESC")).rows;
   const flags = await listFlags(db, actor);
+  const requests = await listRequestsForSteward(db, actor);
   const byId = new Map(records.map((r) => [r.id, r]));
   return (
     <div className="wrap page"><PageSheet title="Reviewer console" lede={`Signed in as ${actor.name}.`} headExtra={<form action={logoutAction} className="sheet-action"><button className="secondary">Sign out ({actor.name})</button></form>}>
@@ -30,6 +33,8 @@ export default async function Review({ searchParams }: { searchParams: Promise<{
           <label htmlFor={`fn-${f.id}`}>Resolution note</label><textarea id={`fn-${f.id}`} name="note" required />
           <div className="btn-row" style={{ marginTop: 14 }}><button type="submit">Resolve report</button></div>
         </form>))}
+
+      <RequestsSection requests={requests} />
 
       <h2>Records ({rows.length})</h2>
       {rows.map((r) => (
