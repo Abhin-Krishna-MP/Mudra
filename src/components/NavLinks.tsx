@@ -4,7 +4,8 @@ import { usePathname } from 'next/navigation';
 export const MAIN_NAV = [
   { href: '/', label: 'Home', match: (p: string) => p === '/' },
   { href: '/catalogue', label: 'Catalogue', match: (p: string) => p.startsWith('/catalogue') || p.startsWith('/r/') },
-  { href: '/reuse', label: 'Reuse Studio', match: (p: string) => p.startsWith('/reuse') },
+  { href: '/check', label: 'Check', match: (p: string) => p.startsWith('/check') },
+  { href: '/developers', label: 'For platforms', match: (p: string) => p.startsWith('/developers') },
   { href: '/about', label: 'About', match: (p: string) => p.startsWith('/about') },
 ] as const;
 

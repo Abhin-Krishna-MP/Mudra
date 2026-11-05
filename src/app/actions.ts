@@ -10,6 +10,7 @@ import { AuthError, checkPassword } from '@/lib/auth';
 import { getActor, startSession, endSession } from '@/lib/session';
 import type { ActionResult } from '@/lib/contracts';
 import type { Capability, CulturalState } from '@/lib/permissions';
+import { createPermissionRequest, decideRequest, revokeGrant, assignSteward, type RequestInput, type DecisionInput } from '@/lib/repo-grants';
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? '');
 
@@ -90,6 +91,58 @@ export async function reviewFormAction(f: FormData) {
   revalidatePath('/');
   revalidatePath(`/r/${recordId}`);
   redirect(`/review?msg=${encodeURIComponent(msg)}`);
+}
+
+/* ------------------------------------------------- permission requests */
+export async function requestPermissionAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+  const recordId = String(f.get('recordId') ?? '');
+  const input: RequestInput = {
+    recordId,
+    useKey: String(f.get('useKey') ?? 'general'),
+    requesterName: String(f.get('requesterName') ?? ''),
+    requesterContact: String(f.get('requesterContact') ?? ''),
+    whatYouWillMake: String(f.get('whatYouWillMake') ?? ''),
+    whereAndHowLong: String(f.get('whereAndHowLong') ?? ''),
+    honeypot: String(f.get('website') ?? ''),
+  };
+  const res = await createPermissionRequest(await getDb(), input, signingKey());
+  if (!res.ok) return res;
+  redirect(`/request/${res.token}?sent=1`);
+}
+
+export async function grantDecisionAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  const input: DecisionInput = {
+    requestId: String(f.get('requestId') ?? ''),
+    decision: (f.get('decision') === 'granted' ? 'granted' : 'declined') as 'granted' | 'declined',
+    note: String(f.get('note') ?? ''),
+    conditions: String(f.get('conditions') ?? '').split('\n').map((s) => s.trim()).filter(Boolean),
+    creditText: String(f.get('creditText') ?? ''),
+    validFrom: String(f.get('validFrom') ?? new Date().toISOString()),
+    validUntil: String(f.get('validUntil') ?? '') || undefined,
+  };
+  const res = await decideRequest(await getDb(), actor, input, signingKey());
+  revalidatePath('/review');
+  if (!res.ok) redirect(`/review?msg=${encodeURIComponent(res.error)}`);
+  redirect(`/review?msg=Decision+recorded.`);
+}
+
+export async function revokeGrantAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  const requestId = String(f.get('requestId') ?? '');
+  const note = String(f.get('note') ?? 'Revoked by reviewer.');
+  await revokeGrant(await getDb(), actor, requestId, note, signingKey());
+  revalidatePath('/review');
+  redirect('/review?msg=Grant+revoked.');
+}
+
+export async function assignStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  const recordId = String(f.get('recordId') ?? '');
+  const userId = Number(f.get('userId'));
+  await assignSteward(await getDb(), actor, recordId, userId);
+  revalidatePath(`/review`);
+  redirect('/review?msg=Steward+assigned.');
 }
 
 /* --------------------------------------------------- sandbox tamper simulation */

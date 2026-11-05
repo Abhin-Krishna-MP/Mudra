@@ -14,5 +14,13 @@ export async function GET(_: Request, { params }: { params: Promise<{ id: string
   if (/^https?:\/\//.test(a.location)) return NextResponse.redirect(a.location);
   const buf = await readLocalAsset(a.location);
   if (!buf) return new NextResponse('Not found', { status: 404 });
-  return new NextResponse(new Uint8Array(buf), { headers: { 'Content-Type': a.mime, 'Cache-Control': reviewer ? 'private, no-store' : 'public, max-age=3600' } });
+  const headers: Record<string, string> = {
+    'Content-Type': a.mime,
+    'Cache-Control': reviewer ? 'private, no-store' : 'public, max-age=3600',
+  };
+  if (a.permAiTraining !== 'permitted') {
+    headers['tdm-reservation'] = '1';
+    headers['tdm-policy'] = '/developers#tdm-policy';
+  }
+  return new NextResponse(new Uint8Array(buf), { headers });
 }

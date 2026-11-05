@@ -4,7 +4,6 @@ import { Icon, type IconName } from '@/components/Icons';
 import { LotusMark } from '@/components/Ornaments';
 import { Carousel } from '@/components/Carousel';
 import { RecordTile } from '@/components/RecordTile';
-import { Petals } from '@/components/Petals';
 import { Lotus3D } from '@/components/Lotus3D';
 
 export const dynamic = 'force-dynamic';
@@ -44,7 +43,6 @@ export default async function Home() {
           </div>
         </div>
         <div className="hero-bg" aria-hidden="true" />
-        <Petals />
         <div className="wrap hero-inner">
           <span className="ghost-ml" lang="ml" aria-hidden="true">മുദ്ര</span>
           <div className="hero-copy">
