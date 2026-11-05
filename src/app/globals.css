@@ -657,12 +657,12 @@ body:has(.hero) .site-header .icon-btn:not(.avatar):hover { background: rgba(8, 
    ========================================================================== */
 :root {
   --petal-a: #ffd45a; --petal-b: #f08a00; --petal-c: #c2410c;
-  --lotus-a: #fff3f1; --lotus-b: #f08aa3; --lotus-c: #a8305a; --lotus-glow: rgba(240, 138, 163, .45);
+  --lotus-a: #fff1f5; --lotus-b: #ea5b88; --lotus-c: #9c1c4e; --lotus-glow: rgba(234, 91, 136, .45);
   --kas-a: #b7791f; --kas-b: #f6d77e;
 }
 :root[data-theme='dark'] {
   --petal-a: #ffb26b; --petal-b: #e8691c; --petal-c: #8f2a0a;
-  --lotus-a: #ffe9cf; --lotus-b: #f0894a; --lotus-c: #8f2a0a; --lotus-glow: rgba(240, 137, 74, .5);
+  --lotus-a: #ffe6ee; --lotus-b: #f25287; --lotus-c: #951443; --lotus-glow: rgba(242, 82, 135, .52);
   --kas-a: #a35a10; --kas-b: #f5c98a;
 }
 @keyframes rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
@@ -766,10 +766,10 @@ html.motion .seal .seal-text { transform-origin: 60px 60px; animation: turn 28s 
 .lotus3d { position: absolute; left: 50%; top: 52%; width: 0; height: 0; transform-style: preserve-3d; transform: scale(1.32) rotateX(-26deg) rotateY(18deg); }
 html.motion .lotus3d { animation: spinY 30s linear infinite; }
 .lotus3d i { position: absolute; left: -26px; bottom: 0; width: 52px; height: 118px; transform-origin: 50% 100%; transform: rotateY(var(--a)) rotateX(var(--t)); clip-path: polygon(50% 0, 88% 34%, 100% 64%, 78% 92%, 50% 100%, 22% 92%, 0 64%, 12% 34%); background: linear-gradient(180deg, var(--lotus-a) 0%, var(--lotus-b) 52%, var(--lotus-c) 100%); backface-visibility: visible; }
-.lotus3d i.r3 { height: 126px; opacity: .88; } .lotus3d i.r2 { height: 112px; } .lotus3d i.r1 { height: 92px; width: 46px; left: -23px; opacity: .96; } .lotus3d i.r0 { height: 64px; width: 38px; left: -19px; background: linear-gradient(180deg, #fff6d6, #f6c84a 70%, #c8841a); }
-.lotus-core { position: absolute; left: -11px; bottom: 2px; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff8d8, #f6c84a 55%, #b9780f); box-shadow: 0 0 22px 6px rgba(246, 200, 74, .55); }
+.lotus3d i.r3 { height: 126px; opacity: .88; } .lotus3d i.r2 { height: 112px; } .lotus3d i.r1 { height: 92px; width: 46px; left: -23px; opacity: .96; } .lotus3d i.r0 { height: 64px; width: 38px; left: -19px; background: linear-gradient(180deg, #fff3f7, #f2729a 65%, #a82054); }
+.lotus-core { position: absolute; left: -11px; bottom: 2px; width: 22px; height: 22px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fffbe8, #f8ca44 55%, #c27d14); box-shadow: 0 0 22px 6px rgba(234, 91, 136, .6), 0 0 8px rgba(248, 202, 68, .6); }
 .lotus-water { position: absolute; left: 0; right: 0; bottom: 6%; height: 40px; pointer-events: none; }
-.lotus-water span { position: absolute; left: 12%; right: 12%; bottom: 0; height: 28px; border-radius: 50%; border: 1.5px solid rgba(233, 185, 73, .55); opacity: .4; }
+.lotus-water span { position: absolute; left: 12%; right: 12%; bottom: 0; height: 28px; border-radius: 50%; border: 1.5px solid var(--lotus-glow); opacity: .45; }
 html.motion .lotus-water span { animation: ripple 5s ease-out infinite; } html.motion .lotus-water span:nth-child(2) { animation-delay: 1.7s; } html.motion .lotus-water span:nth-child(3) { animation-delay: 3.4s; }
 .flipgrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; perspective: 1100px; }
 .flip { display: block; height: 190px; color: inherit; text-decoration: none; outline-offset: 4px; }
