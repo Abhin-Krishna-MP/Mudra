@@ -8,7 +8,7 @@ interface Props {
   recordTitle: string;
   useKey: string;
   hasSteward: boolean;
-  onCancel: () => void;
+  onCancel?: () => void;
 }
 
 export default function RequestPermissionForm({ recordId, recordTitle, useKey, hasSteward, onCancel }: Props) {
@@ -52,7 +52,7 @@ export default function RequestPermissionForm({ recordId, recordTitle, useKey, h
 
         <div className="btn-row" style={{ marginTop: 20 }}>
           <button type="submit" disabled={pending}>{pending ? 'Sending…' : 'Send request'}</button>
-          <button type="button" className="secondary" onClick={onCancel}>Cancel</button>
+          {onCancel && <button type="button" className="secondary" onClick={onCancel}>Cancel</button>}
         </div>
       </form>
 

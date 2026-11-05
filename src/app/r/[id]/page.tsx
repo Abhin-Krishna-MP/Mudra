@@ -147,7 +147,7 @@ export default async function Passport({ params, searchParams }: { params: Promi
             {out.verdict === 'ask_first' && (
               <details className="panel ui" style={{ marginTop: 16 }} open={sp.ask === '1'}>
                 <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Request permission from {hasSteward ? 'steward' : 'community contact'}</summary>
-                <RequestPermissionForm recordId={v.id} recordTitle={v.title} useKey={use} hasSteward={hasSteward} onCancel={() => {}} />
+                <RequestPermissionForm recordId={v.id} recordTitle={v.title} useKey={use} hasSteward={hasSteward} />
               </details>
             )}
             <div className="two" style={{ marginTop: 14 }}>
