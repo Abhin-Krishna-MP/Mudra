@@ -18,8 +18,8 @@ export function PadippuraNavbar() {
             src="/mudra/navbar-full.png"
             alt="Mudra: Kerala's Living Heritage Registry"
             className="padippura-master-art"
-            width={1600}
-            height={326}
+            width={2117}
+            height={421}
             fetchPriority="high"
           />
         </picture>
@@ -39,7 +39,9 @@ export function PadippuraNavbar() {
             className={`padippura-hotspot spot-home${path === '/' ? ' is-active' : ''}`}
             aria-label="Home"
             aria-current={path === '/' ? 'page' : undefined}
-          />
+          >
+            <span className="spot-label">Home</span>
+          </a>
 
           {/* 3. Catalogue */}
           <a
@@ -47,7 +49,9 @@ export function PadippuraNavbar() {
             className={`padippura-hotspot spot-catalogue${path.startsWith('/catalogue') || path.startsWith('/r/') ? ' is-active' : ''}`}
             aria-label="Catalogue"
             aria-current={path.startsWith('/catalogue') || path.startsWith('/r/') ? 'page' : undefined}
-          />
+          >
+            <span className="spot-label">Catalogue<svg className="spot-chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6" /></svg></span>
+          </a>
 
           {/* 4. Reuse Studio */}
           <a
@@ -55,7 +59,9 @@ export function PadippuraNavbar() {
             className={`padippura-hotspot spot-reuse${path.startsWith('/reuse') ? ' is-active' : ''}`}
             aria-label="Reuse Studio"
             aria-current={path.startsWith('/reuse') ? 'page' : undefined}
-          />
+          >
+            <span className="spot-label">Reuse Studio</span>
+          </a>
 
           {/* 5. About */}
           <a
@@ -63,7 +69,9 @@ export function PadippuraNavbar() {
             className={`padippura-hotspot spot-about${path.startsWith('/about') ? ' is-active' : ''}`}
             aria-label="About"
             aria-current={path.startsWith('/about') ? 'page' : undefined}
-          />
+          >
+            <span className="spot-label">About</span>
+          </a>
 
           {/* 6. Search */}
           <a
