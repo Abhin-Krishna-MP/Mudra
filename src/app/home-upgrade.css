@@ -14,8 +14,8 @@
   --curtain-b: #4a1311;
 }
 :root:not([data-theme='dark']) {
-  /* Lotus: gold into maroon (was pink, which is outside the palette) */
-  --lotus-a: #fff6dc; --lotus-b: #e9b949; --lotus-c: #8c2c25; --lotus-glow: rgba(233, 185, 73, .38);
+  /* Lotus: sacred Kerala pink lotus */
+  --lotus-a: #fff1f5; --lotus-b: #ea5b88; --lotus-c: #9c1c4e; --lotus-glow: rgba(234, 91, 136, .45);
 }
 
 /* ---------- 1. Hero framing: show the crown on desktop and the face on phones ---------- */

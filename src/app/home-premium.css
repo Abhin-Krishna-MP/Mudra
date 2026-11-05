@@ -218,7 +218,7 @@ html.motion .tile-compact .tile-link:hover::before { animation: orbit 3.2s linea
 
 /* ---------- 8. Pillars: the lotus becomes a diya in the dark; cards get foil edges ---------- */
 :root[data-theme='dark'] .explore, :root[data-theme='dark'] .pillars { background: transparent; border: 0; box-shadow: none; border-radius: 0; }
-:root[data-theme='dark'] .pillars { background: radial-gradient(60% 90% at 14% 50%, rgba(240, 137, 74, .2), transparent 70%); }
+:root[data-theme='dark'] .pillars { background: radial-gradient(60% 90% at 14% 50%, var(--lotus-glow), transparent 70%); }
 .flip .face { transition: box-shadow .5s; }
 .flip:hover .face.front, .flip:focus-visible .face.front { box-shadow: 0 22px 40px rgba(70, 36, 12, .22); }
 .face.front .q-ico { box-shadow: 0 10px 22px rgba(60, 20, 10, .3), 0 0 0 4px color-mix(in srgb, var(--accent) 24%, transparent); }
