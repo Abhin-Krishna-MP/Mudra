@@ -32,14 +32,22 @@ export default async function Home() {
   return (
     <>
       <section className="hero" aria-labelledby="hero-h" suppressHydrationWarning>
-        <div className="hero-stage" aria-hidden="true">
-          <div className="stage-3d">
+        <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
+          <div className="stage-3d" suppressHydrationWarning>
             <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
             <div className="mist" />
             <img className="layer l-fig lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
             <div className="cloth-sheen lt" />
             <div className="layer d-plate d-bg dk" />
             <img className="layer d-fig dk" src="/mudra/hero-dark-figure.webp" alt="" decoding="async" />
+            {/* Light: silk glows under the pointer. Dark: the oil-lamp flares when the pointer comes near (positions set in Motion.tsx) */}
+            <div className="cloth-glow lt" />
+            <div className="lamp-rig dk">
+              <i className="lamp-bloom" />
+              <i className="lamp-spill" />
+              <i className="lamp-spot" />
+              <i className="lamp-flame" />
+            </div>
           </div>
         </div>
         <div className="hero-bg" aria-hidden="true" />
@@ -50,8 +58,8 @@ export default async function Home() {
             <h1 id="hero-h"><span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span> <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly</em></h1>
             <p className="lede">A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.</p>
             <div className="cta">
-              <a className="btn gold" href="/catalogue">Explore Catalogue <Icon name="arrow" size={18} /></a>
-              <a className="btn ghost" href="/reuse"><Icon name="layers" size={18} /> Reuse Studio</a>
+              <a className="btn gold" data-magnetic href="/catalogue">Explore Catalogue <Icon name="arrow" size={18} /></a>
+              <a className="btn ghost" data-magnetic href="/reuse"><Icon name="layers" size={18} /> Reuse Studio</a>
             </div>
           </div>
         </div>
