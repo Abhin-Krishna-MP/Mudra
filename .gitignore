@@ -12,5 +12,6 @@ public/uploads/
 .DS_Store
 test-results/
 playwright-report/
+*.tsbuildinfo
 .vercel
 .env*

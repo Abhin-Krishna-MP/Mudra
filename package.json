@@ -2,7 +2,7 @@
   "name": "mudra",
   "version": "0.1.0",
   "private": true,
-  "description": "Mudra \u2014 Cultural Passports. ART//CODE 2026 PS-03 \"Credit the Culture\".",
+  "description": "Mudra — Cultural Passports. ART//CODE 2026 PS-03 \"Credit the Culture\".",
   "license": "MIT",
   "scripts": {
     "dev": "next dev",
@@ -24,23 +24,25 @@
     "prepare": "node scripts/install-hooks.mjs"
   },
   "dependencies": {
-    "next": "^15.5.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "@fontsource-variable/inter": "^5.3.0",
+    "@fontsource-variable/playfair-display": "^5.3.0",
     "@libsql/client": "^0.15.0",
     "@vercel/blob": "^1.0.0",
     "canonicalize": "^2.0.0",
-    "sharp": ">=0.33.0",
-    "qrcode": "^1.5.4"
+    "next": "^15.5.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "sharp": ">=0.33.0"
   },
   "devDependencies": {
-    "typescript": "^5.6.0",
+    "@playwright/test": "^1.50.0",
     "@types/node": "^22.0.0",
+    "@types/qrcode": "^1.5.5",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "@types/qrcode": "^1.5.5",
     "tsx": "^4.19.0",
-    "@playwright/test": "^1.50.0"
+    "typescript": "^5.6.0"
   },
   "engines": {
     "node": ">=22.5.0"
