@@ -2,7 +2,6 @@
 import { usePathname } from 'next/navigation';
 import { ThemeToggle } from './ThemeToggle';
 import { MobileChrome } from './MobileChrome';
-import { Icon } from './Icons';
 import { LotusMark } from './Ornaments';
 import { TAGLINE } from '@/lib/copy';
 
@@ -19,8 +18,8 @@ export function PadippuraNavbar() {
             src="/mudra/navbar-full.png"
             alt="Mudra: Kerala's Living Heritage Registry"
             className="padippura-master-art"
-            width={1024}
-            height={210}
+            width={1600}
+            height={326}
             fetchPriority="high"
           />
         </picture>
@@ -114,4 +113,3 @@ export function PadippuraNavbar() {
     </header>
   );
 }
-
