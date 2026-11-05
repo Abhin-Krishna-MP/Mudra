@@ -97,29 +97,89 @@
   background: radial-gradient(460px circle at calc(62% + var(--mx, 0) * 26%) calc(46% + var(--my, 0) * 30%), rgba(255, 205, 110, .55), transparent 62%);
 }
 
-/* ---------- 8. THE MOMENT: the stage curtain parts, then the headline arrives ---------- */
-@keyframes curtain-l { 0% { transform: translateX(0); } 12% { transform: translateX(1.5%); } 100% { transform: translateX(-102%); visibility: hidden; } }
-@keyframes curtain-r { 0% { transform: translateX(0); } 12% { transform: translateX(-1.5%); } 100% { transform: translateX(102%); visibility: hidden; } }
-html.motion .hero::before,
-html.motion .hero::after {
-  content: ''; position: absolute; top: 0; bottom: 0; width: 50.6%; z-index: 8; pointer-events: none;
-  will-change: transform;
-  background:
-    repeating-linear-gradient(90deg, rgba(0, 0, 0, .30) 0 7px, rgba(255, 255, 255, .06) 7px 11px, transparent 11px 46px),
-    linear-gradient(180deg, var(--curtain-a), var(--curtain-b));
-  box-shadow: 0 0 60px rgba(0, 0, 0, .55);
+/* ---------- 8. THE MOMENT: a full-screen stage curtain parts, then the headline arrives ----------
+   .stage-curtain is position: fixed over the whole viewport (above the navbar and the cards).
+   Two pleated silk panels slide apart; the Malayalam wordmark sits on top and fades as they open. */
+@keyframes curtain-l { from { transform: translateX(0); } to { transform: translateX(-103%); } }
+@keyframes curtain-r { from { transform: translateX(0); } to { transform: translateX(103%); } }
+@keyframes curtain-gone { to { visibility: hidden; } }
+@keyframes mark-in  { from { opacity: 0; transform: translate(-50%, -46%) scale(.94); filter: blur(6px); } to { opacity: 1; transform: translate(-50%, -50%) scale(1); filter: blur(0); } }
+@keyframes mark-out { to { opacity: 0; transform: translate(-50%, -54%) scale(1.04); filter: blur(5px); } }
+@keyframes rule-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.stage-curtain { display: none; }
+html.motion .stage-curtain {
+  display: block; position: fixed; inset: 0; z-index: 1000; pointer-events: none; overflow: hidden;
+  animation: curtain-gone 0s linear 2.5s forwards;
 }
-html.motion .hero::before { left: 0;  border-right: 9px solid var(--kas-b); animation: curtain-l 1.7s cubic-bezier(.76, 0, .2, 1) .45s forwards; }
-html.motion .hero::after  { right: 0; border-left: 9px solid var(--kas-b);  animation: curtain-r 1.7s cubic-bezier(.76, 0, .2, 1) .45s forwards; }
+.stage-curtain .cur-panel {
+  position: absolute; top: 0; width: 50.8%; will-change: transform;
+  height: 100vh; height: 100dvh;
+  background:
+    /* head and hem shading */
+    linear-gradient(180deg, rgba(0, 0, 0, .42) 0%, rgba(0, 0, 0, 0) 16%, rgba(0, 0, 0, 0) 76%, rgba(0, 0, 0, .46) 100%),
+    /* soft silk sheen across the folds */
+    linear-gradient(100deg, rgba(255, 215, 180, 0) 30%, rgba(255, 215, 180, .13) 50%, rgba(255, 215, 180, 0) 70%),
+    /* the pleats: dark crease, rounded highlight, dark crease */
+    repeating-linear-gradient(90deg, rgba(0, 0, 0, .46) 0, rgba(0, 0, 0, .10) 1.9vw, rgba(255, 200, 170, .20) 3.9vw, rgba(0, 0, 0, .12) 5.9vw, rgba(0, 0, 0, .46) 7.8vw),
+    linear-gradient(180deg, var(--curtain-a), var(--curtain-b));
+  box-shadow: 0 0 70px rgba(0, 0, 0, .6);
+}
+/* kasavu gold trim down the edge where the two panels meet */
+.stage-curtain .cur-panel::after {
+  content: ''; position: absolute; top: 0; bottom: 0; width: 14px;
+  background: repeating-linear-gradient(180deg, var(--kas-b) 0 10px, var(--kas-a) 10px 14px, var(--kas-b) 14px 22px, #7a4c0c 22px 24px);
+  box-shadow: 0 0 18px rgba(246, 215, 126, .45);
+}
+.stage-curtain .cur-l { left: 0;  animation: curtain-l 1.5s cubic-bezier(.76, 0, .2, 1) .9s forwards; }
+.stage-curtain .cur-r { right: 0; animation: curtain-r 1.5s cubic-bezier(.76, 0, .2, 1) .9s forwards; }
+.stage-curtain .cur-l::after { right: 0; }
+.stage-curtain .cur-r::after { left: 0; }
+
+/* Malayalam wordmark, centred over the folds */
+.stage-curtain .cur-mark {
+  position: absolute; left: 50%; top: 50%; z-index: 2; width: max-content; max-width: 92vw;
+  display: flex; flex-direction: column; align-items: center; gap: clamp(8px, 1.6vh, 16px);
+  padding: clamp(14px, 2.6vw, 34px) clamp(34px, 6vw, 88px) clamp(18px, 3vw, 38px);
+  /* gold-framed silk plaque: covers the seam so the word reads cleanly */
+  background: radial-gradient(130% 150% at 50% 0%, #5e1813 0%, #3b0d0a 58%, #240605 100%);
+  border: 2px solid #e2b85c; border-radius: clamp(18px, 2.2vw, 30px);
+  box-shadow: inset 0 0 0 7px #3b0d0a, inset 0 0 0 8.5px rgba(246, 215, 126, .55), 0 24px 70px rgba(0, 0, 0, .6), 0 0 44px rgba(246, 215, 126, .16);
+  transform: translate(-50%, -50%); opacity: 0;
+  animation: mark-in .8s cubic-bezier(.2, .7, .2, 1) .12s forwards, mark-out .55s ease-in 1.05s forwards;
+}
+.stage-curtain .cur-word {
+  font-family: var(--font-ml, 'Noto Serif Malayalam', serif); font-weight: 700;
+  font-size: clamp(4.4rem, 14vw, 10.5rem); line-height: 1.45; padding: .04em .1em .12em;
+  background: linear-gradient(180deg, #fff6d2 0%, #f8dc88 34%, #e3ae45 66%, #a8701c 100%);
+  -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 0 rgba(58, 14, 10, .7)) drop-shadow(0 12px 28px rgba(0, 0, 0, .55));
+}
+.stage-curtain .cur-rule { display: flex; align-items: center; gap: 12px; width: clamp(180px, 30vw, 360px); margin-top: -.6em; }
+.stage-curtain .cur-rule i { flex: 1; height: 2px; background: linear-gradient(90deg, transparent, #f1cd75); transform-origin: right; animation: rule-grow .9s cubic-bezier(.2, .7, .2, 1) .5s both; }
+.stage-curtain .cur-rule i:last-child { background: linear-gradient(270deg, transparent, #f1cd75); transform-origin: left; }
+.stage-curtain .cur-rule b { width: 9px; height: 9px; background: #f6d77e; transform: rotate(45deg); box-shadow: 0 0 14px rgba(246, 215, 126, .8); }
+.stage-curtain .cur-sub {
+  font: 600 clamp(.66rem, 1.05vw, .82rem)/1 var(--font-ui, system-ui, sans-serif); letter-spacing: .34em; text-transform: uppercase;
+  color: #f6d77e; text-shadow: 0 2px 10px rgba(0, 0, 0, .55); padding-left: .34em;
+}
+
+/* Dark theme: charred cloth, ember-lit trim */
+:root[data-theme='dark'] .stage-curtain .cur-panel::after { background: repeating-linear-gradient(180deg, #f0894a 0 10px, #8f2a0a 10px 14px, #f0894a 14px 22px, #4d1405 22px 24px); box-shadow: 0 0 18px rgba(240, 137, 74, .5); }
+:root[data-theme='dark'] .stage-curtain .cur-mark { background: radial-gradient(130% 150% at 50% 0%, #2a0f08 0%, #170705 60%, #0b0403 100%); border-color: #f0894a; box-shadow: inset 0 0 0 7px #170705, inset 0 0 0 8.5px rgba(240, 137, 74, .55), 0 24px 70px rgba(0, 0, 0, .7), 0 0 44px rgba(240, 137, 74, .18); }
+:root[data-theme='dark'] .stage-curtain .cur-word { background-image: linear-gradient(180deg, #ffe9cf 0%, #f9b074 36%, #e0752b 68%, #8f3a0e 100%); }
+:root[data-theme='dark'] .stage-curtain .cur-sub { color: #f9b074; }
+:root[data-theme='dark'] .stage-curtain .cur-rule b { background: #f0894a; box-shadow: 0 0 14px rgba(240, 137, 74, .8); }
+
 /* hold the hero copy back until the curtain is nearly open */
-html.motion .hero .eyebrow { animation-delay: 1.35s; }
-html.motion .hero h1 .w { animation-delay: calc(var(--i, 0) * .14s + 1.45s); }
-html.motion .hero h1 em.w { animation-delay: 1.9s, 2.9s; }
-html.motion .hero .lede { animation-delay: 2.15s; }
-html.motion .hero .cta { animation-delay: 2.3s; }
+html.motion .hero .eyebrow { animation-delay: 1.75s; }
+html.motion .hero h1 .w { animation-delay: calc(var(--i, 0) * .14s + 1.85s); }
+html.motion .hero h1 em.w { animation-delay: 2.3s, 3.3s; }
+html.motion .hero .lede { animation-delay: 2.55s; }
+html.motion .hero .cta { animation-delay: 2.7s; }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero::before, .hero::after { display: none !important; }
+  .stage-curtain { display: none !important; }
 }
 
 /* ---------- 9. Let tile shadows breathe inside the scrolling track ---------- */
