@@ -4,7 +4,9 @@ import { siteOrigin } from '@/lib/site';
 
 export const metadata = { title: 'For Platforms & Developers' };
 
-const CURL_LOOKUP = `curl -X POST https://mudra.kerala.gov.in/api/v1/lookup \\
+const BASE_URL = 'https://mudra-one-ivory.vercel.app';
+
+const CURL_LOOKUP = `curl -X POST ${BASE_URL}/api/v1/lookup \\
   -H "Content-Type: application/json" \\
   -d '{
     "queries": [
@@ -15,9 +17,9 @@ const CURL_LOOKUP = `curl -X POST https://mudra.kerala.gov.in/api/v1/lookup \\
     ]
   }'`;
 
-const CURL_MANIFEST = `curl https://mudra.kerala.gov.in/api/v1/manifest.json`;
+const CURL_MANIFEST = `curl ${BASE_URL}/api/v1/manifest.json`;
 
-const CURL_TDMREP = `curl https://mudra.kerala.gov.in/.well-known/tdmrep.json`;
+const CURL_TDMREP = `curl ${BASE_URL}/.well-known/tdmrep.json`;
 
 const CURL_OFFLINE = `node scripts/verify-grant.mjs grant.json public-key.pem`;
 
