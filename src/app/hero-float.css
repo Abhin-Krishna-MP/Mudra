@@ -125,12 +125,6 @@ html.motion .scroll-cue i { animation: cue 1.8s ease-in-out infinite; }
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; z-index: 5;
   background: var(--kasavu); opacity: .95; pointer-events: none;
 }
-@media (min-width: 900px) {
-  :root:not([data-theme='dark']) .hero-bg {
-    /* text fade starts after the lamp, and nothing darkens the bottom edge */
-    background: linear-gradient(90deg, transparent 0%, transparent 7%, var(--hero-fade) 15%, var(--hero-fade) 24%, transparent 58%);
-  }
-}
 :root:not([data-theme='dark']) .scroll-cue { bottom: 26px; }
 
 /* ==========================================================================
@@ -145,15 +139,18 @@ html.motion .scroll-cue i { animation: cue 1.8s ease-in-out infinite; }
    ========================================================================== */
 @media (min-width: 900px) {
   :root:not([data-theme='dark']) .hero-stage .stage-3d {
-    inset: 0 -1.5% 0 -1.5%;                    /* no background here: in a 3D stage it would paint over the sky and water plate */
+    inset: -1% -4% -1% -6%;                    /* generous left bleed (6%) so parallax tilt never exposes the edge; right kept at 4% matching hero-3d default */
   }
   :root:not([data-theme='dark']) .hero-stage .layer { object-position: 78% 100%; }
-  :root:not([data-theme='dark']) .hero-stage .l-bg { translate: 1.6% 0; }
+  :root:not([data-theme='dark']) .hero-stage .l-bg { translate: 3.4% 0; }
   :root:not([data-theme='dark']) .cloth-glow {
     -webkit-mask-position: 78% 100%, 0 0; mask-position: 78% 100%, 0 0;
   }
   :root:not([data-theme='dark']) .hero-bg {
     background: linear-gradient(90deg, transparent 0%, transparent 11%, var(--hero-fade) 21%, var(--hero-fade) 27%, transparent 60%);
+    /* Fade out vertically before the kasavu cloth so the dark green text-fade never crosses or discolors the silk */
+    -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 56%);
+    mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 56%);
   }
 }
 
@@ -179,4 +176,16 @@ html.motion .l-lamp {
 }
 @media (min-width: 900px) and (max-height: 760px) {
   :root:not([data-theme='dark']) .hero .lede { display: none !important; }
+}
+
+/* The background plate is nudged right to save the lamp, which opens a thin gap at the far left.
+   A solid dark-foliage colour fills the stage behind the whole scene so any gap during pointer
+   parallax tilt looks like soft out-of-focus foliage — no visible seam, no colour steps.
+   Also extend the stage below the hero's own edge so the stage colour and the page background
+   never create a visible horizontal seam at the hero's bottom boundary. */
+@media (min-width: 900px) {
+  :root:not([data-theme='dark']) .hero-stage {
+    background: var(--hero-base);
+    inset: 0 0 -2px 0;
+  }
 }
