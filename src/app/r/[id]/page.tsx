@@ -81,7 +81,7 @@ export default async function Passport({ params, searchParams }: { params: Promi
             <div>
               <div className="passport-art" data-tilt="8">
                 {v.asset?.displayUrl ? <img src={v.asset.displayUrl} alt={v.asset.alt} /> : <p className="muted ui">The image for this record is withheld because it is marked restricted.</p>}
-                {v.verificationLevel === 'verified' && <Seal />}
+                {v.verificationLevel === 'verified' && <Seal id={v.id} credits={v.credits} label={`Verified identity seal for ${v.id}`} />}
               </div>
             </div>
             <div className="passport-id">
