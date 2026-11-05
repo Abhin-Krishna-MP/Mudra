@@ -1,0 +1,182 @@
+/* ==========================================================================
+   MUDRA · FLOATING KASAVU HERO (light theme) + SCROLL-DRIVEN CARDS
+   Imported LAST in layout.tsx. Dark theme is not touched.
+
+   - The Kathakali, lamp, boat, sky and water are exactly as before.
+     hero-figure.webp was cut into two plates that line up pixel for pixel:
+       hero-figure-top.webp  Kathakali (+ a little overlap with the cloth)
+       hero-cloth.webp       the kasavu cloth, nothing else
+     Only the cloth plate moves.
+   - The cloth sits a little lower (tilted down to the left, pinned where it
+     meets the Kathakali) and drifts gently like silk in air.
+   - The hero is exactly one screen tall, so everything fits without scrolling.
+   - Cards rise in, tilted, as you scroll down (scroll-driven, no JS).
+   ========================================================================== */
+
+/* ---------- the floating cloth plate ---------- */
+.hero-stage .l-cloth { display: none; }
+:root:not([data-theme='dark']) .hero-stage .l-cloth {
+  display: block;
+  transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96);
+  filter: drop-shadow(0 0 24px rgba(255, 176, 70, .32)) drop-shadow(0 14px 22px rgba(20, 8, 2, .35));
+  /* pinned on the right, where the silk meets the Kathakali; the free end (left) swings */
+  transform-origin: 92% 62%;
+  rotate: .6deg;            /* resting position: a little lower than the painting */
+  will-change: transform, rotate, translate;
+}
+
+@keyframes kas-drift {
+  0%   { rotate: .30deg; translate: 0 -3px; }
+  35%  { rotate: .85deg; translate: 0  2px; }
+  70%  { rotate: .50deg; translate: 0  4px; }
+  100% { rotate: 1.00deg; translate: 0 -2px; }
+}
+html.motion .l-cloth {
+  animation:
+    fig-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.75s both,        /* same entrance as the Kathakali plate */
+    kas-drift 9s ease-in-out 3.6s infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) { .l-cloth { animation: none !important; } }
+
+/* ---------- the hero is exactly one screen ---------- */
+:root:not([data-theme='dark']) .hero {
+  height: 100svh; min-height: 600px; max-height: 1200px;
+  align-items: flex-start;
+}
+:root:not([data-theme='dark']) .hero-inner {
+  width: 100%; padding-top: clamp(104px, 16svh, 170px); padding-bottom: 0;
+}
+/* short laptop screens: keep the words clear of the cloth */
+@media (min-width: 900px) and (max-height: 760px) {
+  :root:not([data-theme='dark']) .hero .lede { display: none; }
+  :root:not([data-theme='dark']) .hero h1 { margin-bottom: 14px; }
+  :root:not([data-theme='dark']) .hero .eyebrow { margin-bottom: 10px; }
+}
+/* phones: the picture is on top, the words sit below it (as before), still one screen */
+@media (max-width: 899px) {
+  :root:not([data-theme='dark']) .hero { min-height: 680px; align-items: flex-end; }
+  :root:not([data-theme='dark']) .hero-inner { padding-top: 0; padding-bottom: clamp(56px, 9svh, 96px); }
+}
+
+/* ---------- scroll cue (light only; sits above the fade into the page) ---------- */
+.scroll-cue { display: none; }
+:root:not([data-theme='dark']) .scroll-cue {
+  display: flex; position: absolute; left: 50%; bottom: clamp(104px, 15svh, 150px); z-index: 4; transform: translateX(-50%);
+  flex-direction: column; align-items: center; gap: 4px; text-decoration: none;
+  font: 600 .66rem/1 var(--font-ui, system-ui, sans-serif); letter-spacing: .3em; text-transform: uppercase; color: #5a2418;
+  text-shadow: 0 1px 8px rgba(255, 246, 222, .9);
+}
+.scroll-cue i { width: 11px; height: 11px; border-right: 2px solid #8c2c25; border-bottom: 2px solid #8c2c25; transform: rotate(45deg); }
+@keyframes cue { 0%, 100% { translate: 0 0; opacity: .5; } 50% { translate: 0 7px; opacity: 1; } }
+html.motion .scroll-cue i { animation: cue 1.8s ease-in-out infinite; }
+
+/* ---------- the cards wait below the screen and rise into it ---------- */
+:root:not([data-theme='dark']) .quick { margin-top: 28px; }
+
+@keyframes card-rise {
+  from { opacity: 0; translate: 0 90px; scale: .9; rotate: 1 0 0 18deg; }
+  60%  { opacity: 1; }
+  to   { opacity: 1; translate: 0 0; scale: 1; rotate: 1 0 0 0deg; }
+}
+@keyframes tile-rise { from { opacity: 0; translate: 0 110px; } to { opacity: 1; translate: 0 0; } }
+@keyframes head-rise { from { opacity: 0; translate: 0 50px; } to { opacity: 1; translate: 0 0; } }
+
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    html.motion .quick li[data-reveal] {
+      opacity: 1; transform: none; transition: none;
+      animation: card-rise linear both; animation-timeline: view(block);
+      animation-range: entry calc(var(--i, 0) * 7%) entry calc(78% + var(--i, 0) * 4%);
+      transform-style: preserve-3d;
+    }
+    .quick ul { perspective: 900px; }
+
+    html.motion .explore-head, html.motion .pillars-body > h2, html.motion .pillars-body > .eyebrow-line {
+      animation: head-rise linear both; animation-timeline: view(block); animation-range: entry 0% entry 60%;
+    }
+    html.motion .flipgrid li {
+      animation: card-rise linear both; animation-timeline: view(block);
+      animation-range: entry calc(var(--i, 0) * 8%) entry calc(80% + var(--i, 0) * 4%);
+    }
+    .flipgrid { perspective: 1000px; }
+
+    /* the big sections do not fade as a block; their cards do the work */
+    html.motion .explore[data-reveal], html.motion .pillars[data-reveal] { opacity: 1; transform: none; transition: none; }
+
+    /* gallery tiles rise as they arrive, on top of the existing coverflow tilt */
+    .explore .car-track > li {
+      animation: coverflow linear both, tile-rise linear both;
+      animation-timeline: view(inline), view(block);
+      animation-range: cover, entry 0% entry 90%;
+    }
+  }
+}
+
+/* ==========================================================================
+   Keep the lamp (vilakku) and the basket boat (vanji) at the bottom clear
+   - the old fade-out at the hero's bottom edge is removed (it washed them out)
+   - the dark green text-fade no longer covers the lamp on the far left
+   - a line of woven kasavu gold closes the hero instead
+   ========================================================================== */
+:root:not([data-theme='dark']) .hero {
+  -webkit-mask-image: none; mask-image: none;
+}
+:root:not([data-theme='dark']) .hero::after {
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 5px; z-index: 5;
+  background: var(--kasavu); opacity: .95; pointer-events: none;
+}
+@media (min-width: 900px) {
+  :root:not([data-theme='dark']) .hero-bg {
+    /* text fade starts after the lamp, and nothing darkens the bottom edge */
+    background: linear-gradient(90deg, transparent 0%, transparent 7%, var(--hero-fade) 15%, var(--hero-fade) 24%, transparent 58%);
+  }
+}
+:root:not([data-theme='dark']) .scroll-cue { bottom: 26px; }
+
+/* ==========================================================================
+   Whole picture on screen: lamp (vilakku) and basket boat (vanji) in full
+   Desktop only (phones keep their own framing).
+   - the stage no longer hangs 6% below the hero, which was cutting the bottom
+     of the picture (boat, basket, flowers); the picture is now bottom-aligned
+   - the background plate is nudged right so the lamp bowl is not cut by the
+     left edge
+   - the green text-fade no longer reaches the lamp
+   - a warm glow breathes around the lamp flame
+   ========================================================================== */
+@media (min-width: 900px) {
+  :root:not([data-theme='dark']) .hero-stage .stage-3d {
+    inset: 0 -1.5% 0 -1.5%;                    /* no background here: in a 3D stage it would paint over the sky and water plate */
+  }
+  :root:not([data-theme='dark']) .hero-stage .layer { object-position: 78% 100%; }
+  :root:not([data-theme='dark']) .hero-stage .l-bg { translate: 1.6% 0; }
+  :root:not([data-theme='dark']) .cloth-glow {
+    -webkit-mask-position: 78% 100%, 0 0; mask-position: 78% 100%, 0 0;
+  }
+  :root:not([data-theme='dark']) .hero-bg {
+    background: linear-gradient(90deg, transparent 0%, transparent 11%, var(--hero-fade) 21%, var(--hero-fade) 27%, transparent 60%);
+  }
+}
+
+/* lamp glow: same plate geometry as the background, so it always sits on the flame */
+.hero-stage .l-lamp { display: none; pointer-events: none; }
+:root:not([data-theme='dark']) .hero-stage .l-lamp { display: block; opacity: .9; }
+@keyframes lamp-flick {
+  0%, 100% { opacity: .92; } 14% { opacity: .72; } 27% { opacity: 1; } 41% { opacity: .8; }
+  58% { opacity: .98; } 73% { opacity: .75; } 88% { opacity: 1; }
+}
+html.motion .l-lamp {
+  animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .75s both, lamp-flick 3.4s ease-in-out 3.2s infinite;
+}
+@media (prefers-reduced-motion: reduce) { .l-lamp { animation: none !important; } }
+
+/* ==========================================================================
+   Headline: two lines instead of three, so the words and buttons stay clear
+   of the cloth. (desktop only)
+   ========================================================================== */
+@media (min-width: 900px) {
+  :root:not([data-theme='dark']) .hero .hero-copy { max-width: 880px; }
+  :root:not([data-theme='dark']) .hero h1 { font-size: clamp(2rem, 3.4vw, 3.2rem); margin-bottom: 14px; }
+}
+@media (min-width: 900px) and (max-height: 760px) {
+  :root:not([data-theme='dark']) .hero .lede { display: none !important; }
+}

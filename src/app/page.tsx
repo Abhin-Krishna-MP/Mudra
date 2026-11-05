@@ -45,8 +45,11 @@ export default async function Home() {
         <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
           <div className="stage-3d" suppressHydrationWarning>
             <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
+            <img className="layer l-bg l-lamp lt" src="/mudra/hero-lamp-glow.webp" alt="" decoding="async" />
             <div className="mist" />
-            <img className="layer l-fig lt" src="/mudra/hero-figure.webp" alt="" fetchPriority="high" decoding="async" />
+            {/* Kathakali: same artwork, same place. The cloth is cut away to its own layer below so only the kasavu floats */}
+            <img className="layer l-fig lt" src="/mudra/hero-figure-top.webp" alt="" fetchPriority="high" decoding="async" />
+            <img className="layer l-cloth lt" src="/mudra/hero-cloth.webp" alt="" fetchPriority="high" decoding="async" />
             <div className="cloth-sheen lt" />
             <div className="layer d-plate d-bg dk" />
             <img className="layer d-fig dk" src="/mudra/hero-dark-figure.webp" alt="" fetchPriority="high" decoding="async" />
@@ -81,6 +84,7 @@ export default async function Home() {
             </div>
           </div>
         </div>
+        <a className="scroll-cue" href="#explore-h" aria-label="Scroll to explore"><span>Scroll</span><i /></a>
       </section>
 
       <div className="wrap">

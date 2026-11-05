@@ -3,6 +3,7 @@ import './home-upgrade.css';
 import './hero-3d.css';
 import './home-premium.css';
 import './home-premium-plus.css';
+import './hero-float.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
@@ -46,7 +47,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         {/* Preload hero images and navbar master artwork to eliminate first-paint lag */}
         <link rel="preload" as="image" href="/mudra/hero-bg.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/hero-figure.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/hero-figure-top.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/hero-cloth.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-dark-bg.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-dark-figure.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/navbar-full.webp" fetchPriority="high" />
