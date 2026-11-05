@@ -37,10 +37,10 @@ export default async function Home() {
           <div className="stage-3d" suppressHydrationWarning>
             <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
             <div className="mist" />
-            <img className="layer l-fig lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
+            <img className="layer l-fig lt" src="/mudra/hero-figure.webp" alt="" fetchPriority="high" decoding="async" />
             <div className="cloth-sheen lt" />
             <div className="layer d-plate d-bg dk" />
-            <img className="layer d-fig dk" src="/mudra/hero-dark-figure.webp" alt="" decoding="async" />
+            <img className="layer d-fig dk" src="/mudra/hero-dark-figure.webp" alt="" fetchPriority="high" decoding="async" />
             {/* Light: silk glows under the pointer. Dark: the oil-lamp flares when the pointer comes near (positions set in Motion.tsx) */}
             <div className="cloth-glow lt" />
             <div className="lamp-rig dk">

@@ -44,7 +44,7 @@ body:has(.hero)::after {
 }
 /* When used as an <img> cut-out (hero-dark-figure.webp) */
 img.dk.d-fig {
-  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% 0;
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% top;
   max-width: none; user-select: none; -webkit-user-drag: none;
 }
 /* When used as a feathered masked div */
@@ -58,7 +58,7 @@ div.dk.d-fig {
   background: linear-gradient(90deg, var(--hero-fade) 0%, var(--hero-fade) 22%, transparent 60%), linear-gradient(0deg, rgba(10, 6, 7, .8), transparent 30%);
   transform: none; transition: none; will-change: auto; z-index: -1;
 }
-:root[data-theme='dark'] .hero { -webkit-mask-image: linear-gradient(#000 calc(100% - 140px), transparent); mask-image: linear-gradient(#000 calc(100% - 140px), transparent); }
+:root[data-theme='dark'] .hero { -webkit-mask-image: linear-gradient(#000 calc(100% - 80px), transparent); mask-image: linear-gradient(#000 calc(100% - 80px), transparent); }
 :root[data-theme='dark'] .mist { background: radial-gradient(55% 100% at 30% 50%, rgba(255, 130, 50, .16), transparent 70%), radial-gradient(45% 100% at 76% 55%, rgba(255, 90, 20, .12), transparent 70%); }
 
 /* Drifting particles on their own composited layer (translateY only, no repaint).
@@ -136,10 +136,19 @@ html.motion .dk.d-fig { animation: d-fig-in 1.9s var(--ease-out) 1.3s both; }
 
 /* Ghost Malayalam wordmark behind the copy: depth through scale, not clutter */
 .ghost-ml {
-  position: absolute; left: -2%; top: 50%; z-index: -1; font: 700 clamp(9rem, 24vw, 22rem)/1 var(--font-ml); white-space: nowrap; pointer-events: none; user-select: none;
-  color: transparent; -webkit-text-stroke: 1.2px color-mix(in srgb, var(--hero-gold) 38%, transparent);
-  opacity: .55; transform: translate3d(calc(var(--mx, 0) * -22px), calc(-50% + var(--sy, 0) * -.05px), 0);
-  -webkit-mask-image: linear-gradient(90deg, #000 20%, transparent 80%); mask-image: linear-gradient(90deg, #000 20%, transparent 80%);
+  position: absolute; left: -2%; top: 50%; z-index: -1;
+  font: 700 clamp(9rem, 24vw, 22rem)/1 var(--font-ml);
+  white-space: nowrap; pointer-events: none; user-select: none;
+  color: transparent;
+  -webkit-text-stroke: 1.5px color-mix(in srgb, var(--hero-gold) 55%, transparent);
+  opacity: .62; transform: translate3d(calc(var(--mx, 0) * -22px), calc(-50% + var(--sy, 0) * -.05px), 0);
+  /* Full left-to-right visibility — no mask so all four glyphs show */
+  -webkit-mask-image: linear-gradient(90deg, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(90deg, #000 10%, #000 90%, transparent 100%);
+  letter-spacing: .02em;
+}
+:root[data-theme='dark'] .ghost-ml {
+  -webkit-text-stroke-color: color-mix(in srgb, var(--hero-gold) 60%, transparent);
 }
 .hero .eyebrow { display: inline-flex; align-items: center; gap: 14px; }
 .hero .eyebrow::before { content: ''; width: 44px; height: 1px; background: linear-gradient(90deg, transparent, var(--hero-gold)); }

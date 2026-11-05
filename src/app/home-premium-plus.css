@@ -14,8 +14,8 @@
 img.dk.d-fig { filter: contrast(1.05) saturate(1.08) drop-shadow(0 0 26px rgba(255, 110, 30, .34)) drop-shadow(0 16px 24px rgba(0, 0, 0, .55)); }
 
 /* ---------- 2. Glass header on scroll ---------- */
-:root { --hdr-glass: linear-gradient(180deg, rgba(6, 40, 33, .92), rgba(6, 34, 28, .82)); }
-:root[data-theme='dark'] { --hdr-glass: linear-gradient(180deg, rgba(14, 8, 6, .92), rgba(10, 6, 7, .84)); }
+:root { --hdr-glass: linear-gradient(180deg, rgba(6, 40, 33, .95), rgba(6, 34, 28, .88)); }
+:root[data-theme='dark'] { --hdr-glass: linear-gradient(180deg, rgba(14, 8, 6, .96), rgba(10, 6, 7, .90)); }
 @supports (animation-timeline: scroll()) {
   body:has(.hero) .site-header { position: fixed; }
   body:has(.hero) .site-header::before,
@@ -23,7 +23,8 @@ img.dk.d-fig { filter: contrast(1.05) saturate(1.08) drop-shadow(0 0 26px rgba(2
     content: ''; position: absolute; left: 0; right: 0; pointer-events: none; opacity: 0;
     animation: hdr-in linear both; animation-timeline: scroll(root); animation-range: 40px 180px;
   }
-  body:has(.hero) .site-header::before { inset: 0; z-index: -1; background: var(--hdr-glass); -webkit-backdrop-filter: blur(16px) saturate(1.4); backdrop-filter: blur(16px) saturate(1.4); box-shadow: 0 10px 30px rgba(0, 0, 0, .35); }
+  body:has(.hero) .site-header::before { inset: 0; z-index: -1; background: var(--hdr-glass); -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6); box-shadow: 0 10px 32px rgba(0, 0, 0, .4); }
+  /* Foil bottom border line that appears on scroll */
   body:has(.hero) .site-header::after { bottom: 0; height: 2px; background: var(--foil-gold); }
   :root[data-theme='dark'] body:has(.hero) .site-header::after { background: var(--foil-ember); }
   @keyframes hdr-in { to { opacity: 1; } }
@@ -154,4 +155,127 @@ html.motion .depth-stage .l-fig, html.motion .depth-stage .d-fig { animation-dur
 @media (prefers-reduced-motion: reduce) {
   .cloth-glow, .lamp-rig, .lamp-flame, .lamp-flame::after { animation: none !important; }
   .hero .btn[data-magnetic], .hero .btn[data-magnetic] .icon { translate: none; }
+}
+
+/* ==========================================================================
+   8. KASAVU BORDER — full-width, prominent, fit-to-screen
+   ========================================================================== */
+.kasavu {
+  width: 100vw; position: relative; left: 50%; right: 50%; margin-left: -50vw; margin-right: -50vw;
+  height: 5px;
+  background: var(--kasavu, linear-gradient(90deg, #8c6914 0%, #f6d27a 20%, #fff3c4 36%, #e9b949 50%, #b9780f 66%, #f6d27a 80%, #8c6914 100%));
+  opacity: .95;
+}
+:root[data-theme='dark'] .kasavu {
+  background: var(--foil-ember);
+  opacity: .75;
+}
+.kasavu-foot { margin-bottom: 0; height: 4px; }
+
+/* ==========================================================================
+   9. LOTUS MARK — always pink in every context
+   ========================================================================== */
+.lotus-mark { color: #e91e8c !important; }
+.brand .lotus-mark { filter: drop-shadow(0 0 10px rgba(233, 30, 99, .4)); }
+.explore-head h2 .lotus-mark { color: #e91e8c !important; }
+
+/* ==========================================================================
+   10. LIGHT HERO — Kathakali: eliminate refresh flicker
+   Force GPU layer and disable any alpha paint before images load.
+   ========================================================================== */
+.hero-stage { contain: layout style; }
+.l-bg, .l-fig, img.dk.d-fig {
+  will-change: transform, opacity;
+  /* Decode in parallel with network load */
+  content-visibility: auto;
+}
+
+/* ==========================================================================
+   11. DARK VILAKU FIX — lamp top must not be clipped
+   The .dk.d-fig image is placed with object-position top so the lamp wick
+   at the top of hero-dark-figure.webp is always visible.
+   ========================================================================== */
+img.dk.d-fig { object-position: 78% top; }
+
+/* ==========================================================================
+   12. FOOTER PREMIUM — dark mat wash + foil top border
+   ========================================================================== */
+.site-footer {
+  border-top: 3px solid transparent;
+  background-image: var(--header-bg);
+  position: relative;
+}
+.site-footer::before {
+  content: ''; position: absolute; left: 0; right: 0; top: 0; height: 3px;
+  background: var(--foil-gold); opacity: .8; pointer-events: none;
+}
+:root[data-theme='dark'] .site-footer::before { background: var(--foil-ember); opacity: .6; }
+:root:not([data-theme='dark']) .site-footer { background: linear-gradient(180deg, #0d4035, #082f28); }
+:root[data-theme='dark'] .site-footer { background: linear-gradient(180deg, #100808, #0a0607); }
+
+/* Footer nav multi-column layout */
+@media (min-width: 820px) {
+  .foot { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr); }
+}
+
+/* ==========================================================================
+   13. HERO CTA BUTTONS — premium interactive states
+   ========================================================================== */
+/* Gold button: animated foil sweep on hover */
+.hero .btn.gold {
+  letter-spacing: .06em;
+  border-radius: 3px;
+  position: relative;
+  overflow: hidden;
+}
+.hero .btn.gold::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 30%, rgba(255, 255, 255, .38) 50%, transparent 70%);
+  background-size: 200% 100%; background-position: -100% 0;
+  transition: background-position .6s var(--ease-out);
+  pointer-events: none;
+}
+.hero .btn.gold:hover::before { background-position: 200% 0; }
+
+/* Ghost button: refined glass */
+.hero .btn.ghost {
+  letter-spacing: .04em;
+  border-radius: 3px;
+}
+
+/* Non-hero primary buttons: also sharp corners */
+.btn { border-radius: 4px; }
+.btn.gold { border-radius: 4px; }
+
+/* ==========================================================================
+   14. PILLARS FLIPGRID — enhanced card premium look
+   ========================================================================== */
+.face.front { border-radius: 20px; }
+.face.back { border-radius: 20px; }
+
+/* ==========================================================================
+   15. SECTION HEADINGS — tighter editorial tracking
+   ========================================================================== */
+.explore-head h2 { letter-spacing: -.015em; }
+h2 { letter-spacing: -.01em; }
+h3 { letter-spacing: -.005em; }
+
+/* ==========================================================================
+   16. BODY TEXT — improved readability
+   ========================================================================== */
+body { line-height: 1.72; }
+.lede { line-height: 1.65; }
+
+/* ==========================================================================
+   17. INNER PAGE SHEET — kasavu bottom accent
+   ========================================================================== */
+.sheet-head.has-depth::after {
+  height: 5px;
+  background: var(--foil-gold);
+  opacity: 1;
+}
+:root[data-theme='dark'] .sheet-head.has-depth::after {
+  background: var(--foil-ember);
+  opacity: .85;
 }
