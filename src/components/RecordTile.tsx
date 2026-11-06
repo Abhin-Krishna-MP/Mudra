@@ -1,6 +1,7 @@
 import type { RecordSummary } from '@/lib/contracts';
-import { typeSingular } from '@/lib/ui';
+import { typeLabel, typeSingular } from '@/lib/ui';
 import { Icon, type IconName } from './Icons';
+import { BookmarkButton } from './BookmarkButton';
 
 /** Picks a small emblem for the card: the art form when the title names it, otherwise the work type. */
 function emblem(r: RecordSummary): IconName {
@@ -25,8 +26,28 @@ function emblem(r: RecordSummary): IconName {
  * and the tile behind it is filled with a blurred, tinted copy of the same image so the frame
  * still reads as a full-bleed picture. The compact (home carousel) arch carries a small emblem badge.
  */
-export function RecordTile({ r, compact, i = 0 }: { r: RecordSummary; compact?: boolean; i?: number }) {
+export function RecordTile({ r, compact, catalogue, i = 0 }: { r: RecordSummary; compact?: boolean; catalogue?: boolean; i?: number }) {
   const ico = emblem(r);
+  if (catalogue) {
+    /* Catalogue card: artwork (uncropped) on a dark mat, then a solid caption bar with title, art form and region. */
+    return (
+      <li className="tile tile-cat" data-reveal suppressHydrationWarning style={{ '--i': i % 8 } as React.CSSProperties}>
+        <a className="tile-link" href={`/r/${r.id}`} data-tilt="6">
+          <span className="tile-art">
+            {r.thumbUrl ? <img src={r.thumbUrl} alt={r.alt} loading="lazy" /> : <span className="tile-withheld">Image withheld</span>}
+          </span>
+          <span className="tile-cap">
+            <span className="tile-title">{r.title}</span>
+            <span className="tile-meta-row">
+              <span className="tile-kind"><Icon name={ico} size={13} /><span>{typeLabel(r.workType)}</span></span>
+              <span className="tile-loc"><Icon name="pin" size={13} /><span>{r.region}</span></span>
+            </span>
+          </span>
+        </a>
+        <BookmarkButton id={r.id} title={r.title} />
+      </li>
+    );
+  }
   return (
     <li className={`tile${compact ? ' tile-compact' : ''}`} data-reveal suppressHydrationWarning style={{ '--i': i % 8 } as React.CSSProperties}>
       <a className="tile-link" href={`/r/${r.id}`} data-tilt="9">
