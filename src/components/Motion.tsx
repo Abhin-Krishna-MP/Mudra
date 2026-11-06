@@ -69,8 +69,8 @@ export function Motion() {
         t.style.setProperty('--gx', `${((px + 0.5) * 100).toFixed(1)}%`); t.style.setProperty('--gy', `${((py + 0.5) * 100).toFixed(1)}%`);
         current = t;
       }
-      // depth surfaces: the home hero and every inner-page header
-      document.querySelectorAll<HTMLElement>('.hero, .sheet-head.has-depth').forEach((h) => {
+      // depth surfaces: the home light hero and every inner-page header
+      document.querySelectorAll<HTMLElement>('.hero:not(.mx-hero), .sheet-head.has-depth').forEach((h) => {
         const hr = h.getBoundingClientRect();
         const rowIn = e.clientY >= hr.top && e.clientY <= hr.bottom;
         const inside = rowIn && e.clientX >= hr.left && e.clientX <= hr.right;
@@ -109,7 +109,7 @@ export function Motion() {
     const onMove = (e: PointerEvent) => { if (e.pointerType !== 'mouse') return; last = e; if (!raf) raf = requestAnimationFrame(frame); };
     const onLeave = () => {
       reset(current); current = null;
-      document.querySelectorAll<HTMLElement>('.hero, .sheet-head.has-depth').forEach((h) => { h.classList.remove('is-over'); h.style.setProperty('--lamp', '0'); });
+      document.querySelectorAll<HTMLElement>('.hero:not(.mx-hero), .sheet-head.has-depth').forEach((h) => { h.classList.remove('is-over'); h.style.setProperty('--lamp', '0'); });
       document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((b) => { b.classList.remove('mag-on'); b.style.removeProperty('--tx'); b.style.removeProperty('--ty'); });
     };
     document.addEventListener('pointermove', onMove, { passive: true });
@@ -123,7 +123,7 @@ export function Motion() {
         sraf = 0;
         const max = document.documentElement.scrollHeight - window.innerHeight;
         root.style.setProperty('--scroll', max > 0 ? Math.min(1, window.scrollY / max).toFixed(4) : '0');
-        document.querySelector<HTMLElement>('.hero')?.style.setProperty('--sy', String(Math.min(window.scrollY, 900)));
+        document.querySelector<HTMLElement>('.hero:not(.mx-hero)')?.style.setProperty('--sy', String(Math.min(window.scrollY, 900)));
       });
     };
     window.addEventListener('scroll', onScroll, { passive: true });

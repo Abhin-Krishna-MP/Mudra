@@ -1,0 +1,446 @@
+/* =========================================================================
+   MUDRA — "Credit the Culture"  ·  Top Section (Light & Dark Theme Coexistence)
+   - Light Theme: Kathakali 3D stage with floating kasavu silk cloth & ivory palette.
+   - Dark Theme: Layered 3D Theyyam hero with night temple plate, embers, & smooth torchlight.
+   - Cleanly integrates with the Kerala Padippura navbar.
+   ========================================================================= */
+
+:root {
+  --m-night: #041218;
+  --m-night-2: #07202a;
+  --m-ink: #f8eedf;
+  --m-muted: #d3c6b4;
+  --m-dim: #a99c8b;
+  --m-gold: #f5bf64;
+  --m-gold-hi: #ffe2a8;
+  --m-gold-lo: #c98a2e;
+  --m-ember: #f0894a;
+  --m-line: rgba(255, 215, 150, .26);
+  --m-glass: rgba(8, 26, 34, .62);
+  --m-serif: 'Playfair Display Variable', 'Playfair Display', Georgia, serif;
+  --m-sans: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --m-nav-h: calc(var(--nav-h, min(88vw, 980px) / 4.7867) * 0.96);
+  --m-ease: cubic-bezier(.2, .8, .2, 1);
+  --u: max(1vw, 1.7778svh);
+}
+
+@media (max-width: 899px) {
+  :root {
+    --m-nav-h: 74px;
+  }
+}
+
+/* =========================================================================
+   1. DUAL-THEME SWITCHING
+   ========================================================================= */
+/* In Light Theme: hide the dark Theyyam hero, show the Kathakali light hero */
+:root:not([data-theme='dark']) .dk-hero {
+  display: none !important;
+}
+:root:not([data-theme='dark']) .lt-hero {
+  display: flex !important;
+}
+
+/* In Dark Theme: hide the light Kathakali hero, show the redesigned Theyyam hero */
+:root[data-theme='dark'] .lt-hero {
+  display: none !important;
+}
+:root[data-theme='dark'] .dk-hero {
+  display: flex !important;
+}
+
+/* =========================================================================
+   2. REDESIGNED DARK HERO (.dk-hero / .mx-hero)
+   ========================================================================= */
+.hero.mx-hero.dk-hero {
+  --mx: 0; --my: 0; --msy: 0;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: max(100svh, 680px);
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  background: radial-gradient(120% 90% at 30% 0%, #0a2a36 0%, var(--m-night) 55%, #020b0f 100%) !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+/* Kasavu gold divider at the hero base */
+.hero.mx-hero.dk-hero::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 4px;
+  z-index: 15;
+  background: var(--kasavu, linear-gradient(90deg, #5c1e06 0%, #d06030 20%, #ffe2b2 38%, #f0894a 52%, #9c3a10 70%, #fbdbaf 85%, #5c1e06 100%));
+  opacity: .95;
+  pointer-events: none;
+}
+
+.mx-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  perspective: 1400px;
+  perspective-origin: 62% 40%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Every layer drifts smoothly by its depth; --msy is 0..1 smoothed by lerp */
+.mx-l {
+  position: absolute;
+  will-change: transform;
+  pointer-events: none;
+  backface-visibility: hidden;
+  transform: translate3d(
+    calc(var(--mx, 0) * var(--dx, 0) * 1px),
+    calc(var(--my, 0) * var(--dy, 0) * 1px - var(--msy, 0) * var(--sp, 0) * 1px),
+    0
+  ) rotateY(calc(var(--mx, 0) * var(--ry, 0) * 1deg));
+  transition: transform 0.08s linear;
+}
+.mx-l img {
+  width: 100%;
+  height: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+  image-rendering: auto;
+}
+
+/* 1 — Temple night plate */
+.mx-l-bg {
+  --dx: -14; --dy: -7; --sp: 45;
+  left: calc(var(--u) * -21);
+  top: calc(var(--u) * -4);
+  width: calc(var(--u) * 112);
+  -webkit-mask-image: linear-gradient(90deg, #000 0, #000 80%, transparent 99%);
+  mask-image: linear-gradient(90deg, #000 0, #000 80%, transparent 99%);
+}
+.mx-l-bg img { filter: saturate(1.08) contrast(1.04); }
+
+.mx-win {
+  position: absolute;
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 190, 90, .85), rgba(255, 150, 50, .28) 45%, transparent 72%);
+  animation: mx-flick 3.6s ease-in-out infinite;
+  transform: translate(-50%, -50%);
+}
+.mx-win.a { left: 69.5%; top: 47.5%; width: 13%; height: 8%; }
+.mx-win.b { left: 66%; top: 61.5%; width: 21%; height: 12%; animation-delay: -1.4s; opacity: .8; }
+.mx-win.c { left: 84%; top: 66%; width: 8%; height: 9%; animation-delay: -2.2s; opacity: .6; }
+@keyframes mx-flick {
+  0%, 100% { opacity: .9; }
+  22% { opacity: .55; }
+  41% { opacity: 1; }
+  63% { opacity: .65; }
+  82% { opacity: .95; }
+}
+
+/* 2 — Drifting warm mist */
+.mx-mist {
+  position: absolute;
+  inset: auto -10% 18% -10%;
+  height: 34%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .5;
+  background: radial-gradient(60% 100% at 20% 60%, rgba(120, 190, 190, .2), transparent 70%),
+              radial-gradient(50% 90% at 70% 40%, rgba(255, 190, 120, .14), transparent 70%);
+  filter: blur(18px);
+  animation: mx-mist 24s ease-in-out infinite alternate;
+}
+@keyframes mx-mist {
+  from { transform: translateX(-4%); }
+  to   { transform: translateX(5%); }
+}
+
+/* 3 — Canvas embers */
+.mx-embers {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+/* 4 — Theyyam figure & smooth torchlight */
+.mx-l-fig {
+  --dx: 24; --dy: 12; --sp: -20; --ry: -1.4;
+  z-index: 3;
+  right: calc(var(--u) * -1.6);
+  top: calc(var(--u) * -1);
+  height: calc(var(--u) * 46);
+  aspect-ratio: 1380 / 1140;
+  transform-origin: 30% 60%;
+}
+
+.mx-fig {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  animation: mx-breathe 7s ease-in-out infinite;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 4%, #000 84%, transparent 99%);
+  mask-image: linear-gradient(180deg, transparent 0, #000 4%, #000 84%, transparent 99%);
+  filter: drop-shadow(-24px 18px 40px rgba(0, 0, 0, .55));
+}
+.mx-fig img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* Butter-smooth, zero-artifact torchlight flame glow on Theyyam */
+.mx-torch-glow {
+  position: absolute;
+  width: 520px;
+  height: 520px;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(255, 215, 120, 0.44) 0%,
+    rgba(255, 155, 50, 0.26) 30%,
+    rgba(235, 95, 20, 0.09) 60%,
+    rgba(180, 50, 10, 0.02) 80%,
+    transparent 100%
+  );
+  transform: translate3d(calc(var(--tpx, 55%) - 260px), calc(var(--tpy, 42%) - 260px), 0);
+  opacity: var(--torch-op, 0.7);
+  transition: opacity 0.4s ease;
+  will-change: transform, opacity;
+}
+
+/* Ambient room/temple torchlight that softly warms the scene under cursor */
+.mx-torch-ambient {
+  position: absolute;
+  width: 760px;
+  height: 760px;
+  left: 0;
+  top: 0;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 2;
+  mix-blend-mode: soft-light;
+  background: radial-gradient(
+    circle closest-side,
+    rgba(255, 205, 110, 0.48) 0%,
+    rgba(255, 145, 40, 0.2) 35%,
+    rgba(210, 80, 15, 0.05) 65%,
+    transparent 100%
+  );
+  transform: translate3d(calc(var(--stx, -9999px) - 380px), calc(var(--sty, -9999px) - 380px), 0);
+  opacity: var(--torch-ambient-op, 0);
+  transition: opacity 0.4s ease;
+  will-change: transform, opacity;
+}
+
+@keyframes mx-breathe {
+  0%, 100% { transform: scale(1) translateY(0); }
+  50% { transform: scale(1.012) translateY(-.4%); }
+}
+
+/* 5 — Gold ribbon + foliage */
+.mx-l-rib {
+  --dx: -30; --dy: -16; --sp: -30;
+  z-index: 4;
+  right: calc(var(--u) * -1);
+  bottom: calc(var(--u) * 0.6);
+  width: calc(var(--u) * 102);
+}
+.mx-rib {
+  animation: mx-drift 9s ease-in-out infinite;
+  transform-origin: 50% 60%;
+  filter: drop-shadow(0 0 28px rgba(245, 170, 70, .35));
+}
+@keyframes mx-drift {
+  0%, 100% { transform: translateY(0) rotate(-.25deg); }
+  50% { transform: translateY(calc(var(--u) * -1.1)) rotate(.35deg); }
+}
+
+.mx-l-leaf-tl {
+  --dx: 40; --dy: 20; --sp: 15;
+  z-index: 7;
+  left: calc(var(--u) * -2.5);
+  top: calc(var(--u) * -2.2);
+  width: calc(var(--u) * 16);
+  transform-origin: 0 0;
+}
+.mx-l-leaf-tl img { animation: mx-sway 8s ease-in-out infinite; transform-origin: 0 0; }
+
+.mx-l-leaf-tr {
+  --dx: -26; --dy: 14;
+  z-index: 1;
+  right: calc(var(--u) * 20);
+  top: calc(var(--u) * -1);
+  width: calc(var(--u) * 14);
+  opacity: .5;
+}
+@keyframes mx-sway {
+  0%, 100% { transform: rotate(0); }
+  50% { transform: rotate(1.4deg); }
+}
+
+/* Legibility veil */
+.mx-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 14, 19, .9) 0%, rgba(3, 14, 19, .62) 26%, rgba(3, 14, 19, .18) 46%, transparent 62%),
+    linear-gradient(180deg, rgba(3, 14, 19, .55) 0, transparent 20%),
+    linear-gradient(0deg, rgba(3, 14, 19, .7) 0, transparent 16%);
+}
+
+/* =========================================================================
+   3. HERO COPY & CALLS TO ACTION (Matches Light Theme 1:1)
+   ========================================================================= */
+.hero.mx-hero.dk-hero .hero-inner {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  padding-top: calc(var(--nav-h, 110px) * .98 + clamp(20px, 2.4vw, 40px)) !important;
+  padding-bottom: 110px !important;
+}
+
+.hero.mx-hero.dk-hero .hero-copy {
+  max-width: 680px;
+  position: relative;
+  z-index: 10;
+}
+
+.hero.mx-hero.dk-hero .eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font: 600 .8rem/1 var(--m-sans);
+  letter-spacing: .32em;
+  text-transform: uppercase;
+  color: var(--m-gold);
+  margin: 0 0 18px;
+}
+.hero.mx-hero.dk-hero .eyebrow::before {
+  content: '';
+  width: 44px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--m-gold));
+}
+
+.hero.mx-hero.dk-hero h1 {
+  font-family: var(--m-serif);
+  font-size: clamp(2.3rem, 4.4vw, 3.8rem);
+  line-height: 1.08;
+  color: var(--m-ink);
+  margin: 0 0 18px;
+  text-shadow: 0 2px 24px rgba(0, 0, 0, .6);
+  white-space: normal;
+  text-wrap: balance;
+}
+.hero.mx-hero.dk-hero h1 em {
+  display: block;
+  font-style: italic;
+  font-weight: 500;
+  color: var(--m-gold);
+  text-shadow: 0 0 20px rgba(245, 191, 100, .45);
+}
+.hero.mx-hero.dk-hero .dot {
+  color: var(--m-gold);
+  padding: 0 .12em;
+}
+
+.hero.mx-hero.dk-hero .lede {
+  font-family: var(--m-sans);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  max-width: 530px;
+  color: rgba(248, 238, 223, 0.92);
+  margin: 0 0 32px;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, .7);
+}
+
+.hero.mx-hero.dk-hero .cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+/* Ensure the scroll-cue is visible in dark theme */
+.hero.mx-hero.dk-hero .scroll-cue {
+  display: flex !important;
+  position: absolute;
+  left: 50%;
+  bottom: 24px;
+  z-index: 16;
+  transform: translateX(-50%);
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  text-decoration: none;
+  font: 600 .68rem/1 var(--m-sans);
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--m-gold);
+  text-shadow: 0 0 12px rgba(0, 0, 0, .8);
+}
+.hero.mx-hero.dk-hero .scroll-cue i {
+  display: block;
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(180deg, var(--m-gold) 0%, transparent 100%);
+  animation: mx-cue-drop 2s ease-in-out infinite;
+}
+@keyframes mx-cue-drop {
+  0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }
+  45%  { transform: scaleY(1); transform-origin: top; opacity: 1; }
+  55%  { transform: scaleY(1); transform-origin: bottom; opacity: 1; }
+  100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
+}
+
+/* =========================================================================
+   4. RESPONSIVE HERO
+   ========================================================================= */
+@media (max-width: 960px) {
+  .hero.mx-hero.dk-hero {
+    min-height: 0;
+    display: flex !important;
+  }
+  .mx-stage {
+    bottom: auto;
+    height: 110vw;
+    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+    mask-image: linear-gradient(180deg, #000 70%, transparent 100%);
+  }
+  .mx-l-bg { left: -92vw; top: 54px; width: 196vw; }
+  .mx-l-fig { right: -24vw; top: 58px; height: 74vw; }
+  .mx-l-rib { right: -22vw; bottom: auto; top: 58vw; width: 150vw; }
+  .mx-l-leaf-tl { left: -8vw; top: -4vw; width: 40vw; }
+  .mx-l-leaf-tr { display: none; }
+  .mx-veil { background: linear-gradient(90deg, rgba(3, 14, 19, .55) 0, transparent 40%), linear-gradient(180deg, rgba(3, 14, 19, .5) 0, transparent 18%); }
+  .hero.mx-hero.dk-hero .hero-inner { padding: 90vw 24px 64px !important; }
+}
+
+@media (max-height: 760px) and (min-width: 961px) {
+  .hero.mx-hero.dk-hero .hero-inner { padding-bottom: 70px !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mx-root *, .mx-root *::before, .mx-root *::after { animation: none !important; transition-duration: .01ms !important; }
+  .mx-h1 .ln > span, .mx-h1 .ln > em { transform: none; }
+  .mx-l { transform: none; }
+  .mx-embers { display: none; }
+}
