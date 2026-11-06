@@ -6,6 +6,8 @@ import './home-premium-plus.css';
 import './hero-float.css';
 import './top-section.css';
 import './hero-kerala.css';
+import './explore-dark.css';
+import './footer-dark.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
@@ -13,12 +15,8 @@ import '@fontsource/noto-serif-malayalam';
 import '@fontsource/noto-serif-malayalam/700.css';
 import { PadippuraNavbar } from '@/components/PadippuraNavbar';
 import type { Metadata, Viewport } from 'next';
-import { SITE_NAME, TAGLINE, DISCLAIMER, NOT_FINANCIAL } from '@/lib/copy';
-import { LotusMark, Waves } from '@/components/Ornaments';
-import { Icon } from '@/components/Icons';
-import { NavLinks } from '@/components/NavLinks';
-import { MobileChrome } from '@/components/MobileChrome';
-import { ThemeToggle } from '@/components/ThemeToggle';
+import { SITE_NAME } from '@/lib/copy';
+import { SiteFooter } from '@/components/SiteFooter';
 import { Motion } from '@/components/Motion';
 
 export const metadata: Metadata = {
@@ -32,18 +30,6 @@ const THEME_BOOT = `try{var t=localStorage.getItem('mudra-theme');if(!t&&window.
 
 /** After first paint, decode the hidden theme's hero art in idle time so the theme switch never waits on image decoding. */
 const THEME_WARM = `(function(){function w(){try{document.querySelectorAll('.hero-stage img, .mx-stage img').forEach(function(i){if(i.decode)i.decode().catch(function(){})})}catch(e){}}if('requestIdleCallback' in window)requestIdleCallback(w,{timeout:2500});else setTimeout(w,1500)})()`;
-
-function Brand() {
-  return (
-    <a className="brand" href="/" aria-label={`Mudra, ${TAGLINE}. Home`}>
-      <LotusMark size={38} />
-      <span className="brand-text">
-        <span className="brand-name">Mudra</span>
-        <span className="brand-tag">CREDIT THE CULTURE</span>
-      </span>
-    </a>
-  );
-}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -63,55 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div className="scroll-bar" aria-hidden="true" />
         <PadippuraNavbar />
         <main id="main">{children}</main>
-        <footer className="site-footer">
-          <div className="foot-brand-row">
-            <div className="wrap foot-brand-inner">
-              <LotusMark size={56} />
-              <div className="foot-headline">
-                <span className="foot-brand-name">Mudra</span>
-                <span className="foot-brand-tag">{TAGLINE}</span>
-              </div>
-            </div>
-          </div>
-          <div className="wrap">
-            <div className="kasavu kasavu-foot" aria-hidden="true" />
-            <Waves className="wave" />
-            <div className="foot">
-              <div className="foot-col foot-col-about">
-                <Brand />
-                <p>{DISCLAIMER}</p>
-                <p>{NOT_FINANCIAL}</p>
-              </div>
-              <nav aria-label="Explore" className="foot-col">
-                <p className="foot-nav-head">Explore</p>
-                <ul>
-                  <li><a href="/catalogue">Cultural Passport</a></li>
-                  <li><a href="/reuse">Reuse Studio</a></li>
-                </ul>
-              </nav>
-              <nav aria-label="Tools" className="foot-col">
-                <p className="foot-nav-head">Tools</p>
-                <ul>
-                  <li><a href="/verify">Verify a record</a></li>
-                  <li><a href="/check">Check an image</a></li>
-                  <li><a href="/submit">Submit a work</a></li>
-                </ul>
-              </nav>
-              <nav aria-label="About" className="foot-col">
-                <p className="foot-nav-head">About</p>
-                <ul>
-                  <li><a href="/review">Reviewers</a></li>
-                  <li><a href="/about">About &amp; limits</a></li>
-                </ul>
-              </nav>
-            </div>
-            <div className="foot-legal">
-              <span>© 2026 Mudra Project · Kerala Cultural Heritage Registry</span>
-              <span className="foot-legal-sep" aria-hidden="true">·</span>
-              <span>Preserving living traditions for future generations</span>
-            </div>
-          </div>
-        </footer>
+        <SiteFooter />
         <Motion />
         <script dangerouslySetInnerHTML={{ __html: THEME_WARM }} />
       </body>

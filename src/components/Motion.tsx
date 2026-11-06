@@ -18,12 +18,19 @@ export function Motion() {
 
     // ---- reveal on scroll ----
     const io = 'IntersectionObserver' in window
-      ? new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io?.unobserve(e.target); } }), { threshold: 0.12, rootMargin: '0px 0px -6% 0px' })
+      ? new IntersectionObserver((entries) => entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io?.unobserve(e.target); } }), { threshold: 0.01, rootMargin: '0px 0px 60px 0px' })
       : null;
     const seen = new WeakSet<Element>();
     const scan = () => document.querySelectorAll('[data-reveal]').forEach((el) => {
       if (seen.has(el)) return; seen.add(el);
-      if (io) io.observe(el); else el.classList.add('is-in');
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight + 60) {
+        el.classList.add('is-in');
+      } else if (io) {
+        io.observe(el);
+      } else {
+        el.classList.add('is-in');
+      }
     });
     // ---- lamp position: map the artwork's lamp wick (image coords) through object-fit: cover onto the stage box ----
     const placeLamp = () => {
@@ -45,7 +52,7 @@ export function Motion() {
       mo.observe(document.body, { childList: true, subtree: true });
       onScroll();
       placeLamp();
-    }, 0);
+    }, 150);
 
     window.addEventListener('resize', placeLamp, { passive: true });
 
