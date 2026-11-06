@@ -28,7 +28,7 @@ function emblem(r: RecordSummary): IconName {
 export function RecordTile({ r, compact, i = 0 }: { r: RecordSummary; compact?: boolean; i?: number }) {
   const ico = emblem(r);
   return (
-    <li className={`tile${compact ? ' tile-compact' : ''}`} data-reveal style={{ '--i': i % 8 } as React.CSSProperties}>
+    <li className={`tile${compact ? ' tile-compact' : ''}`} data-reveal suppressHydrationWarning style={{ '--i': i % 8 } as React.CSSProperties}>
       <a className="tile-link" href={`/r/${r.id}`} data-tilt="9">
         <span className="tile-art" style={r.thumbUrl ? { backgroundImage: `url("${r.thumbUrl}")` } : undefined}>
           {r.thumbUrl ? <img src={r.thumbUrl} alt={r.alt} loading="lazy" /> : <span className="tile-withheld">Image withheld</span>}
