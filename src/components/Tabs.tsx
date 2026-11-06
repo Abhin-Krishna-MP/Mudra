@@ -1,7 +1,8 @@
 'use client';
 import { useId, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
+import { Icon, type IconName } from './Icons';
 
-export interface TabDef { id: string; label: string; content: ReactNode }
+export interface TabDef { id: string; label: string; content: ReactNode; icon?: IconName }
 
 /** Accessible tabs (arrow keys, Home/End). Panel content is rendered by the server and only shown/hidden here. */
 export function Tabs({ tabs, label }: { tabs: TabDef[]; label: string }) {
@@ -21,7 +22,7 @@ export function Tabs({ tabs, label }: { tabs: TabDef[]; label: string }) {
     <div className="tabs">
       <div role="tablist" aria-label={label} className="tablist">
         {tabs.map((t, i) => (
-          <button key={t.id} ref={(el) => { refs.current[i] = el; }} role="tab" type="button" id={`${uid}-t-${t.id}`} aria-selected={i === active} aria-controls={`${uid}-p-${t.id}`} tabIndex={i === active ? 0 : -1} onClick={() => setActive(i)} onKeyDown={(e) => onKey(e, i)}>{t.label}</button>
+          <button key={t.id} ref={(el) => { refs.current[i] = el; }} role="tab" type="button" id={`${uid}-t-${t.id}`} aria-selected={i === active} aria-controls={`${uid}-p-${t.id}`} tabIndex={i === active ? 0 : -1} onClick={() => setActive(i)} onKeyDown={(e) => onKey(e, i)}>{t.icon && <Icon name={t.icon} size={18} />}<span>{t.label}</span></button>
         ))}
       </div>
       {tabs.map((t, i) => (
