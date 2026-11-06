@@ -48,6 +48,8 @@ export default async function Home() {
             <img className="layer l-bg l-lamp lt" src="/mudra/hero-lamp-glow.webp" alt="" decoding="async" />
             <div className="mist" />
             {/* Kathakali: same artwork, same place. The cloth is cut away to its own layer below so only the kasavu floats */}
+            {/* Static under-plate (the original full artwork): if the floating cloth ever drifts, this fills the gap so no blank shows */}
+            <img className="layer l-fig l-under lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
             <img className="layer l-fig lt" src="/mudra/hero-figure-top.webp" alt="" fetchPriority="high" decoding="async" />
             <img className="layer l-cloth lt" src="/mudra/hero-cloth.webp" alt="" fetchPriority="high" decoding="async" />
             <div className="cloth-sheen lt" />

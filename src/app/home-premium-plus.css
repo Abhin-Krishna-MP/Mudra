@@ -374,7 +374,7 @@ body { line-height: 1.72; }
 }
 
 /* ==========================================================================
-   18. PADIPPURA / NALUKETTU ROOF NAVBAR (master artwork, 2117 x 421)
+   18. PADIPPURA / NALUKETTU ROOF NAVBAR (master artwork, 2087 x 436)
    - Bar spans ~94% of the viewport (max 1500px), centred, floating over the hero.
    - Artwork is the clean bar (no baked-in active state). The green active pill,
      gold diamonds and label are live HTML, so they follow the current page.
@@ -382,7 +382,7 @@ body { line-height: 1.72; }
    ========================================================================== */
 :root {
   --nav-w: min(88vw, 980px);
-  --nav-h: calc(var(--nav-w) / 5.0285); /* 2117 / 421 */
+  --nav-h: calc(var(--nav-w) / 4.7867); /* 2087 / 436 */
 }
 
 body .site-header.padippura-header,
@@ -427,7 +427,7 @@ body:has(.hero) .site-header.padippura-header::after,
 .padippura-desktop-stage {
   position: relative;
   width: var(--nav-w);
-  aspect-ratio: 2117 / 421;
+  aspect-ratio: 2087 / 436;
   margin: 4px auto 0;
   pointer-events: auto;
   container-type: inline-size;
@@ -440,7 +440,7 @@ body:has(.hero) .site-header.padippura-header::after,
 }
 
 /* Hotspots: left/width are % of artwork width, top/height % of artwork height.
-   Bar centre line is y = 56.05% (236 / 421). */
+   Bar centre line is y = 55.96% (244 / 436). */
 .padippura-hotspots { position: absolute; inset: 0; pointer-events: none; }
 .padippura-hotspot {
   position: absolute;
@@ -455,26 +455,26 @@ body:has(.hero) .site-header.padippura-header::after,
 .padippura-hotspot:focus-visible { outline: 2px solid #dfb76c; outline-offset: 3px; }
 
 /* Brand: lotus + Mudra + Credit the Culture */
-.spot-brand { left: 5.1%; width: 17.1%; top: 41.6%; height: 29.7%; border-radius: 14px; }
+.spot-brand { left: 5.56%; width: 17.44%; top: 45.64%; height: 20.64%; border-radius: 14px; }
 
 /* Text links: 62px-tall pills centred on the bar */
 .spot-home, .spot-catalogue, .spot-reuse, .spot-about {
-  top: 48.7%; height: 14.7%; border-radius: 999px;
+  top: 48.85%; height: 14.22%; border-radius: 999px;
   display: flex; align-items: center; justify-content: center;
 }
-.spot-home      { left: 36.47%; width: 6.61%; }
-.spot-catalogue { left: 44.45%; width: 8.97%; }
-.spot-reuse     { left: 55.41%; width: 11.1%; }
-.spot-about     { left: 68.3%; width: 6.71%; }
+.spot-home      { left: 36.99%; width: 7.38%; }
+.spot-catalogue { left: 45.23%; width: 10.06%; }
+.spot-reuse     { left: 56.25%; width: 11.98%; }
+.spot-about     { left: 69.19%; width: 7.76%; }
 
-/* Round buttons (diameter ~74px in artwork) */
+/* Round buttons (diameter ~72px in artwork) */
 .spot-search, .spot-theme, .spot-bell, .spot-avatar {
-  top: 47.27%; height: 17.58%; border-radius: 50%;
+  top: 48.2%; height: 16.51%; border-radius: 50%;
 }
-.spot-search { left: 77.42%; width: 3.5%; }
-.spot-theme  { left: 81.96%; width: 3.5%; }
-.spot-bell   { left: 86.44%; width: 3.5%; }
-.spot-avatar { left: 91.17%; width: 3.68%; top: 46.8%; height: 18.5%; }
+.spot-search { left: 78.92%; width: 3.45%; }
+.spot-theme { left: 83.47%; width: 3.45%; }
+.spot-bell { left: 88.02%; width: 3.45%; }
+.spot-avatar { left: 92.81%; width: 3.74%; top: 47.5%; height: 17.89%; }
 .spot-theme { background: transparent !important; min-height: 0 !important; }
 
 /* Hover: soft gold halo (links and buttons) */
