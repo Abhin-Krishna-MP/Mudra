@@ -62,25 +62,25 @@ export function TopSectionDark({
           <i
             className="eye eye-l"
             style={{
-              left: '59.171%',
-              top: '25.021%',
-              width: '3.223%',
-              height: '1.988%',
-              backgroundSize: '3102.38% auto',
-              '--bx': '61.142%',
-              '--by': '25.528%',
+              left: '47.813%',
+              top: '46.147%',
+              width: '3.377%',
+              height: '2.237%',
+              backgroundSize: '2961.36% auto',
+              '--bx': '49.484%',
+              '--by': '47.203%',
             } as React.CSSProperties}
           />
           <i
             className="eye eye-r"
             style={{
-              left: '64.543%',
-              top: '25.849%',
-              width: '3.530%',
-              height: '1.988%',
-              backgroundSize: '2832.61% auto',
-              '--bx': '66.905%',
-              '--by': '26.374%',
+              left: '56.025%',
+              top: '44.988%',
+              width: '4.912%',
+              height: '2.320%',
+              backgroundSize: '2035.94% auto',
+              '--bx': '58.918%',
+              '--by': '46.056%',
             } as React.CSSProperties}
           />
         </div>
