@@ -20,8 +20,11 @@
   content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; bottom: 0; left: 50%; width: 100vw; margin-left: -50vw;
   background: url('/mudra/page-light-teal-kathakali.webp') center / cover no-repeat fixed, #0b4a3f;
 }
-:root:not([data-theme='dark']) .wrap.band-a::before {
-  -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 150px); mask-image: linear-gradient(180deg, transparent 0, #000 150px);
+:root:not([data-theme='dark']) .explore {
+  background: transparent;
+  border: 0;
+  box-shadow: none;
+  border-radius: 0;
 }
 @media (max-width: 760px) {
   :root:not([data-theme='dark']) .wrap.band-a::before,
