@@ -37,7 +37,7 @@ export default async function Home() {
       <TopSectionDark scrollCueHref="#quick-links" />
 
       {/* Preserved Lower Sections: Quick Actions, Marquee Ticker, Record Explorer, and 3D Pillars */}
-      <div className="wrap" id="quick-links">
+      <div className="wrap band-a" id="quick-links">
         <nav className="quick" aria-label="What would you like to do?">
           <ul>
             {QUICK.map((q) => (
@@ -77,7 +77,9 @@ export default async function Home() {
           )}
           {shown.length > 0 && <a className="view-all view-all-foot" href="/catalogue">View all {all.length} records <Icon name="arrow" size={16} /></a>}
         </section>
+      </div>
 
+      <div className="wrap band-b">
         <section className="pillars" aria-labelledby="pill-h" data-reveal suppressHydrationWarning>
           <Lotus3D />
           <div className="pillars-body">
