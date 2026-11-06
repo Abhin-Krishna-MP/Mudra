@@ -68,7 +68,7 @@
 
 /* ---------- Track + buttons ---------- */
 :root[data-theme='dark'] .explore .carousel { --cols: 5; --gap: clamp(12px, 1.6vw, 20px); --pad: max(7px, calc(var(--gap) - 7px)); }
-:root[data-theme='dark'] .explore .car-stage { margin-inline: calc(-1 * var(--pad)); }
+:root[data-theme='dark'] .explore .car-stage { margin-inline: calc(-1 * var(--pad)); position: relative; }
 :root[data-theme='dark'] .explore .car-track {
   gap: var(--gap); padding: 14px var(--pad) 30px; perspective: none; scroll-padding-inline: var(--pad);
 }
@@ -78,12 +78,14 @@
   opacity: 1; transform: none; transition: none;
 }
 :root[data-theme='dark'] .explore .car-btn {
+  position: absolute; z-index: 30; cursor: pointer; pointer-events: auto; touch-action: manipulation; user-select: none;
   width: 44px; height: 44px; min-height: 44px; color: var(--ex-gold); top: calc(50% - 16px);
   background: radial-gradient(circle at 35% 28%, #3a2418, #170d09 72%);
   border: 1.5px solid var(--ex-line); box-shadow: 0 8px 20px rgba(0, 0, 0, .55), 0 0 16px rgba(242, 181, 96, .18);
-  transition: border-color .25s, box-shadow .25s, color .25s;
+  transition: border-color .25s, box-shadow .25s, color .25s, transform .15s;
 }
 :root[data-theme='dark'] .explore .car-btn:hover { color: var(--ex-gold-hi); border-color: var(--ex-gold); box-shadow: 0 8px 22px rgba(0, 0, 0, .6), 0 0 22px rgba(242, 181, 96, .4); background: radial-gradient(circle at 35% 28%, #46291a, #1c0f0a 72%); }
+:root[data-theme='dark'] .explore .car-btn:active { transform: translateY(-50%) scale(0.92); }
 :root[data-theme='dark'] .explore .car-btn.prev { left: calc(var(--pad) - 22px); }
 :root[data-theme='dark'] .explore .car-btn.next { right: calc(var(--pad) - 22px); }
 
@@ -354,3 +356,63 @@
   :root[data-theme='dark'] .pillars .eyebrow-line { font-size: .7rem; letter-spacing: .22em; text-indent: .22em; gap: 12px; white-space: nowrap; }
   :root[data-theme='dark'] .pillars .eyebrow-line::before, :root[data-theme='dark'] .pillars .eyebrow-line::after { flex-basis: 28px; }
 }
+
+/* ==========================================================================
+   QUICK LINKS BAR  ·  dark theme
+   A dark brown bar with a gold edge, five links separated by fading gold
+   hairlines, and a gold-framed icon over each label. Static: no floating,
+   tilting, orbiting or lifting. Highlight appears on hover or focus only.
+   ========================================================================== */
+:root[data-theme='dark'] .quick {
+  margin: -72px 0 0; padding: 18px 20px; overflow: visible; border: 1.5px solid transparent; border-radius: 28px;
+  background:
+    linear-gradient(180deg, #21140e 0%, #170d09 100%) padding-box,
+    linear-gradient(180deg, #f7c470 0%, #c98a3a 45%, #f2b560 100%) border-box;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, .55), 0 0 26px rgba(242, 160, 70, .22), inset 0 -10px 24px rgba(242, 160, 70, .06);
+}
+:root[data-theme='dark'] .quick::before { display: none; animation: none; }
+:root[data-theme='dark'] .quick ul { perspective: none; align-items: stretch; gap: 0; }
+:root[data-theme='dark'] .quick li {
+  position: relative; display: flex; animation: none !important; opacity: 1; transform: none; filter: none; translate: none; rotate: none; scale: none;
+}
+:root[data-theme='dark'] .quick li + li { border-left: 0; }
+:root[data-theme='dark'] .quick li + li::before {
+  content: ''; position: absolute; left: 0; top: 14%; bottom: 14%; width: 1px; pointer-events: none;
+  background: linear-gradient(180deg, transparent, rgba(242, 181, 96, .85) 50%, transparent); box-shadow: 0 0 8px rgba(242, 181, 96, .45);
+  transition: opacity .25s;
+}
+:root[data-theme='dark'] .quick li:hover::before,
+:root[data-theme='dark'] .quick li:hover + li::before,
+:root[data-theme='dark'] .quick li:focus-within::before,
+:root[data-theme='dark'] .quick li:focus-within + li::before { opacity: 0; }
+
+:root[data-theme='dark'] .quick a {
+  flex: 1; justify-content: center; gap: 12px; padding: 18px 12px 16px; margin: 0 6px; border: 1px solid transparent; border-radius: 22px;
+  color: #fbf0dc; font: 600 clamp(1rem, 1.35vw, 1.2rem)/1.2 var(--font-display); letter-spacing: .005em;
+  transform: none !important; transform-style: flat; transition: background .25s, border-color .25s, box-shadow .25s, color .25s;
+}
+:root[data-theme='dark'] .quick a::before { display: none; }
+:root[data-theme='dark'] .quick a > span:last-child::after { display: none; }
+:root[data-theme='dark'] .quick .q-ico {
+  width: 56px; height: 56px; border-radius: 16px; color: #f2b560; border: 1.5px solid rgba(242, 181, 96, .8);
+  background: linear-gradient(180deg, #2a1a10, #170d09); box-shadow: inset 0 0 0 3px #170d09, inset 0 0 0 4px rgba(242, 181, 96, .22);
+  animation: none !important; transform: none !important; transform-style: flat; transition: none;
+}
+:root[data-theme='dark'] .quick .q-ico .icon { transform: none; filter: none; width: 28px; height: 28px; stroke-width: 1.6; }
+
+/* the highlighted plate: only when hovering or focused */
+:root[data-theme='dark'] .quick a:hover,
+:root[data-theme='dark'] .quick a:focus-visible {
+  background: linear-gradient(180deg, rgba(150, 96, 36, .62), rgba(70, 40, 18, .55));
+  border-color: rgba(242, 181, 96, .7);
+  box-shadow: 0 0 22px rgba(242, 160, 70, .28), inset 0 -14px 18px -10px rgba(255, 190, 90, .5);
+}
+:root[data-theme='dark'] .quick a:focus-visible { outline: 2px solid #ffe2a8; outline-offset: 2px; }
+
+@media (max-width: 899px) {
+  :root[data-theme='dark'] .quick { margin-top: -56px; padding: 12px 6px; border-radius: 22px; }
+  :root[data-theme='dark'] .quick a { margin: 0 2px; padding: 10px 2px 8px; gap: 6px; border-radius: 14px; font-size: .74rem; }
+  :root[data-theme='dark'] .quick .q-ico { width: 44px; height: 44px; border-radius: 13px; }
+  :root[data-theme='dark'] .quick .q-ico .icon { width: 22px; height: 22px; }
+}
+@media (max-width: 389px) { :root[data-theme='dark'] .quick a { font-size: .66rem; } }

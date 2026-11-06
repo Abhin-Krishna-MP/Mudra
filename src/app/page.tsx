@@ -12,7 +12,7 @@ export const dynamic = 'force-dynamic';
 const QUICK: { href: string; label: string; icon: IconName }[] = [
   { href: '/catalogue', label: 'Cultural Passport', icon: 'book' },
   { href: '/reuse', label: 'Reuse Studio', icon: 'layers' },
-  { href: '/verify', label: 'Verify Record', icon: 'shield' },
+  { href: '/verify', label: 'Verify a Record', icon: 'shield' },
   { href: '/check', label: 'Check an Image', icon: 'scan' },
   { href: '/submit', label: 'Submit a Record', icon: 'upload' },
 ];
