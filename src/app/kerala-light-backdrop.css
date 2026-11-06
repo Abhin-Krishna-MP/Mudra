@@ -42,13 +42,6 @@ html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .pa
 }
 html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page)) .site-header::after { display: none; }
 
-/* footer: let the painting show through, no cream band */
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) .site-footer {
-  background: linear-gradient(180deg, rgba(3, 26, 21, 0) 0%, rgba(3, 26, 21, .72) 42%, rgba(3, 26, 21, .9) 100%);
-}
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) .site-footer::after { content: none; }
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) .foot-scallop { background-color: rgba(3, 26, 21, 0); }
-
 /* ---------- About: its gold wave strip is not needed, the artwork has a shoreline ---------- */
 :root:not([data-theme='dark']) body:has(.about-page) main::after { display: none; }
 :root:not([data-theme='dark']) body:has(.about-page) main { padding-bottom: 40px; }
