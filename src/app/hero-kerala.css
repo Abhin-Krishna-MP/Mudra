@@ -238,20 +238,7 @@
 /* Scroll cue */
 .hero.lt-hero.mh .mh-scroll,
 .hero.lt-hero.mh .scroll-cue {
-  position: absolute;
-  z-index: 20;
-  left: 50%;
-  bottom: 5%;
-  translate: -50% 0;
-  display: grid;
-  justify-items: center;
-  gap: 4px;
-  color: #2a1408;
-  text-decoration: none;
-  font-size: .7rem;
-  letter-spacing: .26em;
-  font-weight: 600;
-  animation: none !important;
+  display: none !important;
 }
 
 /* Mobile & Tablet */
