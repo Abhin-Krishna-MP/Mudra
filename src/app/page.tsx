@@ -5,6 +5,7 @@ import { LotusMark } from '@/components/Ornaments';
 import { Carousel } from '@/components/Carousel';
 import { RecordTile } from '@/components/RecordTile';
 import { Lotus3D } from '@/components/Lotus3D';
+import { TopSectionDark } from '@/components/TopSectionDark';
 
 export const dynamic = 'force-dynamic';
 
@@ -29,71 +30,23 @@ const PILLARS: { word: string; text: string; cta: string; href: string; icon: Ic
 export default async function Home() {
   const all = await listRecords(await getDb());
   const shown = all.slice(0, 10);
+
   return (
     <>
-      {/* Full-screen stage curtain: sits above the navbar and every card, parts on load, then removes itself */}
-      <div className="stage-curtain" aria-hidden="true">
-        <div className="cur-panel cur-l" />
-        <div className="cur-panel cur-r" />
-        <div className="cur-mark">
-          <span className="cur-word" lang="ml">മുദ്ര</span>
-          <span className="cur-rule"><i /><b /><i /></span>
-          <span className="cur-sub">Credit the Culture</span>
-        </div>
-      </div>
-      <section className="hero" aria-labelledby="hero-h" suppressHydrationWarning>
-        <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
-          <div className="stage-3d" suppressHydrationWarning>
-            <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
-            <img className="layer l-bg l-lamp lt" src="/mudra/hero-lamp-glow.webp" alt="" decoding="async" />
-            <div className="mist" />
-            {/* Kathakali: same artwork, same place. The cloth is cut away to its own layer below so only the kasavu floats */}
-            {/* Static under-plate (the original full artwork): if the floating cloth ever drifts, this fills the gap so no blank shows */}
-            <img className="layer l-fig l-under lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
-            <img className="layer l-fig lt" src="/mudra/hero-figure-top.webp" alt="" fetchPriority="high" decoding="async" />
-            <img className="layer l-cloth lt" src="/mudra/hero-cloth.webp" alt="" fetchPriority="high" decoding="async" />
-            <div className="cloth-sheen lt" />
-            <div className="layer d-plate d-bg dk" />
-            <img className="layer d-fig dk" src="/mudra/hero-dark-figure.webp" alt="" fetchPriority="high" decoding="async" />
-            {/* Light: silk glows under the pointer. Dark: the oil-lamp flares when the pointer comes near (positions set in Motion.tsx) */}
-            <div className="cloth-glow lt" />
-            <div className="lamp-rig dk">
-              <i className="lamp-bloom" />
-              <i className="lamp-spill" />
-              <i className="lamp-spot" />
-              <i className="lamp-flame" />
-            </div>
-          </div>
-        </div>
-        <div className="hero-bg" aria-hidden="true" />
-        <div className="wrap hero-inner">
-          <div className="hero-copy">
-            <p className="eyebrow">Kerala’s Living Heritage</p>
-            <h1 id="hero-h"><span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span><span className="dot" aria-hidden="true"> · </span><span className="sr">, </span><span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span> <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly</em></h1>
-            <p className="lede">A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.</p>
-            <div className="cta">
-              <a className="btn gold btn-explore" href="/catalogue">
-                <span className="btn-seal" aria-hidden="true" />
-                <Icon name="book" size={19} />
-                <span>Explore Catalogue</span>
-                <Icon name="arrow" size={17} />
-              </a>
-              <a className="btn ghost btn-reuse" href="/reuse">
-                <Icon name="layers" size={20} />
-                <span>Reuse Studio</span>
-                <Icon name="arrow" size={17} />
-              </a>
-            </div>
-          </div>
-        </div>
-        <a className="scroll-cue" href="#explore-h" aria-label="Scroll to explore"><span>Scroll</span><i /></a>
-      </section>
+      {/* Redesigned Dark Top Section: Full-screen Stage Curtain & Layered 3D Theyyam Hero */}
+      <TopSectionDark scrollCueHref="#quick-links" />
 
-      <div className="wrap">
+      {/* Preserved Lower Sections: Quick Actions, Marquee Ticker, Record Explorer, and 3D Pillars */}
+      <div className="wrap" id="quick-links">
         <nav className="quick" aria-label="What would you like to do?">
           <ul>
             {QUICK.map((q) => (
-              <li key={q.href} data-reveal suppressHydrationWarning style={{ '--i': QUICK.indexOf(q) } as React.CSSProperties}><a href={q.href} data-tilt="14"><span className="q-ico"><Icon name={q.icon} size={30} /></span><span>{q.label}</span></a></li>
+              <li key={q.href} data-reveal suppressHydrationWarning style={{ '--i': QUICK.indexOf(q) } as React.CSSProperties}>
+                <a href={q.href} data-tilt="14">
+                  <span className="q-ico"><Icon name={q.icon} size={30} /></span>
+                  <span>{q.label}</span>
+                </a>
+              </li>
             ))}
           </ul>
         </nav>
@@ -107,13 +60,19 @@ export default async function Home() {
 
         <section className="explore" aria-labelledby="explore-h" data-reveal>
           <div className="explore-head">
-            <h2 id="explore-h"><LotusMark size={30} />Explore Kerala’s Cultural Expressions{all.length > 0 && <span className="count">{all.length} {all.length === 1 ? 'record' : 'records'}</span>}</h2>
+            <h2 id="explore-h">
+              <LotusMark size={30} />
+              Explore Kerala’s Cultural Expressions
+              {all.length > 0 && <span className="count">{all.length} {all.length === 1 ? 'record' : 'records'}</span>}
+            </h2>
             <a className="view-all" href="/catalogue">View All <Icon name="arrow" size={18} /></a>
           </div>
           {shown.length === 0 ? (
             <p className="muted">No records are published yet. <a href="/submit">Submit a work</a>.</p>
           ) : (
-            <Carousel label="Cultural expressions">{shown.map((r, i) => <RecordTile key={r.id} r={r} i={i} compact />)}</Carousel>
+            <Carousel label="Cultural expressions">
+              {shown.map((r, i) => <RecordTile key={r.id} r={r} i={i} compact />)}
+            </Carousel>
           )}
         </section>
 
@@ -127,8 +86,15 @@ export default async function Home() {
                 <li key={p.word} style={{ '--i': i } as React.CSSProperties}>
                   <a className="flip" href={p.href}>
                     <span className="flip-in">
-                      <span className="face front" aria-hidden="true"><span className="q-ico"><Icon name={p.icon} size={30} /></span><span className="flip-word">{p.word}</span></span>
-                      <span className="face back"><strong className="flip-word">{p.word}</strong><span>{p.text}</span><span className="flip-go">{p.cta} <Icon name="arrow" size={16} /></span></span>
+                      <span className="face front" aria-hidden="true">
+                        <span className="q-ico"><Icon name={p.icon} size={30} /></span>
+                        <span className="flip-word">{p.word}</span>
+                      </span>
+                      <span className="face back">
+                        <strong className="flip-word">{p.word}</strong>
+                        <span>{p.text}</span>
+                        <span className="flip-go">{p.cta} <Icon name="arrow" size={16} /></span>
+                      </span>
                     </span>
                   </a>
                 </li>

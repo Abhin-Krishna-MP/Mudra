@@ -4,6 +4,7 @@ import './hero-3d.css';
 import './home-premium.css';
 import './home-premium-plus.css';
 import './hero-float.css';
+import './top-section.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
@@ -29,7 +30,7 @@ export const viewport: Viewport = { width: 'device-width', initialScale: 1, them
 const THEME_BOOT = `try{var t=localStorage.getItem('mudra-theme');if(!t&&window.matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t==='dark'||t==='light')document.documentElement.setAttribute('data-theme',t)}catch(e){}try{if(!window.matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('motion')}catch(e){}`;
 
 /** After first paint, decode the hidden theme's hero art in idle time so the theme switch never waits on image decoding. */
-const THEME_WARM = `(function(){function w(){try{document.querySelectorAll('.hero-stage img').forEach(function(i){if(i.decode)i.decode().catch(function(){})})}catch(e){}}if('requestIdleCallback' in window)requestIdleCallback(w,{timeout:2500});else setTimeout(w,1500)})()`;
+const THEME_WARM = `(function(){function w(){try{document.querySelectorAll('.hero-stage img, .mx-stage img').forEach(function(i){if(i.decode)i.decode().catch(function(){})})}catch(e){}}if('requestIdleCallback' in window)requestIdleCallback(w,{timeout:2500});else setTimeout(w,1500)})()`;
 
 function Brand() {
   return (
@@ -49,12 +50,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         {/* Preload hero images and navbar master artwork to eliminate first-paint lag */}
+        <link rel="preload" as="image" href="/mudra/navbar-full.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-bg.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-figure-top.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/hero-cloth.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/hero-dark-bg.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/hero-dark-figure.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/navbar-full.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/bg-temple.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/theyyam.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/ribbon.webp" />
       </head>
       <body>
         <a className="skip" href="#main">Skip to content</a>
