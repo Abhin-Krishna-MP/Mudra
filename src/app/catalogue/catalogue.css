@@ -126,6 +126,7 @@ body:has(.cat-page) .site-header::after { display: none; }
 
 /* ---------- Caption cards ---------- */
 .cat-grid { margin: 0; gap: 22px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+.tile-cat { opacity: 1 !important; transform: none !important; animation: none !important; }
 .tile-cat .tile-link {
   display: flex; flex-direction: column; aspect-ratio: auto; border-radius: 18px; color: var(--ink);
   border: 1px solid var(--cat-edge); background: #130d0b;

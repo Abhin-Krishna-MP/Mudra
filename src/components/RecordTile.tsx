@@ -31,7 +31,7 @@ export function RecordTile({ r, compact, catalogue, i = 0 }: { r: RecordSummary;
   if (catalogue) {
     /* Catalogue card: artwork (uncropped) on a dark mat, then a solid caption bar with title, art form and region. */
     return (
-      <li className="tile tile-cat" data-reveal suppressHydrationWarning style={{ '--i': i % 8 } as React.CSSProperties}>
+      <li className="tile tile-cat" suppressHydrationWarning style={{ '--i': i % 8 } as React.CSSProperties}>
         <a className="tile-link" href={`/r/${r.id}`} data-tilt="6">
           <span className="tile-art">
             {r.thumbUrl ? <img src={r.thumbUrl} alt={r.alt} loading="lazy" /> : <span className="tile-withheld">Image withheld</span>}
