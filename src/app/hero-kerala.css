@@ -103,7 +103,7 @@
 .hero.lt-hero.mh .l-fig {
   position: absolute;
   left: 62%;
-  top: -8%;
+  top: -18%;
   width: 44%;
   z-index: 4;
   height: auto;
@@ -395,7 +395,7 @@
   .hero.lt-hero.mh .l-fig {
     left: 28%;
     width: 78%;
-    top: 6%;
+    top: -4%;
     opacity: .55;
   }
   .hero.lt-hero.mh .mh-copy {
