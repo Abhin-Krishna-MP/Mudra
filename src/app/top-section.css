@@ -399,7 +399,7 @@
   width: 1px;
   height: 28px;
   background: linear-gradient(180deg, var(--m-gold) 0%, transparent 100%);
-  animation: mx-cue-drop 2s ease-in-out infinite;
+  animation: none !important;
 }
 @keyframes mx-cue-drop {
   0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }

@@ -381,11 +381,7 @@
   font-size: .7rem;
   letter-spacing: .26em;
   font-weight: 600;
-  animation: bob 2.2s ease-in-out infinite;
-}
-
-@keyframes bob {
-  50% { transform: translateY(5px); }
+  animation: none !important;
 }
 
 /* Mobile & Tablet */

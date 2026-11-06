@@ -68,7 +68,7 @@ html.motion .l-cloth {
 }
 .scroll-cue i { width: 11px; height: 11px; border-right: 2px solid #8c2c25; border-bottom: 2px solid #8c2c25; transform: rotate(45deg); }
 @keyframes cue { 0%, 100% { translate: 0 0; opacity: .5; } 50% { translate: 0 7px; opacity: 1; } }
-html.motion .scroll-cue i { animation: cue 1.8s ease-in-out infinite; }
+html.motion .scroll-cue i { animation: none !important; }
 
 /* ---------- the cards wait below the screen and rise into it ---------- */
 :root:not([data-theme='dark']) .quick { margin-top: 28px; }
