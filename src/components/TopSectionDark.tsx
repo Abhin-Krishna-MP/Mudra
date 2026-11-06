@@ -92,33 +92,35 @@ export function TopSectionDark({
         <div className="layer l-motes" aria-hidden="true" />
         <div className="layer l-fade" aria-hidden="true" />
 
-        <div className="mh-copy">
-          <p className="mh-eyebrow">Kerala’s Living Heritage</p>
-          <h1 id="hero-lt-h">
-            <span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span>
-            <span className="dot" aria-hidden="true"> · </span>
-            <span className="sr">, </span>
-            <span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span>
-            <span className="dot" aria-hidden="true"> · </span>
-            <span className="sr">, </span>
-            <span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span>{' '}
-            <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly.</em>
-          </h1>
-          <p className="mh-lede">
-            A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.
-          </p>
-          <div className="cta mh-cta">
-            <a className="btn gold btn-explore mh-btn gold" href="/catalogue">
-              <span className="btn-seal" aria-hidden="true" />
-              <Icon name="book" size={19} />
-              <span>Explore Catalogue</span>
-              <Icon name="arrow" size={17} />
-            </a>
-            <a className="btn ghost btn-reuse mh-btn ghost" href="/reuse">
-              <Icon name="layers" size={20} />
-              <span>Reuse Studio</span>
-              <Icon name="arrow" size={17} />
-            </a>
+        <div className="wrap hero-inner">
+          <div className="hero-copy">
+            <p className="eyebrow">Kerala’s Living Heritage</p>
+            <h1 id="hero-lt-h">
+              <span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span>
+              <span className="dot" aria-hidden="true"> · </span>
+              <span className="sr">, </span>
+              <span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span>
+              <span className="dot" aria-hidden="true"> · </span>
+              <span className="sr">, </span>
+              <span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span>{' '}
+              <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly</em>
+            </h1>
+            <p className="lede">
+              A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.
+            </p>
+            <div className="cta">
+              <a className="btn gold btn-explore" href="/catalogue">
+                <span className="btn-seal" aria-hidden="true" />
+                <Icon name="book" size={19} />
+                <span>Explore Catalogue</span>
+                <Icon name="arrow" size={17} />
+              </a>
+              <a className="btn ghost btn-reuse" href="/reuse">
+                <Icon name="layers" size={20} />
+                <span>Reuse Studio</span>
+                <Icon name="arrow" size={17} />
+              </a>
+            </div>
           </div>
         </div>
 

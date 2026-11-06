@@ -166,18 +166,6 @@ html.motion .l-lamp {
 }
 @media (prefers-reduced-motion: reduce) { .l-lamp { animation: none !important; } }
 
-/* ==========================================================================
-   Headline: two lines instead of three, so the words and buttons stay clear
-   of the cloth. (desktop only)
-   ========================================================================== */
-@media (min-width: 900px) {
-  :root:not([data-theme='dark']) .hero .hero-copy { max-width: 880px; }
-  :root:not([data-theme='dark']) .hero h1 { font-size: clamp(2rem, 3.4vw, 3.2rem); margin-bottom: 14px; }
-}
-@media (min-width: 900px) and (max-height: 760px) {
-  :root:not([data-theme='dark']) .hero .lede { display: none !important; }
-}
-
 /* The background plate is nudged right to save the lamp, which opens a thin gap at the far left.
    A solid dark-foliage colour fills the stage behind the whole scene so any gap during pointer
    parallax tilt looks like soft out-of-focus foliage — no visible seam, no colour steps.
