@@ -364,8 +364,13 @@
   display: block;
   font-style: italic;
   font-weight: 500;
-  color: var(--m-gold);
-  text-shadow: 0 0 20px rgba(245, 191, 100, .45);
+  background-image: var(--foil-gold, linear-gradient(100deg, #b9780f 0%, #f6d27a 24%, #fff3c4 38%, #e9b949 52%, #b9780f 78%, #f6d27a 100%)) !important;
+  background-size: 220% 100% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  filter: drop-shadow(0 0 20px rgba(245, 191, 100, .45)) !important;
 }
 .hero.mx-hero.dk-hero .dot,
 .hero.lt-hero.mh .dot {
@@ -379,7 +384,7 @@
   font-size: 1.05rem;
   line-height: 1.6;
   max-width: 530px;
-  color: rgba(248, 238, 223, 0.92);
+  color: rgba(248, 238, 223, 0.95);
   margin: 0 0 32px;
   text-shadow: 0 1px 12px rgba(0, 0, 0, .7);
 }
@@ -444,7 +449,10 @@
   .mx-l-leaf-tl { left: -8vw; top: -4vw; width: 40vw; }
   .mx-l-leaf-tr { display: none; }
   .mx-veil { background: linear-gradient(90deg, rgba(3, 14, 19, .55) 0, transparent 40%), linear-gradient(180deg, rgba(3, 14, 19, .5) 0, transparent 18%); }
-  .hero.mx-hero.dk-hero .hero-inner { padding: 90vw 24px 64px !important; }
+  .hero.mx-hero.dk-hero .hero-inner {
+    margin-top: 56vw !important;
+    padding: 24px 20px 48px !important;
+  }
 }
 
 @media (max-height: 760px) and (min-width: 961px) {

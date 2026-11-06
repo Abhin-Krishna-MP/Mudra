@@ -171,12 +171,12 @@ html.motion .stage-curtain {
 :root[data-theme='dark'] .stage-curtain .cur-sub { color: #f9b074; }
 :root[data-theme='dark'] .stage-curtain .cur-rule b { background: #f0894a; box-shadow: 0 0 14px rgba(240, 137, 74, .8); }
 
-/* hold the hero copy back until the curtain is nearly open */
-html.motion .hero .eyebrow { animation-delay: 1.75s; }
-html.motion .hero h1 .w { animation-delay: calc(var(--i, 0) * .14s + 1.85s); }
-html.motion .hero h1 em.w { animation-delay: 2.3s, 3.3s; }
-html.motion .hero .lede { animation-delay: 2.55s; }
-html.motion .hero .cta { animation-delay: 2.7s; }
+/* Hero headline and lede entrance timing - aligned across light & dark */
+html.motion .hero .eyebrow { animation-delay: .05s; }
+html.motion .hero h1 .w { animation-delay: calc(var(--i, 0) * .1s + .2s); }
+html.motion .hero h1 em.w { animation-delay: .5s, 1.2s; }
+html.motion .hero .lede { animation-delay: .5s; }
+html.motion .hero .cta { animation-delay: .65s; }
 
 @media (prefers-reduced-motion: reduce) {
   .stage-curtain { display: none !important; }
