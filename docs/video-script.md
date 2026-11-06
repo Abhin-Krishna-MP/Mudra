@@ -1,60 +1,66 @@
-# Mudra — Video Demonstration Script
-> Target Duration: 4 minutes 15 seconds (Max: 5:00) · Captioned MP4 Walkthrough
+# Mudra — Video Demonstration Script (v1.1)
+> Target Duration: 4 minutes 20 seconds · ART//CODE 2026 PS-03 "Credit the Culture"
+> Lead Story: **Check → Ask → On Record**
 
 ---
 
-### Segment 1: The Problem & The Vision (0:00 – 0:40)
-- **Visual:** Title card with lotus logo: "Mudra — Cultural Passports (ART//CODE 2026 PS-03)". Transition to browser showing digital imagery across social media and merchandise without attribution.
+### Act 1: The Designer's Problem & The Match (0:00 – 1:00)
+- **Visual (0:00 – 0:25):** A graphic designer finds a Theyyam photo online and wants to use it for commercial T-shirt merchandise.
 - **Voiceover:**
-  > "Every day, traditional indigenous art and motifs are reused across digital media, merchandise, and AI training datasets without knowing who they come from or what their communities intended. A Creative Commons image licence might legally allow commercial use, but does the living community consent? Conflating legal licences with cultural wishes harms living heritage.
-  >
-  > Welcome to Mudra. Mudra gives every cultural work a public Cultural Passport, combining community consent with file licences into plain-language reuse verdicts and ready-to-use credit cards."
+  > "A designer in Kochi finds a striking photo of a Theyyam performer. They want to print it on a run of T-shirts for a cultural festival. Legally, the photo might be under Creative Commons or Public Domain. But does the ritual community consent? Conflating an image licence with living community consent harms cultural heritage. Mudra turns 'ask first' into a recorded, verifiable answer."
+- **Action (0:25 – 1:00):** Navigate to `https://mudra-one-ivory.vercel.app/check`. Drop the Theyyam image.
+- **Voiceover:**
+  > "Instead of guessing, the designer drops the image into Mudra's 'Check an Image' tool. Using perceptual dHash matching, Mudra matches the artwork without requiring a central copyright database and links directly to its Cultural Passport.
+  > On the passport, we see who the tradition bearers are, cited sources, and our two distinct permission layers: the file licence says yes, but the community has not stated terms. Mudra resolves conservatively: 'Commercial merchandise: Ask first'."
 
 ---
 
-### Segment 2: Working Demo — Discovery & Cultural Passport (0:40 – 1:35)
-- **Visual:** Open homepage `http://localhost:3000`. Show the interactive 3D lotus ornament, marigold petals particle system, and search box.
-- **Action:** Type "Teyyam" (with deliberate phonetic spelling variation).
+### Act 2: Ask → Grant (1:00 – 2:00)
+- **Visual (1:00 – 1:30):** Click *Request permission* directly inside the Reuse Studio on the passport page.
+- **Action:** Fill the 4 clean fields:
+  - Name: `Aline Designer`
+  - Contact: `aline@studio.in` (kept private)
+  - What you will make: `Limited run of 200 screen-printed T-shirts for Malabar Craft Fair`
+  - Where & how long: `Kerala craft exhibition, 3 months`
+  Click *Send request*.
 - **Voiceover:**
-  > "On the home screen, users can explore Kerala's living heritage. Notice how typing 'Teyyam' instantly surfaces the Panchuruli Theyyam record through our built-in phonetic alias engine. Let's open Kathakali (Record MDR-2026-0001)."
-- **Visual:** Navigate to `/r/MDR-2026-0001`.
+  > "Instead of a dead end, Mudra gives the designer an actionable next step: 'Request permission'. Four simple fields: who you are, private contact details, what you will make, and where. Mudra never leaks requester contact info to public logs. The designer receives a private status tracking link."
+- **Visual (1:30 – 2:00):** Switch to the Reviewer / Steward console (`/review`).
+- **Action:** Open the *Permission Requests* section. Show the open request. Click *Grant permission & issue signed grant* with conditions: `Must display Mudra credit line alongside label; max 200 units`.
 - **Voiceover:**
-  > "Above the fold, the artwork is presented uncropped on an archival museum mat, stamped with a verified deterministic identity seal. We see the tradition bearers credited, geographical origins, cited academic sources from Kerala Kalamandalam, and our two distinct permission layers: what the community has stated, and what the image licence says."
+  > "Now we cut to the steward console. Mudra never consents on behalf of a community—only a linked cultural steward decides. The steward sees the request with its full context, enters specific conditions, and grants permission. Mudra cryptographically signs the grant using an Ed25519 key over RFC 8785 canonical JSON, and appends the grant event to the record's tamper-evident SHA-256 audit chain."
 
 ---
 
-### Segment 3: Working Demo — Reuse Studio & Dual-Layer Engine (1:35 – 2:35)
-- **Visual:** Scroll down to the embedded Reuse Studio on the passport page or navigate to `/reuse`.
-- **Action:** Select "Print on merchandise (commercial)".
+### Act 3: Prove & Verify (2:00 – 2:40)
+- **Visual (2:00 – 2:20):** Open the public grant link at `/g/<grantId>`.
 - **Voiceover:**
-  > "Now, suppose a graphic designer wants to print this Kathakali image on commercial apparel. They select 'Print on merchandise'. Watch how Mudra evaluates this:
-  > The Creative Commons licence allows commercial use, BUT the Kathakali tradition bearers have not stated terms for commercial exploitation.
-  > Mudra's conservative engine triggers: 'Ask first, because the community has not stated whether commercial use is acceptable.' It never assumes consent.
-  > In one click, the user can copy a formatted credit line in Plain text, Academic, BibTeX, or HTML, or download a high-resolution 1200 by 630 Visual Credit Card with an embedded QR code linking back to this passport."
+  > "The designer now has a signed, verifiable grant. Print shops and merchandise platforms can verify it instantly online: it shows the permitted scope, validity dates, specific conditions, and cryptographic signature confirmation against the record's audit head."
+- **Visual (2:20 – 2:40):** Show terminal with offline CLI verification.
+- **Action:** Run `node scripts/verify-grant.mjs grant.json public-key.pem`. Show active status. Then alter one character in `grant.json` and re-run to show instant failure.
+- **Voiceover:**
+  > "Mudra works without lock-in. Anyone can verify the grant completely offline using our standalone verification script. If anyone alters even a single byte of the grant conditions, the cryptographic signature check fails immediately."
 
 ---
 
-### Segment 4: Cryptographic Trust & Tamper-Evident History (2:35 – 3:20)
-- **Visual:** Click "Verify this record" or navigate to `/verify/MDR-DEMO-0001`.
-- **Action:** Show the audit timeline with green integrity dots. Click "Simulate tampering in memory".
+### Act 4: For Platforms & Machine-Readable AI Signals (2:40 – 3:20)
+- **Visual (2:40 – 3:20):** Navigate to `/developers`.
 - **Voiceover:**
-  > "Trust in Mudra is verifiable. Every submission, status change, and reviewer action appends an event to an atomic SHA-256 hash chain with optional Ed25519 digital signatures.
-  > On the verify page, anyone can inspect the cryptographic trail. Let's test our in-app tamper simulation on this sandbox record. If a malicious party alters the stored data in memory, Mudra immediately flags the exact sequence number where the hash chain breaks, proving the history is tamper-evident."
+  > "Responsible AI requires machine-readable consent. For platforms and dataset builders, Mudra provides:
+  > First, a hash-only batch lookup API: platforms check whether imagery has community stances without uploading user images.
+  > Second, an Ed25519-signed manifest for dataset auditors.
+  > Third, W3C TDMRep signals at `/.well-known/tdmrep.json` and HTTP asset headers, publishing the community's stated AI-training reservations."
 
 ---
 
-### Segment 5: Governance & Reviewer Console (3:20 – 3:55)
-- **Visual:** Navigate to `/review` and log in with `reviewer@mudra.demo`.
-- **Action:** Show the queue of pending submissions and open community flags. Demonstrate approving a pending work and resolving a flag with an evidence note.
+### Act 5: Safeguards, Honest Limits & Close (3:20 – 4:20)
+- **Visual (3:20 – 3:50):** Navigate to `/about` and show the limits table.
 - **Voiceover:**
-  > "Mudra includes a secure reviewer console guarded by scrypt session authentication. Reviewers can examine pending submissions, inspect image similarity matches, review community corrections or flags, and resolve them with evidence notes—with each decision atomically recorded to the public audit chain."
-
----
-
-### Segment 6: Architecture, Ethics & Closing (3:55 – 4:25)
-- **Visual:** Brief look at `/check` (image similarity drop zone) and `/about` (museum limits and ethics).
+  > "Mudra is built with strict discipline:
+  > 1. Mudra never grants permission for a community; if no steward is linked, requests are forwarded, never granted.
+  > 2. Grants are recorded statements, not legal contracts.
+  > 3. TDMRep is a community signal, not an automated filter.
+  > 4. All 15 Kerala records were verified by humans from cited academic and government sources; zero cultural facts were generated by AI."
+- **Visual (3:50 – 4:20):** Return to home page showing the 15 records in the catalogue.
 - **Voiceover:**
-  > "Mudra is built on Next.js 15, Turso LibSQL, and Sharp. It contains 15 curated real-world Kerala cultural records backed by official government archives. Mudra is not a copyright enforcement tool or a financial scheme; it is a community-first bridge for respectful attribution.
-  >
-  > Don't just take the imagery. Credit the culture. Thank you."
-- **Visual:** Closing slide with GitHub repository link `https://github.com/Abhin-Krishna-MP/Mudra` and team credits (Abhin + Alin).
+  > "Mudra bridges the gap between traditional culture and modern digital reuse. By turning 'ask first' into a recorded, verifiable answer, Mudra makes crediting the culture practical for creators, stewards, and platforms alike. Thank you."
