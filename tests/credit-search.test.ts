@@ -30,6 +30,9 @@ test('search: exact ID first, alias spelling, fuzzy, filters', () => {
   assert.equal(searchRecords(items, 'kasavoo')[0].id, 'MDR-2026-0002');
   assert.equal(searchRecords(items, 'aranmla')[0].id, 'MDR-2026-0003');
   assert.equal(searchRecords(items, 'weavers')[0].id, 'MDR-2026-0002');
+  assert.equal(searchRecords(items, 't')[0].id, 'MDR-2026-0001');
+  assert.equal(searchRecords(items, 'k')[0].id, 'MDR-2026-0002');
+  assert.equal(searchRecords(items, '0003')[0].id, 'MDR-2026-0003');
   assert.equal(searchRecords(items, '', { workType: 'craft' }).length, 1);
   assert.equal(searchRecords(items, 'zzzzzz').length, 0);
 });

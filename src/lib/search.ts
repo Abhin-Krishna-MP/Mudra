@@ -40,7 +40,12 @@ export function levenshtein(a: string, b: string): number {
 
 function tokenScore(q: string, t: string): number {
   if (q === t) return 10;
-  if (t.startsWith(q) && q.length >= 3) return 7;
+  if (t.startsWith(q)) {
+    if (q.length >= 3) return 7;
+    if (q.length === 2) return 5;
+    return 4; // 1-character prefix match (e.g. 'm' -> 'mohiniyattam')
+  }
+  if (q.length >= 3 && t.includes(q)) return 3;
   if (q.length >= 4) {
     const d = levenshtein(q, t);
     const allowed = q.length >= 7 ? 2 : 1;
@@ -58,24 +63,39 @@ export function searchRecords<T extends Searchable>(items: T[], query: string, f
   const q = query.trim();
   if (!q) return pool;
   const qNorm = normalise(q);
+  const qt = tokens(qNorm);
+
   const scored = pool.map((r) => {
     if (r.id.toLowerCase() === q.toLowerCase()) return { r, s: 1000 };
     let s = 0;
-    if (r.id.toLowerCase().includes(q.toLowerCase())) s += 200;
-    const qt = tokens(qNorm);
+    const idLower = r.id.toLowerCase();
+    const idMatches = (q.length >= 3 && idLower.includes(q.toLowerCase())) || idLower === q.toLowerCase();
+    if (idMatches) s += 200;
+
+    const titleNorm = normalise(r.title);
+    if (titleNorm.startsWith(qNorm)) s += 20;
+
     const titleT = tokens(r.title);
-    const partyT = r.parties.flatMap(tokens);
+    const partyT = (r.parties || []).flatMap(tokens);
     const regionT = tokens(r.region);
+
     let matched = 0;
     for (const t of qt) {
       const ts = Math.max(0, ...titleT.map((x) => tokenScore(t, x)));
       const ps = Math.max(0, ...partyT.map((x) => tokenScore(t, x))) * 0.6;
       const rs = Math.max(0, ...regionT.map((x) => tokenScore(t, x))) * 0.4;
       const best = Math.max(ts * 1.5, ps, rs);
-      if (best > 0) { matched++; s += best; }
+      if (best > 0) {
+        matched++;
+        s += best;
+      } else if (t.length >= 3 && idLower.includes(t)) {
+        matched++;
+        s += 50;
+      }
     }
-    if (matched < qt.length) return { r, s: 0 };
+    if (!idMatches && matched < qt.length) return { r, s: 0 };
     return { r, s };
   });
+
   return scored.filter((x) => x.s > 0).sort((a, b) => b.s - a.s).map((x) => x.r);
 }
