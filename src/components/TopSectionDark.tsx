@@ -3,6 +3,7 @@
 import React from 'react';
 import { Icon } from './Icons';
 import { HeroMotion } from './HeroMotion';
+import { HeroDepth } from './HeroDepth';
 
 export interface TopSectionDarkProps {
   includeCurtain?: boolean;
@@ -50,17 +51,29 @@ export function TopSectionDark({
           2. LIGHT THEME HERO (Kathakali, Ivory Silk, Floating Kasavu Gold)
           Shown only when: :root:not([data-theme='dark'])
           =================================================================== */}
-      <section className="hero hero-light lt-hero" aria-labelledby="hero-lt-h" suppressHydrationWarning>
+      <section className="hero hero-light lt-hero dh" aria-labelledby="hero-lt-h" suppressHydrationWarning>
         <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
           <div className="stage-3d" suppressHydrationWarning>
-            <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
-            <img className="layer l-bg l-lamp lt" src="/mudra/hero-lamp-glow.webp" alt="" decoding="async" />
+            {/* 1. Far plane: backwater sunset, sun glow, god-rays, water glints */}
+            <div className="d d-sky">
+              <img src="/mudra/depth-sky.webp" alt="" fetchPriority="high" decoding="async" />
+              <div className="sun-pool" />
+              <div className="sun-rays" />
+              <div className="water-glint" />
+            </div>
+            {/* 2. Mist between water and performer */}
             <div className="mist" />
-            <img className="layer l-fig l-under lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
-            <img className="layer l-fig lt" src="/mudra/hero-figure-top.webp" alt="" fetchPriority="high" decoding="async" />
-            <img className="layer l-cloth lt" src="/mudra/hero-cloth.webp" alt="" fetchPriority="high" decoding="async" />
-            <div className="cloth-sheen lt" />
-            <div className="cloth-glow lt" />
+            {/* 3. Mid plane: Kathakali, lit by a torch that follows the pointer */}
+            <div className="d d-kath" style={{ '--fig': "url('/mudra/depth-kathakali.webp')" } as React.CSSProperties}>
+              <img src="/mudra/depth-kathakali.webp" alt="" fetchPriority="high" decoding="async" />
+              <div className="kath-light" />
+            </div>
+            {/* 4. Near plane: kasavu silk, Nilavilakku lamp, hibiscus */}
+            <div className="d d-kasavu" style={{ '--silk': "url('/mudra/depth-kasavu.webp')" } as React.CSSProperties}>
+              <img src="/mudra/depth-kasavu.webp" alt="" fetchPriority="high" decoding="async" />
+              <div className="silk-sheen" />
+              <div className="lamp-bloom" />
+            </div>
           </div>
         </div>
         <div className="hero-bg" aria-hidden="true" />
@@ -95,6 +108,7 @@ export function TopSectionDark({
             </div>
           </div>
         </div>
+        <HeroDepth />
         <a className="scroll-cue" href={scrollCueHref} aria-label="Scroll to explore">
           <span>Scroll</span>
           <i />

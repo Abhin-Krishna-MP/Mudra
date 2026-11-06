@@ -5,6 +5,7 @@ import './home-premium.css';
 import './home-premium-plus.css';
 import './hero-float.css';
 import './top-section.css';
+import './hero-depth.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
@@ -51,9 +52,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         {/* Preload hero images and navbar master artwork to eliminate first-paint lag */}
         <link rel="preload" as="image" href="/mudra/navbar-full.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/hero-bg.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/hero-figure-top.webp" fetchPriority="high" />
-        <link rel="preload" as="image" href="/mudra/hero-cloth.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/depth-sky.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/depth-kathakali.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/depth-kasavu.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/bg-temple.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/theyyam.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/ribbon.webp" />
