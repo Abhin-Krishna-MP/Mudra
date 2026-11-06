@@ -18,18 +18,14 @@
 :root:not([data-theme='dark']) .hero-stage .l-cloth {
   display: block;
   transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96);
-  filter: drop-shadow(0 0 24px rgba(255, 176, 70, .32)) drop-shadow(0 14px 22px rgba(20, 8, 2, .35));
-  /* pinned on the right, where the silk meets the Kathakali; the free end (left) swings */
-  transform-origin: 92% 62%;
-  rotate: .6deg;            /* resting position: a little lower than the painting */
-  will-change: transform, rotate, translate;
+  filter: drop-shadow(0 0 24px rgba(255, 176, 70, .28));
+  transform-origin: 50% 50%;
+  will-change: transform, translate;
 }
 
 @keyframes kas-drift {
-  0%   { rotate: .30deg; translate: 0 -3px; }
-  35%  { rotate: .85deg; translate: 0  2px; }
-  70%  { rotate: .50deg; translate: 0  4px; }
-  100% { rotate: 1.00deg; translate: 0 -2px; }
+  0%, 100% { translate: 0 0; }
+  50%      { translate: 0 -2px; }
 }
 html.motion .l-cloth {
   animation:
@@ -192,35 +188,17 @@ html.motion .l-lamp {
 
 
 /* ==========================================================================
-   FIX 1 · KASAVU BLANK
-   The cloth plate scaled about 92% 62% while the Kathakali plate scales about the
-   centre, so the cloth slid ~28px away from the cut-out it was taken from and left
-   a blank. The cloth now keeps its right-hand pivot for the gentle swing, but its
-   resting pose is offset so it lands exactly on the cut-out. A static under-plate
-   (.l-under, the original full artwork) fills any sliver the swing uncovers.
+   FIX 1 · KASAVU SEAM & STATIC UNDER-PLATE
+   The under-plate (.l-under) shares the exact depth, origin, and scale as .l-fig,
+   providing a solid, seamless companion beneath the floating Kasavu silk.
    ========================================================================== */
-@keyframes cloth-in {
-  from { opacity: 0; transform: translate3d(calc(90px - 1.68%), calc(var(--sy, 0) * .04px - .48%), 60px) scale(1.02); }
-  to   { opacity: 1; transform: translate3d(-1.68%, calc(var(--sy, 0) * .04px - .48%), 60px) scale(.96); }
-}
-@keyframes kas-drift {
-  0%   { rotate: -.12deg; translate: 0 -2px; }
-  35%  { rotate:  .22deg; translate: 0  1px; }
-  70%  { rotate:  .04deg; translate: 0  2px; }
-  100% { rotate:  .30deg; translate: 0 -1px; }
-}
-:root:not([data-theme='dark']) .hero-stage .l-cloth {
-  transform: translate3d(-1.68%, calc(var(--sy, 0) * .04px - .48%), 60px) scale(.96);
-  rotate: 0deg;
-}
-html.motion .l-cloth {
-  animation:
-    cloth-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.75s both,
-    kas-drift 9s ease-in-out 3.6s infinite alternate;
-}
-@media (prefers-reduced-motion: reduce) { .l-cloth { animation: none !important; } }
 .hero-stage .l-under { display: none; filter: none; }
-:root:not([data-theme='dark']) .hero-stage .l-under { display: block; filter: none; }
+:root:not([data-theme='dark']) .hero-stage .l-under {
+  display: block;
+  filter: none;
+  transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96);
+  transform-origin: 50% 50%;
+}
 
 /* ==========================================================================
    FIX 2 · SMOOTH THEME SWITCH
