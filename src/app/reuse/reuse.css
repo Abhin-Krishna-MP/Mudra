@@ -24,12 +24,7 @@
   color: var(--ink);
 }
 
-/* ---------- Page artwork: backwater at dusk (fixed layer, works on phones too) ---------- */
-body:has(.reuse-page) { background-color: #0a0607; background-image: none; }
-body:has(.reuse-page)::before {
-  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: url('/mudra/reuse-bg.jpg') center bottom / cover no-repeat, #0a0607;
-}
+/* ---------- Page artwork: the Catalogue painting, fixed layer (defined in kerala-backdrop.css) ---------- */
 /* navbar floats straight over the artwork */
 html:root:root body:has(.reuse-page) .site-header.padippura-header { background: transparent !important; border: 0 !important; box-shadow: none !important; padding-bottom: 0 !important; }
 body:has(.reuse-page) .site-header::after { display: none; }

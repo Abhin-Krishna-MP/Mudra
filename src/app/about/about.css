@@ -167,11 +167,7 @@
    Match the reference design (dark theme): page backdrop, wider sheet,
    bigger banner type, taller cards, scene illustration, bottom waves.
    ===================================================================== */
-:root[data-theme='dark'] body:has(.about-page) {
-  background-color: #1a0d07;
-  background-image: url('/mudra/about-bg.webp');
-  background-size: cover; background-position: center bottom; background-attachment: fixed;
-}
+/* page painting: the Catalogue art, set in kerala-backdrop.css */
 :root[data-theme='dark'] body:has(.about-page) main { position: relative; padding-bottom: 96px; }
 :root[data-theme='dark'] body:has(.about-page) main::after {       /* gold waves along the bottom edge */
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 84px; z-index: 0; pointer-events: none; opacity: .55;
