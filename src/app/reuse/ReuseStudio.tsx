@@ -37,6 +37,7 @@ export default function ReuseStudio({ works, initialId, initialUse }: { works: W
   const out = evaluate({ use, licence: w.licence, cultural: w.permissions, attributionRequired: w.attributionRequired, sensitivity: w.sensitivity });
   const v = out.verdict;
   const useLabel = USES[use].label;
+  const termsHref = `/r/${encodeURIComponent(w.id)}?use=${encodeURIComponent(use)}#studio-h`;
 
   return (
     <>
@@ -73,7 +74,7 @@ export default function ReuseStudio({ works, initialId, initialUse }: { works: W
               </button>
             )}
             <CopyButton text={w.credit} label="Copy Credit Line" variant={v === 'ask_first' ? 'secondary' : 'primary'} />
-            <a className="btn secondary rs-btn rs-btn-ghost" href={`/r/${w.id}?use=${use}#studio-h`}>View Full Terms <Icon name="arrow" size={18} /></a>
+            <a className="btn secondary rs-btn rs-btn-ghost" href={termsHref}>View Full Terms <Icon name="arrow" size={18} /></a>
           </div>
         </section>
 
