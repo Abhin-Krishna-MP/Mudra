@@ -42,11 +42,19 @@ export function HeroKerala() {
 
     const onPointerMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
+      if (document.documentElement.getAttribute('data-theme') === 'dark') return;
       const r = hero.getBoundingClientRect();
-      tx = ((e.clientX - r.left) / r.width - 0.5) * 2;
-      ty = ((e.clientY - r.top) / r.height - 0.5) * 2;
-      tgx = ((e.clientX - r.left) / r.width) * 100;
-      tgy = ((e.clientY - r.top) / r.height) * 100;
+      // Track pointer across viewport as long as hero is in view
+      if (r.bottom < 0 || r.top > window.innerHeight) return;
+
+      // Mouse offset normalized around hero center (-1 to 1)
+      const cx = r.left + r.width / 2;
+      const cy = r.top + r.height / 2;
+      tx = Math.max(-1.4, Math.min(1.4, (e.clientX - cx) / (r.width / 2)));
+      ty = Math.max(-1.4, Math.min(1.4, (e.clientY - cy) / (r.height / 2)));
+
+      tgx = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+      tgy = Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100));
       last = performance.now();
       hero.classList.add('is-over');
     };
@@ -61,8 +69,8 @@ export function HeroKerala() {
       ts = Math.min(window.scrollY, 900);
     };
 
-    hero.addEventListener('pointermove', onPointerMove, { passive: true });
-    hero.addEventListener('pointerleave', onPointerLeave);
+    window.addEventListener('pointermove', onPointerMove, { passive: true });
+    document.addEventListener('mouseleave', onPointerLeave);
     window.addEventListener('scroll', onScroll, { passive: true });
 
     // Magnetic tilt on buttons
@@ -105,12 +113,12 @@ export function HeroKerala() {
         rafId = null;
         return;
       }
-      const idle = t - last > 2500;
-      const a = idle ? Math.sin(t / 3000) * 0.3 : tx;
-      const b = idle ? Math.cos(t / 3800) * 0.2 : ty;
+      const idle = t - last > 1800;
+      const a = idle ? Math.sin(t / 2200) * 0.5 : tx;
+      const b = idle ? Math.cos(t / 2800) * 0.38 : ty;
 
-      mx += (a - mx) * 0.07;
-      my += (b - my) * 0.07;
+      mx += (a - mx) * 0.08;
+      my += (b - my) * 0.08;
       sy += (ts - sy) * 0.1;
       gx += (tgx - gx) * 0.1;
       gy += (tgy - gy) * 0.1;
@@ -130,8 +138,8 @@ export function HeroKerala() {
       if (rafId) cancelAnimationFrame(rafId);
       observer.disconnect();
       themeObserver.disconnect();
-      hero.removeEventListener('pointermove', onPointerMove);
-      hero.removeEventListener('pointerleave', onPointerLeave);
+      window.removeEventListener('pointermove', onPointerMove);
+      document.removeEventListener('mouseleave', onPointerLeave);
       window.removeEventListener('scroll', onScroll);
       buttons.forEach((btn) => {
         btn.removeEventListener('mousemove', onBtnMove);
