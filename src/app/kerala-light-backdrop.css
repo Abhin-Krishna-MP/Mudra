@@ -1,0 +1,106 @@
+/* =========================================================================
+   LIGHT THEME ONLY: teal Kerala backdrop (lamp, houseboat, hibiscus, leaves).
+   Pages: Catalogue · Record description (passport) · Reuse Studio · Reviewer sign-in ·
+          Check an image · About · Verify record · Submit record.
+   Every rule is scoped to :root:not([data-theme='dark']), so the dark theme is untouched.
+   Loaded last (see layout.tsx).
+   ========================================================================= */
+
+:root:not([data-theme='dark']) {
+  --cbl-bg: url('/mudra/page-light-teal.webp');
+  --cbl-bg-mobile: url('/mudra/page-light-teal-mobile.webp');
+  /* Reuse Studio, Sign-in, Check, Verify and Submit use this variable in kerala-backdrop.css */
+  --cb-bg: var(--cbl-bg);
+  --cb-bg-mobile: var(--cbl-bg-mobile);
+}
+
+/* ---------- The fixed artwork layer (same technique as the dark one) ---------- */
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) {
+  background-color: #0b4a3f;
+  background-image: none;
+  background-attachment: scroll;
+}
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page))::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  height: 100vh; height: 100lvh;
+  background: var(--cbl-bg) center / cover no-repeat, #0b4a3f;
+}
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page))::after {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  height: 100vh; height: 100lvh;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 65%, rgba(2, 20, 16, .3) 100%);
+}
+@media (max-width: 760px) {
+  html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page))::before {
+    background: var(--cbl-bg-mobile) center bottom / cover no-repeat, #0b4a3f;
+  }
+}
+
+/* navbar floats over the artwork on all of these pages */
+html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page)) .site-header.padippura-header {
+  background: transparent !important; border: 0 !important; box-shadow: none !important; padding-bottom: 0 !important;
+}
+html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page)) .site-header::after { display: none; }
+
+/* footer: let the painting show through, no cream band */
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) .site-footer {
+  background: linear-gradient(180deg, rgba(3, 26, 21, 0) 0%, rgba(3, 26, 21, .72) 42%, rgba(3, 26, 21, .9) 100%);
+}
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) .site-footer::after { content: none; }
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) .foot-scallop { background-color: rgba(3, 26, 21, 0); }
+
+/* ---------- About: its gold wave strip is not needed, the artwork has a shoreline ---------- */
+:root:not([data-theme='dark']) body:has(.about-page) main::after { display: none; }
+:root:not([data-theme='dark']) body:has(.about-page) main { padding-bottom: 40px; }
+
+/* ---------- Dark-styled pages (Reuse, Sign-in, Verify, Check, Submit): swap brown glass for deep-teal glass in light ---------- */
+:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) {
+  --line: #1f5a4d;
+  --line-strong: #6fa593;
+  --panel-bg: #06261f;
+  --panel-border: rgba(233, 185, 73, .42);
+  --surface-2: #0a352c;
+  --bg-soft: #06261f;
+  --sheet-head-fade: rgba(3, 26, 21, .94);
+  --rs-edge: rgba(233, 185, 73, .5);
+  --ck-edge: rgba(233, 185, 73, .5);
+  --sb-edge: rgba(233, 185, 73, .5);
+}
+:root:not([data-theme='dark']) .reuse-page .sheet,
+:root:not([data-theme='dark']) .check-page .sheet,
+:root:not([data-theme='dark']) .submit-page .sheet {
+  background: linear-gradient(180deg, rgba(6, 44, 36, .78), rgba(3, 26, 21, .88));
+  box-shadow: 0 30px 70px rgba(0, 18, 14, .55), 0 0 0 1px rgba(255, 226, 160, .08) inset;
+}
+:root:not([data-theme='dark']) :is(.rs-card, .ck-how, .si-card),
+:root:not([data-theme='dark']) .check-page .ck-results .panel,
+:root:not([data-theme='dark']) .submit-page fieldset.panel {
+  background: radial-gradient(120% 90% at 100% 100%, rgba(233, 185, 73, .08), transparent 55%), linear-gradient(180deg, rgba(10, 62, 52, .92), rgba(4, 34, 28, .95));
+}
+:root:not([data-theme='dark']) .verify-page .vf-info {
+  background: radial-gradient(110% 80% at 100% 0%, rgba(120, 150, 60, .12), transparent 55%), linear-gradient(180deg, rgba(10, 62, 52, .92), rgba(4, 34, 28, .95));
+}
+:root:not([data-theme='dark']) .check-page .ck-drop { background: rgba(2, 22, 18, .6); }
+:root:not([data-theme='dark']) .check-page .ck-drop.over { background: radial-gradient(90% 80% at 50% 0%, rgba(233, 185, 73, .16), transparent 70%), rgba(2, 22, 18, .7); }
+:root:not([data-theme='dark']) .reuse-page .rs-form select,
+:root:not([data-theme='dark']) .si-input, :root:not([data-theme='dark']) .si-card input.si-input,
+:root:not([data-theme='dark']) .verify-page .vf-field input,
+:root:not([data-theme='dark']) .submit-page :is(input[type=text], input[type=url], input[type=email], select, textarea) {
+  background-color: rgba(2, 22, 18, .72);
+}
+:root:not([data-theme='dark']) .submit-page .stepper .n { background: rgba(2, 22, 18, .6); }
+:root:not([data-theme='dark']) :is(.si-ico, .vf-ico) {
+  background: linear-gradient(180deg, rgba(16, 92, 76, .6), rgba(6, 44, 36, .8)); border-color: rgba(233, 185, 73, .45);
+}
+:root:not([data-theme='dark']) .submit-page .sb-point { background: rgba(255, 255, 255, .04); border-color: rgba(233, 185, 73, .3); }
+
+/* mobile bottom action bar on Submit */
+@media (max-width: 760px) {
+  :root:not([data-theme='dark']) .submit-page .sb-actions { background: linear-gradient(180deg, rgba(3, 26, 21, 0), rgba(3, 26, 21, .92) 28%); }
+}
+
+/* ---------- Catalogue, About and Record description keep their cream cards in light; softer shadow on teal ---------- */
+:root:not([data-theme='dark']) :is(.cat-page, .about-page, .passport-page) .sheet,
+:root:not([data-theme='dark']) .pp {
+  box-shadow: 0 26px 60px rgba(0, 18, 14, .45);
+}
