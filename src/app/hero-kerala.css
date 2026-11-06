@@ -130,6 +130,8 @@
 .hero.lt-hero.mh .fg-mid {
   transform: none !important;
   will-change: auto !important;
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 14%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 14%);
 }
 
 .hero.lt-hero.mh .fg-left,
