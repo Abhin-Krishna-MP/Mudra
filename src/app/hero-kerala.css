@@ -102,9 +102,9 @@
 /* 2 · Kathakali plate */
 .hero.lt-hero.mh .l-fig {
   position: absolute;
-  left: 62%;
-  top: -18%;
-  width: 44%;
+  left: 53%;
+  top: -15%;
+  width: 56%;
   z-index: 4;
   height: auto;
   filter: drop-shadow(0 14px 28px rgba(0, 0, 0, .38)) saturate(1.1);
