@@ -57,36 +57,6 @@
     linear-gradient(180deg, rgba(3, 12, 15, .45) 0%, transparent 20%);
 }
 
-.hero.lt-hero.mh .l-sun {
-  inset: 0;
-  z-index: 2;
-  mix-blend-mode: screen;
-  opacity: .85;
-  background:
-    radial-gradient(ellipse 55% 45% at 58% 38%, rgba(255, 200, 110, .45), rgba(255, 140, 40, .2) 28%, transparent 52%),
-    radial-gradient(circle at 51% 38%, rgba(255, 210, 120, .5), transparent 26%);
-  animation: sunPulse 6s ease-in-out infinite;
-}
-
-.hero.lt-hero.mh .l-rays {
-  inset: -20%;
-  z-index: 2;
-  mix-blend-mode: screen;
-  opacity: .22;
-  background: repeating-conic-gradient(from 200deg at 51% 58%, rgba(255, 200, 120, .55) 0 3deg, transparent 3deg 11deg);
-  -webkit-mask: radial-gradient(circle at 51% 58%, #000, transparent 55%);
-  mask: radial-gradient(circle at 51% 58%, #000, transparent 55%);
-  animation: rays 14s ease-in-out infinite alternate;
-}
-
-@keyframes sunPulse {
-  50% { opacity: 1; transform: scale(1.04); }
-}
-
-@keyframes rays {
-  to { opacity: .34; transform: rotate(3deg); }
-}
-
 .hero.lt-hero.mh .l-mist {
   inset: auto 0 28% 0;
   height: 30%;

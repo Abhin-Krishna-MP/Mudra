@@ -53,8 +53,6 @@ export function TopSectionDark({
           =================================================================== */}
       <section className="hero hero-light lt-hero mh" id="home" aria-labelledby="hero-lt-h" suppressHydrationWarning>
         <div className="layer l-bg" aria-hidden="true" />
-        <div className="layer l-sun" aria-hidden="true" />
-        <div className="layer l-rays" aria-hidden="true" />
         <div className="layer l-shade" aria-hidden="true" />
         <div className="layer l-mist" aria-hidden="true" />
         <div className="layer l-fig" aria-hidden="true">
