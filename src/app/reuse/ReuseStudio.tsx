@@ -16,6 +16,18 @@ const ICON: Record<Verdict, IconName> = { permitted: 'checkCircle', ask_first: '
 const HEADLINE: Record<Verdict, string> = { permitted: 'You may use it.', ask_first: 'Ask first.', not_permitted: 'Not permitted.' };
 const LICENCE_FACT: Record<Verdict, string> = { permitted: 'As stated', ask_first: 'Ask first', not_permitted: 'Not allowed' };
 
+const CULTURAL_STATUS: Record<Verdict, { label: string; tone: string }> = {
+  permitted: { label: 'Community Permitted', tone: 'ok' },
+  ask_first: { label: 'Consent Required', tone: 'ask' },
+  not_permitted: { label: 'Community Restricted', tone: 'no' },
+};
+
+const LICENCE_STATUS: Record<Verdict, { label: string; tone: string }> = {
+  permitted: { label: 'Licence Permitted', tone: 'ok' },
+  ask_first: { label: 'Terms Unspecified', tone: 'ask' },
+  not_permitted: { label: 'Licence Prohibited', tone: 'no' },
+};
+
 export default function ReuseStudio({ works, initialId, initialUse }: { works: Work[]; initialId: string; initialUse: Use }) {
   const [id, setId] = useState(initialId);
   const [use, setUse] = useState<Use>(initialUse);
@@ -102,16 +114,84 @@ export default function ReuseStudio({ works, initialId, initialUse }: { works: W
         <summary>
           <span className="rs-how-tri" aria-hidden="true" />
           <span>How this answer was reached</span>
-          <Icon name="file" size={26} className="rs-how-ico" />
+          <Icon name="file" size={24} className="rs-how-ico" />
         </summary>
         <div className="rs-how-body">
-          <div className="two">
-            <div><h3>Cultural layer</h3><p>{out.cultural.statement}</p></div>
-            <div><h3>File licence layer</h3><p>{out.licence.statement}</p></div>
+          <div className="rs-layers-grid">
+            <div className="rs-layer-card">
+              <div className="rs-layer-head">
+                <div className="rs-layer-title">
+                  <Icon name="users" size={20} />
+                  <h3>Cultural Layer</h3>
+                </div>
+                <span className={`rs-layer-badge ${CULTURAL_STATUS[out.cultural.verdict].tone}`}>
+                  {CULTURAL_STATUS[out.cultural.verdict].label}
+                </span>
+              </div>
+              <p className="rs-layer-desc">{out.cultural.statement}</p>
+              <span className="rs-layer-caption">
+                Reflects directives established by tradition bearers and community custodians.
+              </span>
+            </div>
+
+            <div className="rs-layer-card">
+              <div className="rs-layer-head">
+                <div className="rs-layer-title">
+                  <Icon name="shield" size={20} />
+                  <h3>File Licence Layer</h3>
+                </div>
+                <span className={`rs-layer-badge ${LICENCE_STATUS[out.licence.verdict].tone}`}>
+                  {LICENCE_STATUS[out.licence.verdict].label}
+                </span>
+              </div>
+              <p className="rs-layer-desc">{out.licence.statement}</p>
+              <span className="rs-layer-caption">
+                Governed by the statutory open copyright licence registered for this media asset.
+              </span>
+            </div>
           </div>
-          {out.notes.map((n) => <p key={n} className="notice">{n}</p>)}
-          <p><strong>Next step:</strong> {out.nextAction}</p>
-          <p className="hint">{out.creditRequired ? 'Credit is required here.' : 'Credit is not required by the licence, but is recommended.'}</p>
+
+          <div className="rs-how-synthesis">
+            <Icon name="scale" size={20} />
+            <p>
+              <strong>Dual-Layer Protocol:</strong> Mudra reconciles cultural stewardship with statutory copyright law.
+              When standards differ, the more protective requirement always takes precedence.
+            </p>
+          </div>
+
+          {out.notes.length > 0 && (
+            <div className="rs-advisories">
+              <h4>Cultural Integrity Advisories</h4>
+              {out.notes.map((n) => (
+                <div key={n} className="rs-advisory-item">
+                  <Icon name="info" size={18} />
+                  <span>{n}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div className="rs-next-grid">
+            <div className="rs-next-card">
+              <div className="rs-next-meta">
+                <Icon name="checkCircle" size={18} />
+                <strong>Next Step</strong>
+              </div>
+              <p>{out.nextAction}</p>
+            </div>
+
+            <div className="rs-next-card">
+              <div className="rs-next-meta">
+                <Icon name="tag" size={18} />
+                <strong>Attribution Policy</strong>
+              </div>
+              <p>
+                {out.creditRequired
+                  ? 'Mandatory Attribution: Full custodial credit and provenance citation must accompany any display or reproduction.'
+                  : 'Recommended Attribution: While not strictly mandated by this licence, preserving community attribution is strongly advised.'}
+              </p>
+            </div>
+          </div>
         </div>
       </details>
     </>
