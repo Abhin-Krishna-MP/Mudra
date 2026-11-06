@@ -8,9 +8,12 @@ import { allFormats } from '@/lib/credit';
 import { recordUrl } from '@/lib/site';
 import { COMPILED_NOTE, LAYER_NOTE } from '@/lib/copy';
 import { typeSingular } from '@/lib/ui';
-import { TwoLayers, PermissionChips } from '@/components/Permissions';
+import { TwoLayers, ReusePills } from '@/components/Permissions';
 import { CopyButton } from '@/components/CopyButton';
-import { PageSheet } from '@/components/PageSheet';
+import { Gallery, type GalleryItem } from '@/components/Gallery';
+import { ShareButton } from '@/components/ShareButton';
+import { BookmarkButton } from '@/components/BookmarkButton';
+import './passport.css';
 import { Tabs } from '@/components/Tabs';
 import { VerdictCard } from '@/components/VerdictCard';
 import { Icon } from '@/components/Icons';
@@ -41,6 +44,15 @@ export default async function Passport({ params, searchParams }: { params: Promi
   const lic = LICENCES[v.licence];
   const community = v.credits.find((c) => c.collective)?.name ?? v.credits[0]?.name ?? 'Not yet credited';
 
+  const firstPara = (v.culturalContext || '').split(/\n+/)[0].trim();
+  const blurb = firstPara.length > 230 ? firstPara.slice(0, 227).replace(/\s+\S*$/, '') + '…' : firstPara;
+  const extra = ((v as unknown as { media?: { displayUrl?: string; alt?: string }[] }).media ?? []).filter((m) => m.displayUrl);
+  const gallery: GalleryItem[] = [
+    ...(v.asset?.displayUrl ? [{ url: v.asset.displayUrl, alt: v.asset.alt }] : []),
+    ...extra.map((m) => ({ url: m.displayUrl as string, alt: m.alt ?? v.title })),
+  ];
+  const period = (v as unknown as { period?: string }).period;
+
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
@@ -60,26 +72,43 @@ export default async function Passport({ params, searchParams }: { params: Promi
   };
 
   const tabs = [
-    { id: 'about', label: 'About', content: (
-      <>
-        <p style={{ whiteSpace: 'pre-line' }}>{v.culturalContext}</p>
-        {v.submissionBasis === 'compiled_from_public_sources' && <p className="notice">{COMPILED_NOTE}</p>}
-      </>
+    { id: 'overview', label: 'Overview', icon: 'file' as const, content: (
+      <div className="pp-overview">
+        <section className="pp-card-in pp-about" aria-labelledby="about-h">
+          <h2 id="about-h">About the Work</h2>
+          <p style={{ whiteSpace: 'pre-line' }}>{v.culturalContext}</p>
+          {v.submissionBasis === 'compiled_from_public_sources' && <p className="notice">{COMPILED_NOTE}</p>}
+        </section>
+        <section className="pp-card-in pp-glance-card" aria-labelledby="glance-h">
+          <h2 id="glance-h">At a Glance <Icon name="info" size={16} className="pp-i" /></h2>
+          <dl>
+            {period && <div><dt><Icon name="calendar" size={18} />Period</dt><dd>{period}</dd></div>}
+            <div><dt><Icon name="users" size={18} />Type</dt><dd>{typeSingular(v.workType)}</dd></div>
+            {v.language && <div><dt><Icon name="book" size={18} />Language</dt><dd>{v.language}</dd></div>}
+            <div><dt><Icon name="pin" size={18} />Region</dt><dd>{v.region}</dd></div>
+          </dl>
+        </section>
+      </div>
     ) },
-    { id: 'creators', label: 'Creators', content: (
+    { id: 'media', label: `Media (${gallery.length})`, icon: 'image' as const, content: (
+      gallery.length > 0 ? (
+        <ul className="pp-media">{gallery.map((g, n) => <li key={g.url + n}><a href={g.url} target="_blank" rel="noopener noreferrer"><img src={g.url} alt={g.alt} loading="lazy" /></a></li>)}</ul>
+      ) : <p className="muted">No media has been added to this record.</p>
+    ) },
+    { id: 'creators', label: 'Creators', icon: 'users' as const, content: (
       <>
         <ul>{v.credits.map((c) => <li key={c.name + c.role}><strong>{c.name}</strong> — {c.role}{c.collective ? ' (collective)' : ''}</li>)}</ul>
         {v.credits.length === 0 && <p className="muted">Creators are not yet credited.</p>}
         {v.custodian && <p><strong>Stated custodian to contact:</strong> {v.custodian}</p>}
       </>
     ) },
-    { id: 'permissions', label: 'Permissions', content: (
+    { id: 'permissions', label: 'Permissions', icon: 'shield' as const, content: (
       <>
         <p className="hint" style={{ marginBottom: 12 }}>{LAYER_NOTE}</p>
         <TwoLayers permissions={v.permissions} licence={v.licence} />
       </>
     ) },
-    { id: 'sources', label: 'Sources', content: (
+    { id: 'sources', label: 'Sources', icon: 'link' as const, content: (
       (v.contextSources.length > 0 || v.sourceUrl || v.asset?.sourceNote) ? (
         <ul>
           {v.contextSources.map((s) => <li key={s}>{/^https?:\/\//.test(s) ? <a href={s}>{s}</a> : s}</li>)}
@@ -88,7 +117,7 @@ export default async function Passport({ params, searchParams }: { params: Promi
         </ul>
       ) : <p className="muted">No sources are listed for this record.</p>
     ) },
-    { id: 'history', label: 'History', content: (
+    { id: 'history', label: 'History', icon: 'clock' as const, content: (
       <ol className="timeline">{timeline.map((t) => (
         <li key={t.seq} data-dot={t.hashOk ? '●' : '○'}><strong>{t.summary}</strong><br /><span className="muted"><time dateTime={t.at}>{new Date(t.at).toUTCString()}</time> · {t.role}{t.actor ? ` (${t.actor})` : ''} · integrity {t.hashOk ? 'ok' : 'broken'}</span></li>
       ))}</ol>
@@ -96,47 +125,80 @@ export default async function Passport({ params, searchParams }: { params: Promi
   ];
 
   return (
-    <div className="wrap page">
+    <div className="wrap page passport-page">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <PageSheet title="Cultural Passport" eyebrow={v.id}>
-        <article>
-          <div className="two passport">
-            <div>
-              <div className="passport-art" data-tilt="8">
-                {v.asset?.displayUrl ? <img src={v.asset.displayUrl} alt={v.asset.alt} /> : <p className="muted ui">The image for this record is withheld because it is marked restricted.</p>}
+      <article className="pp">
+        <header className="pp-hero has-depth">
+          <div className="hero-stage depth-stage" aria-hidden="true" suppressHydrationWarning>
+            <div className="stage-3d" suppressHydrationWarning>
+              <div className="layer l-bg lt" />
+              <div className="mist" />
+              <div className="layer l-fig lt" />
+              <div className="layer d-bg dk" />
+              <div className="layer d-fig dk" />
+            </div>
+          </div>
+          <a className="pp-back" href="/catalogue"><Icon name="arrow" size={16} className="flip" /> Back to Catalogue</a>
+          <div className="pp-top">
+            <div className="pp-media-col">
+              <p className="pp-id">{v.id}</p>
+              <div className="passport-art pp-art" data-tilt="0">
+                <Gallery items={gallery} withheld={v.sensitivity === 'restricted'} />
                 {v.verificationLevel === 'verified' && <Seal id={v.id} credits={v.credits} label={`Verified identity seal for ${v.id}`} />}
               </div>
             </div>
-            <div className="passport-id">
-              <div className="passport-top">
-                <div>
-                  <h2 className="passport-title">{v.title}</h2>
-                  <ul className="chips">
-                    {v.verificationLevel === 'verified' ? <li className="chip verified"><span aria-hidden="true">✓ </span>Verified by a reviewer against evidence</li> : <li className="chip">Not yet verified</li>}
+            <div className="pp-info">
+              <div className="pp-title-row">
+                <div className="pp-title-block">
+                  <p className="pp-id pp-id-m">{v.id}</p>
+                  <h1 className="pp-title">{v.title}</h1>
+                  <ul className="chips pp-status">
+                    {v.verificationLevel === 'verified' ? <li className="chip verified"><span aria-hidden="true">✓ </span>Verified by a reviewer against evidence</li> : <li className="chip"><Icon name="shield" size={14} /> Not yet verified</li>}
                     {v.disputed && <li className="chip ask"><span aria-hidden="true">? </span>Open report under review</li>}
                     {v.sensitivity !== 'public' && <li className="chip ask">{v.sensitivity === 'restricted' ? 'Restricted' : 'Handle with care'}</li>}
                   </ul>
+                  {blurb && <p className="pp-blurb">{blurb}</p>}
                 </div>
-                <div className="qr"><img src={qr} alt={`QR code linking to the passport for ${v.id}`} width={92} height={92} /></div>
+                <div className="qr pp-qr">
+                  <img src={qr} alt={`QR code linking to the passport for ${v.id}`} width={92} height={92} />
+                  <span>Scan to open this record</span>
+                </div>
               </div>
-              <ul className="meta-list">
-                <li><Icon name="users" size={18} /><b>Community</b><span>{community}</span></li>
-                <li><Icon name="tag" size={18} /><b>Category</b><span>{typeSingular(v.workType)}</span></li>
-                <li><Icon name="pin" size={18} /><b>Region</b><span>{v.region}{v.language ? ` · ${v.language}` : ''}</span></li>
-                <li><Icon name="scale" size={18} /><b>Licence</b><span>{lic.url ? <a href={lic.url}>{lic.label}</a> : lic.label}</span></li>
-                <li><Icon name="file" size={18} /><b>Record</b><span>{v.id}</span></li>
-              </ul>
-              <PermissionChips permissions={v.permissions} />
-              <div className="btn-row" style={{ marginTop: 4 }}>
-                {v.asset?.displayUrl && <a className="btn" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}>Download Credit Card <Icon name="download" size={18} /></a>}
-                <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={18} /> Verify this record</a>
+              <div className="pp-meta">
+                <ul className="meta-list">
+                  <li><Icon name="users" size={18} /><b>Community</b><span>{community}</span></li>
+                  <li><Icon name="tag" size={18} /><b>Category</b><span>{typeSingular(v.workType)}</span></li>
+                </ul>
+                <ul className="meta-list">
+                  <li><Icon name="pin" size={18} /><b>Region</b><span>{v.region}{v.language ? ` · ${v.language}` : ''}</span></li>
+                  <li><Icon name="scale" size={18} /><b>Licence</b><span>{lic.url ? <a href={lic.url}>{lic.label}</a> : lic.label}</span></li>
+                  <li><Icon name="file" size={18} /><b>Record</b><span>{v.id}</span></li>
+                </ul>
               </div>
             </div>
           </div>
 
+          <div className="pp-glance" role="group" aria-label="Reuse at a glance">
+            <h2>Reuse at a Glance <a href="#studio-h" className="pp-info-ico" aria-label="How reuse is decided"><Icon name="info" size={16} /></a></h2>
+            <ReusePills permissions={v.permissions} />
+          </div>
+
+          <div className="pp-actions">
+            <a className="btn pp-primary" href="#studio-h"><Icon name="refresh" size={18} /> Check Reuse in Reuse Studio</a>
+            <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
+            <ShareButton title={v.title} />
+            <span className="pp-save"><BookmarkButton id={v.id} title={v.title} /></span>
+          </div>
+          <div className="pp-actions pp-actions-2">
+            {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
+            <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
+          </div>
+        </header>
+
+        <div className="pp-body">
           <Tabs label={`${v.title} passport sections`} tabs={tabs} />
 
           <section aria-labelledby="studio-h" style={{ marginTop: 34 }}>
@@ -164,8 +226,8 @@ export default async function Passport({ params, searchParams }: { params: Promi
               <a className="btn secondary" href={`/r/${v.id}/report`}>Report a problem</a>
             </div>
           </section>
-        </article>
-      </PageSheet>
+        </div>
+      </article>
     </div>
   );
 }

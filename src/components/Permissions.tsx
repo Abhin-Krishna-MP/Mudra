@@ -40,3 +40,17 @@ export function TwoLayers({ permissions, licence }: { permissions: Record<Capabi
     </div>
   );
 }
+
+/** Compact "Reuse at a Glance" pills: one per capability, colour always paired with an icon and words. */
+export function ReusePills({ permissions }: { permissions: Record<Capability, CulturalState> }) {
+  return (
+    <ul className="reuse-pills" aria-label="Cultural permissions as stated">
+      {CAPABILITIES.map((c) => (
+        <li key={c} className={`rpill ${CLS[permissions[c]]}`}>
+          <span className="rpill-ico" aria-hidden="true">{ICON[permissions[c]]}</span>
+          <span>{cap(CAP_PHRASE[c])}: {permissions[c] === 'unspecified' ? 'not stated' : WORD[permissions[c]].toLowerCase()}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
