@@ -2,6 +2,7 @@
    LIGHT THEME ONLY: teal Kerala backdrop (lamp, houseboat, hibiscus, leaves).
    Pages: Catalogue · Record description (passport) · Reuse Studio · Reviewer sign-in ·
           Check an image · About · Verify record · Submit record.
+   Reuse Studio, Sign-in, Verify, Check and Submit use the cream Catalogue look with the Kathakali banner.
    Every rule is scoped to :root:not([data-theme='dark']), so the dark theme is untouched.
    Loaded last (see layout.tsx).
    ========================================================================= */
@@ -46,50 +47,246 @@ html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .pa
 :root:not([data-theme='dark']) body:has(.about-page) main::after { display: none; }
 :root:not([data-theme='dark']) body:has(.about-page) main { padding-bottom: 40px; }
 
-/* ---------- Dark-styled pages (Reuse, Sign-in, Verify, Check, Submit): swap brown glass for deep-teal glass in light ---------- */
-:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) {
-  --line: #1f5a4d;
-  --line-strong: #6fa593;
-  --panel-bg: #06261f;
-  --panel-border: rgba(233, 185, 73, .42);
-  --surface-2: #0a352c;
-  --bg-soft: #06261f;
-  --sheet-head-fade: rgba(3, 26, 21, .94);
-  --rs-edge: rgba(233, 185, 73, .5);
-  --ck-edge: rgba(233, 185, 73, .5);
-  --sb-edge: rgba(233, 185, 73, .5);
+/* ---------- Reuse Studio · Reviewer sign-in · Verify record · Check image · Submit record ----------
+   Light theme now matches the Catalogue: Kathakali banner, cream sheet, cream cards with a gold rim,
+   maroon buttons. The dark theme keeps its own look (reuse.css / check.css / submit.css). */
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) {
+  color-scheme: light;
+  --ink: #1b1b1b; --muted: #5c4b3a; --line: #d8c7a6; --line-strong: #8a7355;
+  --panel-bg: #fbf5e8; --panel-border: rgba(138, 115, 85, .5);
+  --surface-2: #fffbf2; --bg-soft: #f1e4cb;
+  --sheet-head-fade: rgba(247, 238, 221, .96);
+  --primary: #681f1c; --primary-fill: #681f1c; --link: #681f1c;
+  --kasavu: linear-gradient(90deg, #8c6914 0%, #f6d27a 20%, #fff3c4 36%, #e9b949 50%, #b9780f 66%, #f6d27a 80%, #8c6914 100%);
+  --rs-gold: #7c2520; --ck-gold: #7c2520; --sb-gold: #7c2520;
+  --rs-edge: rgba(138, 115, 85, .5); --ck-edge: rgba(138, 115, 85, .5); --sb-edge: rgba(138, 115, 85, .5);
+  --sb-bad: #b71c1c; --sb-bad-ink: #7a1414; --sb-bad-bg: rgba(183, 28, 28, .07);
+  --lp-maroon: #8c2c25;
+  --lp-field: #fffdf8;
+  --lp-rim: linear-gradient(135deg, #f4d783 0%, #c18f2b 24%, #8c2c25 52%, #c18f2b 78%, #f4d783 100%);
+  --lp-rim-soft: linear-gradient(135deg, rgba(244, 215, 131, .95), rgba(193, 143, 43, .7) 42%, rgba(140, 44, 37, .72) 100%);
+  --lp-ember: linear-gradient(180deg, #9a352c 0%, #7a2620 55%, #5e1816 100%);
+  --lp-wave: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40' fill='none' stroke='%23a97a1e' stroke-width='1.2'%3E%3Cpath d='M0 30c15 0 15-14 30-14s15 14 30 14 15-14 30-14 15 14 30 14'/%3E%3Cpath d='M0 38c15 0 15-14 30-14s15 14 30 14' opacity='.6'/%3E%3C/svg%3E");
 }
-:root:not([data-theme='dark']) .reuse-page .sheet,
-:root:not([data-theme='dark']) .check-page .sheet,
-:root:not([data-theme='dark']) .submit-page .sheet {
-  background: linear-gradient(180deg, rgba(6, 44, 36, .78), rgba(3, 26, 21, .88));
-  box-shadow: 0 30px 70px rgba(0, 18, 14, .55), 0 0 0 1px rgba(255, 226, 160, .08) inset;
-}
-:root:not([data-theme='dark']) :is(.rs-card, .ck-how, .si-card),
-:root:not([data-theme='dark']) .check-page .ck-results .panel,
-:root:not([data-theme='dark']) .submit-page fieldset.panel {
-  background: radial-gradient(120% 90% at 100% 100%, rgba(233, 185, 73, .08), transparent 55%), linear-gradient(180deg, rgba(10, 62, 52, .92), rgba(4, 34, 28, .95));
-}
-:root:not([data-theme='dark']) .verify-page .vf-info {
-  background: radial-gradient(110% 80% at 100% 0%, rgba(120, 150, 60, .12), transparent 55%), linear-gradient(180deg, rgba(10, 62, 52, .92), rgba(4, 34, 28, .95));
-}
-:root:not([data-theme='dark']) .check-page .ck-drop { background: rgba(2, 22, 18, .6); }
-:root:not([data-theme='dark']) .check-page .ck-drop.over { background: radial-gradient(90% 80% at 50% 0%, rgba(233, 185, 73, .16), transparent 70%), rgba(2, 22, 18, .7); }
-:root:not([data-theme='dark']) .reuse-page .rs-form select,
-:root:not([data-theme='dark']) .si-input, :root:not([data-theme='dark']) .si-card input.si-input,
-:root:not([data-theme='dark']) .verify-page .vf-field input,
-:root:not([data-theme='dark']) .submit-page :is(input[type=text], input[type=url], input[type=email], select, textarea) {
-  background-color: rgba(2, 22, 18, .72);
-}
-:root:not([data-theme='dark']) .submit-page .stepper .n { background: rgba(2, 22, 18, .6); }
-:root:not([data-theme='dark']) :is(.si-ico, .vf-ico) {
-  background: linear-gradient(180deg, rgba(16, 92, 76, .6), rgba(6, 44, 36, .8)); border-color: rgba(233, 185, 73, .45);
-}
-:root:not([data-theme='dark']) .submit-page .sb-point { background: rgba(255, 255, 255, .04); border-color: rgba(233, 185, 73, .3); }
 
-/* mobile bottom action bar on Submit */
-@media (max-width: 760px) {
-  :root:not([data-theme='dark']) .submit-page .sb-actions { background: linear-gradient(180deg, rgba(3, 26, 21, 0), rgba(3, 26, 21, .92) 28%); }
+/* ----- sheet + Kathakali banner (same as the Catalogue) ----- */
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet {
+  border: 1.5px solid transparent; border-radius: 28px;
+  background: linear-gradient(180deg, #fbf5e8, #f7eddb) padding-box, var(--lp-rim) border-box;
+  -webkit-backdrop-filter: none; backdrop-filter: none;
+  box-shadow: 0 26px 60px rgba(0, 18, 14, .45);
+}
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .hero-stage .lt { display: block !important; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .hero-stage .dk { display: none !important; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth { min-height: 240px; padding: 40px 44px 54px; align-items: center; border-bottom: 0; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth::before {
+  background:
+    linear-gradient(90deg, var(--sheet-head-fade) 0%, var(--sheet-head-fade) 30%, transparent 78%),
+    linear-gradient(0deg, var(--panel-bg) 0%, color-mix(in srgb, var(--panel-bg) 70%, transparent) 22%, transparent 55%);
+}
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth::after { display: none; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head-text { max-width: 560px; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .eyebrow-sm { color: var(--primary); }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head h1 { color: var(--ink); text-shadow: none; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .lede-sm { color: var(--ink); opacity: .92; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .lede-sm::after { height: 3px; background: linear-gradient(90deg, var(--primary), transparent); }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-body { padding-top: 6px; }
+
+/* ----- cream cards with a gold rim ----- */
+html:root:root:not([data-theme='dark']) :is(.rs-card, .ck-how, .vf-card, .vf-info, .si-card, .rs-how, .submit-page fieldset.panel, .check-page .ck-results .panel, .reuse-page .studio ~ .panel) {
+  border: 1.5px solid transparent;
+  background:
+    radial-gradient(120% 90% at 100% 100%, rgba(218, 160, 23, .13), transparent 55%) padding-box,
+    linear-gradient(180deg, #fffcf6, #f7ecd6) padding-box,
+    var(--lp-rim-soft) border-box;
+  box-shadow: 0 14px 32px rgba(70, 36, 12, .16), 0 1px 0 rgba(255, 255, 255, .8) inset;
+}
+html:root:root:not([data-theme='dark']) .verify-page .vf-info {
+  background:
+    radial-gradient(110% 80% at 100% 0%, rgba(6, 75, 63, .09), transparent 55%) padding-box,
+    linear-gradient(180deg, #fffcf6, #f7ecd6) padding-box,
+    var(--lp-rim-soft) border-box;
+}
+html:root:root:not([data-theme='dark']) .check-page .ck-results .panel { margin: 0; }
+
+/* headings and body text inside the cards */
+html:root:root:not([data-theme='dark']) .rs-card-head h2, html:root:root:not([data-theme='dark']) .rs-label, html:root:root:not([data-theme='dark']) .si-info h2, html:root:root:not([data-theme='dark']) .si-info h3, html:root:root:not([data-theme='dark']) .vf-info h2, html:root:root:not([data-theme='dark']) .vf-info h3,
+html:root:root:not([data-theme='dark']) .ck-intro, html:root:root:not([data-theme='dark']) .ck-or, html:root:root:not([data-theme='dark']) .ck-drop-title, html:root:root:not([data-theme='dark']) .ck-how-head h2, html:root:root:not([data-theme='dark']) .ck-steps h3,
+html:root:root:not([data-theme='dark']) .sb-points h2, html:root:root:not([data-theme='dark']) .submit-page legend h2, html:root:root:not([data-theme='dark']) .submit-page label, html:root:root:not([data-theme='dark']) .submit-page .stepper li[aria-current='step'],
+html:root:root:not([data-theme='dark']) .submit-page .stepper li.done, html:root:root:not([data-theme='dark']) .rs-how > summary, html:root:root:not([data-theme='dark']) .rs-layer-title h3, html:root:root:not([data-theme='dark']) .rs-how-synthesis strong { color: var(--ink); }
+html:root:root:not([data-theme='dark']) .rs-card-head p, html:root:root:not([data-theme='dark']) .si-info-lede, html:root:root:not([data-theme='dark']) .si-info li p, html:root:root:not([data-theme='dark']) .vf-info li p, html:root:root:not([data-theme='dark']) .vf-hint, html:root:root:not([data-theme='dark']) .vf-samples p,
+html:root:root:not([data-theme='dark']) .ck-sub, html:root:root:not([data-theme='dark']) .ck-steps p, html:root:root:not([data-theme='dark']) .sb-points p, html:root:root:not([data-theme='dark']) .sb-count, html:root:root:not([data-theme='dark']) .rs-note, html:root:root:not([data-theme='dark']) .rs-layer-caption,
+html:root:root:not([data-theme='dark']) .check-page .ck-drop .formats, html:root:root:not([data-theme='dark']) .submit-page .hint { color: var(--muted); }
+html:root:root:not([data-theme='dark']) .rs-i, html:root:root:not([data-theme='dark']) .rs-note .icon, html:root:root:not([data-theme='dark']) .rs-layer-title, html:root:root:not([data-theme='dark']) .rs-next-meta, html:root:root:not([data-theme='dark']) .rs-how-synthesis .icon,
+html:root:root:not([data-theme='dark']) .rs-advisories h4, html:root:root:not([data-theme='dark']) .rs-advisory-item .icon, html:root:root:not([data-theme='dark']) .rs-how-ico, html:root:root:not([data-theme='dark']) .submit-page .req { color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li { color: var(--muted); }
+html:root:root:not([data-theme='dark']) .submit-page legend h2::after { background: linear-gradient(90deg, var(--lp-maroon), transparent); }
+html:root:root:not([data-theme='dark']) .rs-card-ico { color: var(--lp-maroon); filter: drop-shadow(0 2px 6px rgba(193, 143, 43, .45)); }
+
+/* icon tiles: maroon tile, gold glyph (as the home-page tiles) */
+html:root:root:not([data-theme='dark']) :is(.si-ico, .vf-card .vf-ico, .sb-point-ico) {
+  color: #f2c766; border: 1px solid rgba(244, 215, 131, .6);
+  background: linear-gradient(150deg, #8c2c25 0%, #4e1412 100%);
+  box-shadow: 0 6px 14px rgba(78, 20, 18, .3), inset 0 1px 0 rgba(255, 255, 255, .18);
+}
+html:root:root:not([data-theme='dark']) :is(.vf-info .vf-ico, .ck-step-ico) {
+  color: var(--lp-maroon); background: rgba(140, 44, 37, .07); border: 1px solid rgba(138, 115, 85, .38); box-shadow: none;
+}
+html:root:root:not([data-theme='dark']) :is(.vf-i, .ck-how-ico) { color: var(--lp-maroon); border-color: rgba(138, 115, 85, .55); background: rgba(193, 143, 43, .13); filter: none; }
+
+/* ----- form controls ----- */
+html:root:root:not([data-theme='dark']) .reuse-page .rs-form select,
+html:root:root:not([data-theme='dark']) .si-input, html:root:root:not([data-theme='dark']) .si-card input.si-input,
+html:root:root:not([data-theme='dark']) .verify-page .vf-card .vf-field input,
+html:root:root:not([data-theme='dark']) .submit-page :is(input[type=text], input[type=url], input[type=email], select, textarea) {
+  background-color: var(--lp-field); color: var(--ink); border-color: rgba(138, 115, 85, .6);
+  box-shadow: inset 0 1px 2px rgba(70, 36, 12, .07);
+}
+html:root:root:not([data-theme='dark']) .reuse-page .rs-form select, html:root:root:not([data-theme='dark']) .submit-page select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%238c2c25' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m5 9 7 7 7-7'/%3E%3C/svg%3E");
+}
+html:root:root:not([data-theme='dark']) .reuse-page .rs-form select option, html:root:root:not([data-theme='dark']) .submit-page select option { background: #fffdf8; color: #1b1b1b; }
+html:root:root:not([data-theme='dark']) .si-input::placeholder, html:root:root:not([data-theme='dark']) .vf-card .vf-field input::placeholder,
+html:root:root:not([data-theme='dark']) .submit-page input::placeholder, html:root:root:not([data-theme='dark']) .submit-page textarea::placeholder { color: rgba(92, 75, 58, .72); }
+html:root:root:not([data-theme='dark']) .si-input:-webkit-autofill { -webkit-text-fill-color: #1b1b1b; box-shadow: 0 0 0 40px #fffdf8 inset; caret-color: #1b1b1b; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page .rs-form select, .si-input, .verify-page .vf-card .vf-field input, .submit-page :is(input[type=text], input[type=url], input[type=email], select, textarea)):hover { border-color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) :is(.reuse-page .rs-form select, .si-input, .verify-page .vf-card .vf-field input, .submit-page :is(input[type=text], input[type=url], input[type=email], select, textarea)):focus-visible {
+  outline: none; border-color: #b9862a; box-shadow: 0 0 0 3px rgba(212, 166, 58, .38);
+}
+html:root:root:not([data-theme='dark']) .vf-field-ico, html:root:root:not([data-theme='dark']) .fi-ico, html:root:root:not([data-theme='dark']) .submit-page .fi-ico { color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) button.si-eye { color: #6b5744; }
+html:root:root:not([data-theme='dark']) button.si-eye:hover { background: rgba(140, 44, 37, .09); color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) button.si-eye:focus-visible { outline: 2px solid #b9862a; }
+html:root:root:not([data-theme='dark']) .rs-note { border-color: rgba(138, 115, 85, .32); background: rgba(140, 44, 37, .04); }
+html:root:root:not([data-theme='dark']) .si-info::before { background: linear-gradient(180deg, transparent, rgba(185, 134, 42, .6), transparent); }
+html:root:root:not([data-theme='dark']) .si-info::after, html:root:root:not([data-theme='dark']) .vf-card::after { background-image: var(--lp-wave); opacity: .5; }
+html:root:root:not([data-theme='dark']) .submit-page .check-row input[type=checkbox] { accent-color: var(--lp-maroon); }
+
+/* ----- buttons: maroon ember ----- */
+html:root:root:not([data-theme='dark']) :is(.rs-actions .btn:not(.secondary), .ck-go, .submit-page .btn-row button:not(.secondary), .check-page .ck-results .btn) {
+  color: #fff6e5; border: 1px solid rgba(244, 215, 131, .75); background: var(--lp-ember);
+  box-shadow: 0 8px 18px rgba(104, 31, 28, .36), inset 0 1.5px 1px rgba(255, 255, 255, .28), inset 0 -1px 0 rgba(0, 0, 0, .2);
+}
+html:root:root:not([data-theme='dark']) :is(.rs-actions .btn:not(.secondary), .ck-go:not(:disabled), .submit-page .btn-row button:not(.secondary):not(:disabled)):hover {
+  filter: brightness(1.1); box-shadow: 0 12px 24px rgba(104, 31, 28, .44), inset 0 1.5px 1px rgba(255, 255, 255, .34), inset 0 -1px 0 rgba(0, 0, 0, .2);
+}
+html:root:root:not([data-theme='dark']) :is(.rs-actions .btn.secondary, .submit-page .btn-row button.secondary) {
+  background: transparent; color: #681f1c; border: 1.5px solid var(--lp-maroon); box-shadow: none;
+}
+html:root:root:not([data-theme='dark']) :is(.rs-actions .btn.secondary, .submit-page .btn-row button.secondary):hover { background: rgba(140, 44, 37, .09); border-color: #681f1c; }
+html:root:root:not([data-theme='dark']) .check-page .ck-go:focus-visible { outline-color: #0b5cad; }
+
+/* ----- Reuse Studio: verdict card + "How this answer was reached" ----- */
+html:root:root:not([data-theme='dark']) .rs-result { box-shadow: 0 14px 32px rgba(70, 36, 12, .2), 0 0 0 1px rgba(255, 255, 255, .6) inset, 0 0 26px rgba(90, 180, 120, .2); }
+html:root:root:not([data-theme='dark']) .rs-result.ask_first { box-shadow: 0 14px 32px rgba(70, 36, 12, .2), 0 0 0 1px rgba(255, 255, 255, .6) inset, 0 0 26px rgba(230, 170, 60, .24); }
+html:root:root:not([data-theme='dark']) .rs-result.not_permitted { box-shadow: 0 14px 32px rgba(70, 36, 12, .2), 0 0 0 1px rgba(255, 255, 255, .6) inset, 0 0 26px rgba(200, 70, 60, .2); }
+html:root:root:not([data-theme='dark']) .reuse-page .studio .parasol { filter: drop-shadow(0 8px 12px rgba(70, 36, 12, .3)); }
+html:root:root:not([data-theme='dark']) .rs-how > summary:hover { background: rgba(193, 143, 43, .12); }
+html:root:root:not([data-theme='dark']) .rs-how-tri { border-left-color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) .rs-how-body { border-top-color: rgba(138, 115, 85, .3); }
+html:root:root:not([data-theme='dark']) .rs-layer-card, html:root:root:not([data-theme='dark']) .rs-next-card { background: rgba(255, 255, 255, .6); border-color: rgba(138, 115, 85, .36); box-shadow: 0 4px 12px rgba(70, 36, 12, .08); }
+html:root:root:not([data-theme='dark']) .rs-layer-desc, html:root:root:not([data-theme='dark']) .rs-next-card p, html:root:root:not([data-theme='dark']) .rs-advisory-item, html:root:root:not([data-theme='dark']) .rs-how-synthesis { color: var(--ink); }
+html:root:root:not([data-theme='dark']) .rs-how-synthesis { background: rgba(140, 44, 37, .05); border-color: rgba(138, 115, 85, .5); }
+html:root:root:not([data-theme='dark']) .rs-advisories { background: rgba(218, 160, 23, .1); border-color: rgba(138, 115, 85, .38); }
+html:root:root:not([data-theme='dark']) .rs-layer-badge.ok { background: rgba(46, 125, 50, .12); border-color: rgba(46, 125, 50, .45); color: #1b5e20; }
+html:root:root:not([data-theme='dark']) .rs-layer-badge.ask { background: rgba(217, 119, 6, .12); border-color: rgba(180, 100, 10, .45); color: #78350f; }
+html:root:root:not([data-theme='dark']) .rs-layer-badge.no { background: rgba(220, 38, 38, .1); border-color: rgba(183, 28, 28, .45); color: #b71c1c; }
+
+/* ----- Verify: sample IDs ----- */
+html:root:root:not([data-theme='dark']) .vf-samples { border-top-color: rgba(138, 115, 85, .35); }
+html:root:root:not([data-theme='dark']) .vf-samples a { color: var(--lp-maroon); background: rgba(140, 44, 37, .06); border-color: rgba(138, 115, 85, .55); }
+html:root:root:not([data-theme='dark']) .vf-samples a:hover { background: rgba(140, 44, 37, .13); border-color: var(--lp-maroon); }
+
+/* ----- Check image ----- */
+html:root:root:not([data-theme='dark']) .check-page .ck-drop {
+  border-color: rgba(140, 44, 37, .5);
+  background: radial-gradient(90% 80% at 50% 0%, rgba(218, 160, 23, .13), transparent 70%), #fffdf8;
+}
+html:root:root:not([data-theme='dark']) .check-page .ck-drop:hover { border-color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) .check-page .ck-drop.over {
+  border-color: var(--lp-maroon); box-shadow: 0 0 0 4px rgba(212, 166, 58, .25), 0 0 26px rgba(193, 143, 43, .3);
+  background: radial-gradient(90% 80% at 50% 0%, rgba(218, 160, 23, .22), transparent 70%), #fffaf0;
+}
+html:root:root:not([data-theme='dark']) .ck-up .ck-up-back { color: rgba(138, 115, 85, .3); }
+html:root:root:not([data-theme='dark']) .ck-up .up { color: var(--lp-maroon); filter: drop-shadow(0 3px 8px rgba(193, 143, 43, .5)); }
+html:root:root:not([data-theme='dark']) .check-page .ck-choose .choose { color: var(--lp-maroon); border-color: var(--lp-maroon); background: rgba(140, 44, 37, .06); }
+html:root:root:not([data-theme='dark']) .check-page .ck-drop:hover .choose { background: rgba(140, 44, 37, .13); border-color: #681f1c; }
+html:root:root:not([data-theme='dark']) .check-page .ck-drop .preview { border-color: rgba(138, 115, 85, .5); box-shadow: 0 8px 20px rgba(70, 36, 12, .25); }
+html:root:root:not([data-theme='dark']) .ck-num { background: var(--lp-ember); color: #fff6e5; box-shadow: 0 3px 8px rgba(104, 31, 28, .4); }
+html:root:root:not([data-theme='dark']) .ck-steps li:not(:last-child)::before { border-left-color: rgba(138, 115, 85, .6); }
+
+/* ----- Submit a record ----- */
+html:root:root:not([data-theme='dark']) .sb-points { border-color: rgba(138, 115, 85, .38); background: rgba(255, 255, 255, .55); box-shadow: 0 6px 16px rgba(70, 36, 12, .07); }
+html:root:root:not([data-theme='dark']) .sb-points li + li { border-left-color: rgba(138, 115, 85, .4); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li + li::before { background: rgba(138, 115, 85, .32); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li.done::before, html:root:root:not([data-theme='dark']) .submit-page .stepper li[aria-current='step']::before { background: linear-gradient(90deg, #c18f2b, var(--lp-maroon)); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper .n { background: #fffdf8; border-color: rgba(138, 115, 85, .85); color: var(--ink); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li[aria-current='step'] .n { background: var(--lp-ember); border-color: #c18f2b; color: #fff6e5; box-shadow: 0 0 0 4px rgba(212, 166, 58, .26), 0 4px 10px rgba(104, 31, 28, .35); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li.done .n { background: rgba(140, 44, 37, .12); border-color: var(--lp-maroon); color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li.has-err .n { background: rgba(183, 28, 28, .1); border-color: #b71c1c; color: #b71c1c; box-shadow: 0 0 0 4px rgba(183, 28, 28, .1); }
+html:root:root:not([data-theme='dark']) .submit-page .stepper li.has-err[aria-current='step'] .n { background: linear-gradient(180deg, #d9534f, #b71c1c); color: #fff; border-color: #b71c1c; }
+html:root:root:not([data-theme='dark']) .sb-mandala { color: var(--lp-maroon); opacity: .13; }
+html:root:root:not([data-theme='dark']) .sb-drop { border-color: rgba(140, 44, 37, .5); background: rgba(218, 160, 23, .09); }
+html:root:root:not([data-theme='dark']) .sb-drop:hover { border-color: var(--lp-maroon); background: rgba(218, 160, 23, .15); }
+html:root:root:not([data-theme='dark']) .sb-drop:focus-within { border-color: #b9862a; box-shadow: 0 0 0 3px rgba(212, 166, 58, .38); }
+html:root:root:not([data-theme='dark']) .submit-page input[type=file]::file-selector-button { border-color: var(--lp-maroon); background: rgba(140, 44, 37, .08); color: var(--lp-maroon); }
+html:root:root:not([data-theme='dark']) .sb-thumb img { border-color: rgba(138, 115, 85, .5); }
+html:root:root:not([data-theme='dark']) .sb-credit { background: rgba(255, 255, 255, .55); border-color: rgba(138, 115, 85, .32); }
+html:root:root:not([data-theme='dark']) .sb-done-ico { color: var(--lp-maroon); background: rgba(193, 143, 43, .16); border-color: #c18f2b; box-shadow: 0 0 22px rgba(193, 143, 43, .35); }
+html:root:root:not([data-theme='dark']) .submit-page .sb-done p { color: var(--ink); }
+
+/* errors (light): soft red on cream */
+html:root:root:not([data-theme='dark']) .submit-page .errsum {
+  border-color: rgba(183, 28, 28, .35); color: #7a1414;
+  background: radial-gradient(90% 120% at 0% 0%, rgba(183, 28, 28, .1), transparent 60%), linear-gradient(180deg, #fff3f0, #fde4df);
+  box-shadow: 0 12px 28px rgba(122, 20, 20, .14);
+}
+html:root:root:not([data-theme='dark']) .errsum-ico { color: #b71c1c; background: rgba(183, 28, 28, .1); border-color: rgba(183, 28, 28, .4); }
+html:root:root:not([data-theme='dark']) .errsum-head strong, html:root:root:not([data-theme='dark']) .errsum-group h3 { color: #5f1010; }
+html:root:root:not([data-theme='dark']) .errsum-head p { color: #7a1414; }
+html:root:root:not([data-theme='dark']) .errsum-groups { border-top-color: rgba(183, 28, 28, .22); }
+html:root:root:not([data-theme='dark']) .errsum-step { color: #7a1414; border-color: rgba(183, 28, 28, .55); }
+html:root:root:not([data-theme='dark']) .submit-page .errsum a { color: #7a1414; background: rgba(183, 28, 28, .06); }
+html:root:root:not([data-theme='dark']) .submit-page .errsum a:hover { background: rgba(183, 28, 28, .13); border-color: rgba(183, 28, 28, .35); color: #5f1010; }
+html:root:root:not([data-theme='dark']) .submit-page .errsum a:focus-visible { outline-color: #b71c1c; }
+html:root:root:not([data-theme='dark']) .submit-page .err, html:root:root:not([data-theme='dark']) .sb-callout { border-color: rgba(183, 28, 28, .3); }
+html:root:root:not([data-theme='dark']) .submit-page .field .fi :is(input, select, textarea)[aria-invalid='true'],
+html:root:root:not([data-theme='dark']) .submit-page .field :is(input, select, textarea)[aria-invalid='true'],
+html:root:root:not([data-theme='dark']) .sb-drop.bad { border-color: #b71c1c; background-color: #fff4f2; box-shadow: 0 0 0 3px rgba(183, 28, 28, .12); }
+html:root:root:not([data-theme='dark']) .submit-page .field:has([aria-invalid='true']) > label { color: #7a1414; }
+
+/* guidelines: deep Kerala green with gold, as the light header */
+html:root:root:not([data-theme='dark']) .sb-guide {
+  border: 1.5px solid rgba(233, 185, 73, .8);
+  background: radial-gradient(120% 80% at 100% 100%, rgba(233, 185, 73, .18), transparent 60%), linear-gradient(180deg, #0d4d40 0%, #073228 100%);
+  box-shadow: 0 16px 36px rgba(0, 38, 30, .38), 0 0 0 1px rgba(255, 226, 160, .1) inset;
+}
+
+/* ----- Phones ----- */
+html:root:root:not([data-theme='dark']) .submit-page .fi > :is(input, select, textarea) { padding-left: 50px; }
+
+@media (max-width: 640px) {
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet { border-radius: 22px; box-shadow: 0 18px 44px rgba(0, 18, 14, .42); }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth { min-height: 196px; padding: 24px 20px 44px; align-items: center; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth::before {
+    background:
+      linear-gradient(90deg, var(--sheet-head-fade) 0%, rgba(247, 238, 221, .86) 44%, transparent 92%),
+      linear-gradient(0deg, var(--panel-bg) 0%, color-mix(in srgb, var(--panel-bg) 72%, transparent) 20%, transparent 52%);
+  }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head-text { max-width: 68%; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head h1 { font-size: clamp(2rem, 9.5vw, 2.4rem); }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .eyebrow-sm { font-size: .68rem; letter-spacing: .26em; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .lede-sm { font-size: 1rem; max-width: 24ch; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-body { padding: 4px 12px 22px; }
+  html:root:root:not([data-theme='dark']) :is(.rs-card, .ck-how, .vf-card, .vf-info, .si-card, .rs-how, .submit-page fieldset.panel) { border-radius: 22px; box-shadow: 0 10px 24px rgba(70, 36, 12, .15), 0 1px 0 rgba(255, 255, 255, .8) inset; }
+  html:root:root:not([data-theme='dark']) :is(.vf-card, .si-card, .rs-card) { padding: 20px 16px 22px; }
+  html:root:root:not([data-theme='dark']) .reuse-page .rs-form select, html:root:root:not([data-theme='dark']) .si-input, html:root:root:not([data-theme='dark']) .verify-page .vf-card .vf-field input { min-height: 52px; }
+  html:root:root:not([data-theme='dark']) .sb-points { background: rgba(255, 255, 255, .6); }
+  html:root:root:not([data-theme='dark']) .sb-points li + li { border-top-color: rgba(138, 115, 85, .3); }
+  html:root:root:not([data-theme='dark']) .submit-page .sb-actions { background: linear-gradient(180deg, rgba(247, 238, 221, 0), rgba(247, 238, 221, .94) 30%); }
+  html:root:root:not([data-theme='dark']) .sb-guide { border-radius: 22px; }
+  html:root:root:not([data-theme='dark']) .check-page .ck-drop { min-height: 224px; border-radius: 20px; }
+  html:root:root:not([data-theme='dark']) .ck-go { width: 100%; }
 }
 
 /* ---------- Catalogue, About and Record description keep their cream cards in light; softer shadow on teal ---------- */
