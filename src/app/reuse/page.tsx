@@ -1,3 +1,4 @@
+import './reuse.css';
 import { getDb } from '@/lib/db';
 import { listRecords, getRecordView } from '@/lib/repo';
 import { USE_IDS, type Use } from '@/lib/permissions';
@@ -24,8 +25,8 @@ export default async function Reuse({ searchParams }: { searchParams: Promise<{ 
   const initialId = works.some((w) => w.id === sp.work) ? (sp.work as string) : works[0]?.id ?? '';
   const initialUse = (USE_IDS.includes(sp.use as Use) ? sp.use : 'teach') as Use;
   return (
-    <div className="wrap page">
-      <PageSheet title="Reuse Studio" lede="Check how you may use a cultural work for your project.">
+    <div className="wrap page reuse-page">
+      <PageSheet eyebrow="Reuse Studio" title="Reuse Studio" lede="Check how you may use a cultural work for your project.">
         <ReuseStudio works={works} initialId={initialId} initialUse={initialUse} />
       </PageSheet>
     </div>
