@@ -201,24 +201,46 @@
   display: none !important;
 }
 
-/* Headline animation */
-.hero.lt-hero.mh h1 .w {
+/* Headline animation - identical timing and rise for both light and dark themes */
+html.motion .hero.lt-hero.mh h1 .w,
+html.motion .hero.mx-hero.dk-hero h1 .w,
+.hero.lt-hero.mh h1 .w,
+.hero.mx-hero.dk-hero h1 .w {
   display: inline-block;
   opacity: 0;
   transform: translateY(18px);
   animation: rise .7s cubic-bezier(.2, .8, .2, 1) calc(.2s + var(--i, 0) * .1s) forwards;
 }
 
-.hero.lt-hero.mh h1 em.w {
+html.motion .hero.lt-hero.mh h1 em.w,
+html.motion .hero.mx-hero.dk-hero h1 em.w,
+.hero.lt-hero.mh h1 em.w,
+.hero.mx-hero.dk-hero h1 em.w {
   display: block;
+  font-style: italic;
+  font-weight: 500;
+  background-image: var(--foil-gold, linear-gradient(100deg, #b9780f 0%, #f6d27a 24%, #fff3c4 38%, #e9b949 52%, #b9780f 78%, #f6d27a 100%)) !important;
+  background-size: 220% 100% !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  filter: drop-shadow(0 0 20px rgba(245, 191, 100, .45)) !important;
+  animation: rise .7s cubic-bezier(.2, .8, .2, 1) .5s forwards, shine 6s linear infinite 1.2s !important;
 }
 
-.hero.lt-hero.mh .lede {
+html.motion .hero.lt-hero.mh .lede,
+html.motion .hero.mx-hero.dk-hero .lede,
+.hero.lt-hero.mh .lede,
+.hero.mx-hero.dk-hero .lede {
   opacity: 0;
   animation: rise .7s ease .5s forwards;
 }
 
-.hero.lt-hero.mh .cta {
+html.motion .hero.lt-hero.mh .cta,
+html.motion .hero.mx-hero.dk-hero .cta,
+.hero.lt-hero.mh .cta,
+.hero.mx-hero.dk-hero .cta {
   opacity: 0;
   animation: rise .7s ease .65s forwards;
 }
@@ -309,45 +331,53 @@
   }
 
   /* 4. Text & Buttons */
-  .hero.lt-hero.mh .hero-inner {
+  .hero.lt-hero.mh .hero-inner,
+  .hero.mx-hero.dk-hero .hero-inner {
     position: relative !important;
     z-index: 10 !important;
   }
 
-  .hero.lt-hero.mh .hero-copy {
+  .hero.lt-hero.mh .hero-copy,
+  .hero.mx-hero.dk-hero .hero-copy {
     max-width: 100% !important;
   }
 
-  .hero.lt-hero.mh .eyebrow {
+  .hero.lt-hero.mh .eyebrow,
+  .hero.mx-hero.dk-hero .eyebrow {
     font-size: .72rem !important;
     letter-spacing: .28em !important;
     margin: 0 0 14px !important;
   }
 
-  .hero.lt-hero.mh .eyebrow::before {
+  .hero.lt-hero.mh .eyebrow::before,
+  .hero.mx-hero.dk-hero .eyebrow::before {
     width: 32px !important;
   }
 
-  .hero.lt-hero.mh h1 {
+  .hero.lt-hero.mh h1,
+  .hero.mx-hero.dk-hero h1 {
     font-size: clamp(2.1rem, 7.8vw, 2.9rem) !important;
     line-height: 1.1 !important;
     margin: 0 0 16px !important;
   }
 
-  .hero.lt-hero.mh .lede {
+  .hero.lt-hero.mh .lede,
+  .hero.mx-hero.dk-hero .lede {
     font-size: .98rem !important;
     line-height: 1.55 !important;
     margin: 0 0 28px !important;
     color: rgba(248, 238, 223, 0.9) !important;
   }
 
-  .hero.lt-hero.mh .cta {
+  .hero.lt-hero.mh .cta,
+  .hero.mx-hero.dk-hero .cta {
     display: flex !important;
     gap: 12px !important;
     width: 100% !important;
   }
 
-  .hero.lt-hero.mh .scroll-cue {
+  .hero.lt-hero.mh .scroll-cue,
+  .hero.mx-hero.dk-hero .scroll-cue {
     display: none !important;
   }
 }
@@ -424,13 +454,17 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero.lt-hero.mh * {
+  .hero.lt-hero.mh *,
+  .hero.mx-hero.dk-hero * {
     animation: none !important;
   }
   .hero.lt-hero.mh h1 .w,
+  .hero.mx-hero.dk-hero h1 .w,
   .hero.lt-hero.mh .lede,
-  .hero.lt-hero.mh .cta {
-    opacity: 1;
-    transform: none;
+  .hero.mx-hero.dk-hero .lede,
+  .hero.lt-hero.mh .cta,
+  .hero.mx-hero.dk-hero .cta {
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

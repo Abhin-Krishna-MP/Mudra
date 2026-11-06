@@ -130,7 +130,7 @@ html.motion .dk.d-fig { animation: d-fig-in 1.9s var(--ease-out) 1.75s both; }
 .hero h1 .dot { opacity: .6; }
 .hero h1 em.w { font-weight: 500; letter-spacing: -.02em; font-size: 1.12em; padding-bottom: .06em; }
 :root:not([data-theme='dark']) .hero h1 em.w { background-image: var(--foil-gold); background-size: 220% 100%; }
-:root[data-theme='dark'] .hero h1 em.w { background-image: var(--foil-ember); background-size: 220% 100%; filter: drop-shadow(0 0 18px rgba(255, 110, 30, .45)); }
+:root[data-theme='dark'] .hero h1 em.w { background-image: var(--foil-gold); background-size: 220% 100%; filter: drop-shadow(0 0 20px rgba(245, 191, 100, .45)); }
 
 .hero .eyebrow { display: inline-flex; align-items: center; gap: 14px; }
 .hero .eyebrow::before { content: ''; width: 44px; height: 1px; background: linear-gradient(90deg, transparent, var(--hero-gold)); }
