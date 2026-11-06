@@ -8,12 +8,24 @@ export function Carousel({ label, children }: { label: string; children: ReactNo
   const [pages, setPages] = useState(1);
   const [page, setPage] = useState(0);
 
-  const step = (el: HTMLElement) => Math.max(240, el.clientWidth * 0.8);
+  /** One page = as many whole cards as are visible, so each click lands exactly on a card. */
+  const step = (el: HTMLElement) => {
+    const li = el.querySelector('li') as HTMLElement | null;
+    if (!li) return Math.max(240, el.clientWidth * 0.8);
+    const gap = parseFloat(getComputedStyle(el).columnGap) || 0;
+    const pitch = li.offsetWidth + gap;
+    return pitch * Math.max(1, Math.floor((el.clientWidth + gap) / pitch));
+  };
   const reduce = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const by = (dir: 1 | -1) => {
     const el = ref.current; if (!el) return;
-    el.scrollBy({ left: dir * step(el), behavior: reduce() ? 'auto' : 'smooth' });
+    const max = el.scrollWidth - el.clientWidth;
+    const behavior = reduce() ? 'auto' : 'smooth';
+    // at either end the arrow wraps round, so it always does something visible
+    if (dir === 1 && el.scrollLeft >= max - 4) return el.scrollTo({ left: 0, behavior });
+    if (dir === -1 && el.scrollLeft <= 4) return el.scrollTo({ left: max, behavior });
+    el.scrollTo({ left: Math.min(max, Math.max(0, el.scrollLeft + dir * step(el))), behavior });
   };
   const to = (n: number) => {
     const el = ref.current; if (!el) return;
