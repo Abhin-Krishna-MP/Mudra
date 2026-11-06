@@ -27,12 +27,7 @@
   color: var(--ink);
 }
 
-/* ---------- Page artwork: backwater at dusk (fixed layer) ---------- */
-body:has(.submit-page) { background-color: #0a0607; background-image: none; }
-body:has(.submit-page)::before {
-  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
-  background: url('/mudra/check-bg.webp') center bottom / cover no-repeat, #0a0607;
-}
+/* ---------- Page artwork: the Catalogue painting, fixed layer (defined in kerala-backdrop.css) ---------- */
 html:root:root body:has(.submit-page) .site-header.padippura-header { background: transparent !important; border: 0 !important; box-shadow: none !important; padding-bottom: 0 !important; }
 body:has(.submit-page) .site-header::after { display: none; }
 .submit-page.page { padding-top: 14px; }

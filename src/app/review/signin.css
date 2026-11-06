@@ -1,9 +1,6 @@
 /* Reviewer sign-in. Builds on the Reuse Studio look (reuse.css); only the backdrop and the form/summary pieces differ. */
 
-/* Backdrop: leaves framing both sides, brass lamp at the bottom left */
-body:has(.signin-page.reuse-page)::before {
-  background: url('/mudra/signin-bg.jpg') center bottom / cover no-repeat, #0a0607;
-}
+/* Backdrop: the Catalogue painting, set in kerala-backdrop.css */
 /* the backdrop already carries the lamp, so the footer does not draw a second one */
 :root[data-theme='dark'] body:has(.signin-page) .site-footer::after { content: none; }
 
