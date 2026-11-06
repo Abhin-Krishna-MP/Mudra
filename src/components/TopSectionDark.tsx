@@ -3,7 +3,7 @@
 import React from 'react';
 import { Icon } from './Icons';
 import { HeroMotion } from './HeroMotion';
-import { HeroDepth } from './HeroDepth';
+import { HeroKerala } from './HeroKerala';
 
 export interface TopSectionDarkProps {
   includeCurtain?: boolean;
@@ -48,71 +48,64 @@ export function TopSectionDark({
       )}
 
       {/* ===================================================================
-          2. LIGHT THEME HERO (Kathakali, Ivory Silk, Floating Kasavu Gold)
+          2. LIGHT THEME HERO (Kathakali, Sunset Backwaters, Kasavu & Lamp)
           Shown only when: :root:not([data-theme='dark'])
           =================================================================== */}
-      <section className="hero hero-light lt-hero dh" aria-labelledby="hero-lt-h" suppressHydrationWarning>
-        <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
-          <div className="stage-3d" suppressHydrationWarning>
-            {/* 1. Far plane: backwater sunset, sun glow, god-rays, water glints */}
-            <div className="d d-sky">
-              <img src="/mudra/depth-sky.webp" alt="" fetchPriority="high" decoding="async" />
-              <div className="sun-pool" />
-              <div className="sun-rays" />
-              <div className="water-glint" />
-            </div>
-            {/* 2. Mist between water and performer */}
-            <div className="mist" />
-            {/* 3. Mid plane: Kathakali, lit by a torch that follows the pointer */}
-            <div className="d d-kath" style={{ '--fig': "url('/mudra/depth-kathakali.webp')" } as React.CSSProperties}>
-              <img src="/mudra/depth-kathakali.webp" alt="" fetchPriority="high" decoding="async" />
-              <div className="kath-light" />
-            </div>
-            {/* 4. Near plane: kasavu silk, Nilavilakku lamp, hibiscus */}
-            <div className="d d-kasavu" style={{ '--silk': "url('/mudra/depth-kasavu.webp')" } as React.CSSProperties}>
-              <img src="/mudra/depth-kasavu.webp" alt="" fetchPriority="high" decoding="async" />
-              <div className="silk-sheen" />
-              <div className="lamp-bloom" />
-            </div>
+      <section className="hero hero-light lt-hero mh" id="home" aria-labelledby="hero-lt-h" suppressHydrationWarning>
+        <div className="layer l-bg" aria-hidden="true" />
+        <div className="layer l-sun" aria-hidden="true" />
+        <div className="layer l-rays" aria-hidden="true" />
+        <div className="layer l-shade" aria-hidden="true" />
+        <div className="layer l-mist" aria-hidden="true" />
+        <img className="layer l-fig" src="/mudra/kathakali.webp" alt="" fetchPriority="high" decoding="async" />
+        <div className="layer l-fg" aria-hidden="true">
+          <img className="fg-mid" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
+          <img className="fg-left" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
+          <img className="fg-right" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
+          <div className="lamp-glow" />
+        </div>
+        <div className="layer l-glow" aria-hidden="true" />
+        <div className="layer l-motes" aria-hidden="true" />
+        <div className="layer l-fade" aria-hidden="true" />
+
+        <div className="mh-copy">
+          <p className="mh-eyebrow">Kerala’s Living Heritage</p>
+          <h1 id="hero-lt-h">
+            <span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span>
+            <span className="dot" aria-hidden="true"> · </span>
+            <span className="sr">, </span>
+            <span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span>
+            <span className="dot" aria-hidden="true"> · </span>
+            <span className="sr">, </span>
+            <span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span>{' '}
+            <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly.</em>
+          </h1>
+          <p className="mh-lede">
+            A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.
+          </p>
+          <div className="cta mh-cta">
+            <a className="btn gold btn-explore mh-btn gold" href="/catalogue">
+              <span className="btn-seal" aria-hidden="true" />
+              <Icon name="book" size={19} />
+              <span>Explore Catalogue</span>
+              <Icon name="arrow" size={17} />
+            </a>
+            <a className="btn ghost btn-reuse mh-btn ghost" href="/reuse">
+              <Icon name="layers" size={20} />
+              <span>Reuse Studio</span>
+              <Icon name="arrow" size={17} />
+            </a>
           </div>
         </div>
-        <div className="hero-bg" aria-hidden="true" />
-        <div className="wrap hero-inner">
-          <div className="hero-copy">
-            <p className="eyebrow">Kerala’s Living Heritage</p>
-            <h1 id="hero-lt-h">
-              <span className="w" style={{ '--i': 0 } as React.CSSProperties}>Discover</span>
-              <span className="dot" aria-hidden="true"> · </span>
-              <span className="sr">, </span>
-              <span className="w" style={{ '--i': 1 } as React.CSSProperties}>Credit</span>
-              <span className="dot" aria-hidden="true"> · </span>
-              <span className="sr">, </span>
-              <span className="w" style={{ '--i': 2 } as React.CSSProperties}>Reuse</span>{' '}
-              <em className="w" style={{ '--i': 3 } as React.CSSProperties}>Responsibly</em>
-            </h1>
-            <p className="lede">
-              A digital space to explore Kerala’s art, craft and cultural expressions, see who they come from, and know how you may reuse them with the creators’ terms.
-            </p>
-            <div className="cta">
-              <a className="btn gold btn-explore" href="/catalogue">
-                <span className="btn-seal" aria-hidden="true" />
-                <Icon name="book" size={19} />
-                <span>Explore Catalogue</span>
-                <Icon name="arrow" size={17} />
-              </a>
-              <a className="btn ghost btn-reuse" href="/reuse">
-                <Icon name="layers" size={20} />
-                <span>Reuse Studio</span>
-                <Icon name="arrow" size={17} />
-              </a>
-            </div>
-          </div>
-        </div>
-        <HeroDepth />
-        <a className="scroll-cue" href={scrollCueHref} aria-label="Scroll to explore">
-          <span>Scroll</span>
-          <i />
+
+        <a className="mh-scroll scroll-cue" href={scrollCueHref} aria-label="Scroll to explore">
+          <span>SCROLL</span>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="m6 9 6 6 6-6M6 5l6 6 6-6" opacity=".9" />
+          </svg>
         </a>
+
+        <HeroKerala />
       </section>
 
       {/* ===================================================================
