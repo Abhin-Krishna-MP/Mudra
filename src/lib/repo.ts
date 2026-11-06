@@ -42,21 +42,21 @@ const BASES: Basis[] = ['creator_submitted', 'custodian_submitted', 'compiled_fr
 export function validateCreate(i: CreateInput): Record<string, string> {
   const e: Record<string, string> = {};
   const t = (s: unknown) => (typeof s === 'string' ? s.trim() : '');
-  if (t(i.title).length < 3 || t(i.title).length > 160) e.title = 'Enter a title of 3 to 160 characters.';
-  if (!t(i.workType)) e.workType = 'Choose the type of work.';
-  if (!t(i.region)) e.region = 'Enter the region.';
-  if (t(i.culturalContext).length < 20) e.culturalContext = 'Write at least a couple of sentences of cultural context, in your own words.';
+  if (t(i.title).length < 3 || t(i.title).length > 160) e.title = 'Please enter a title between 3 and 160 characters.';
+  if (!t(i.workType)) e.workType = 'Please select a cultural expression category.';
+  if (!t(i.region)) e.region = 'Please enter the cultural or geographical region.';
+  if (t(i.culturalContext).length < 20) e.culturalContext = 'Please provide at least 20 characters of cultural description and context in your own words.';
   if (i.submissionBasis === 'compiled_from_public_sources' && !(i.contextSources ?? []).some((s) => t(s)))
-    e.contextSources = 'Add at least one source for a compiled record.';
-  if (!BASES.includes(i.submissionBasis)) e.submissionBasis = 'Choose how this record was prepared.';
-  if (!SENS.includes(i.sensitivity)) e.sensitivity = 'Choose a sensitivity level.';
-  if (!LICENCE_IDS.includes(i.licence)) e.licence = 'Choose the licence that applies to the image file.';
-  if (!t(i.licenceSourceNote)) e.licenceSourceNote = 'Say where the image and its licence come from.';
+    e.contextSources = 'Please cite at least one verifiable documentary source for compiled records.';
+  if (!BASES.includes(i.submissionBasis)) e.submissionBasis = 'Please select the custodial basis for this submission.';
+  if (!SENS.includes(i.sensitivity)) e.sensitivity = 'Please select a sensitivity classification.';
+  if (!LICENCE_IDS.includes(i.licence)) e.licence = 'Please select the governing copyright licence for the media file.';
+  if (!t(i.licenceSourceNote)) e.licenceSourceNote = 'Please cite the source provenance and licence reference for the media file.';
   const credits = (i.credits ?? []).filter((c) => t(c.name) && t(c.role));
-  if (!credits.length) e.credits = 'Credit at least one person, group or community, with a role.';
-  for (const c of CAPABILITIES) if (!STATES.includes(i.permissions?.[c])) e[`perm_${c}`] = 'Choose a state.';
-  if (!i.asset) e.asset = 'Add an image.';
-  else if (!t(i.asset.alt)) e.alt = 'Describe the image for people who cannot see it.';
+  if (!credits.length) e.credits = 'Please attribute at least one tradition bearer, community group, or contributor with their role.';
+  for (const c of CAPABILITIES) if (!STATES.includes(i.permissions?.[c])) e[`perm_${c}`] = 'Please select a community permission state.';
+  if (!i.asset) e.asset = 'Please upload a representative media image.';
+  else if (!t(i.asset.alt)) e.alt = 'Please provide an accessibility description (alt text) for the image.';
   return e;
 }
 
