@@ -1,35 +1,31 @@
 /* =========================================================================
    LIGHT THEME · HOME PAGE · lower sections (generated from explore-dark.css, then adapted)
    - Five quick cards: same position, static layout and hover/focus plate as the dark theme
-   - "Explore Kerala's Cultural Expressions" + "Credit the Culture": the Kathakali festival
+   - "Explore Kerala's Cultural Expressions" + "Credit the Culture": the light-theme page painting
      teal backdrop, with the dark theme's arched gold cards, headings and 3D lotus
    Every rule is scoped to :root:not([data-theme='dark']); nothing above the cards is touched
    and the dark theme is unchanged. Loaded last (see layout.tsx).
    ========================================================================= */
 
-/* ---------- Teal festival backdrop: full-bleed behind each band ---------- */
+/* ---------- Page backdrop: same method as the dark theme ----------
+   Dark: the page painting (page-dark.jpg) is fixed behind transparent sections, centred and cover-sized,
+   so the content scrolls over a still picture. Light: its matching painting (page-light-teal) does the same
+   behind Explore and Credit the Culture. Each band paints the one fixed picture, so they join with no seam.
+   The top of the first band melts in from the hero's ivory fade, so nothing above the cards is changed. */
 :root:not([data-theme='dark']) main:has(#quick-links) { overflow-x: clip; }
 :root:not([data-theme='dark']) .wrap.band-a,
 :root:not([data-theme='dark']) .wrap.band-b { position: relative; isolation: isolate; display: flow-root; }
 :root:not([data-theme='dark']) .wrap.band-a::before,
 :root:not([data-theme='dark']) .wrap.band-b::before {
-  content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; bottom: 0; left: 50%; width: 100vw; translate: -50% 0;
-  background: url('/mudra/kathakali-festival-bg.webp') center top / cover no-repeat, #0b4a3f;
+  content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; bottom: 0; left: 50%; width: 100vw; margin-left: -50vw;
+  background: url('/mudra/page-light-teal-kathakali.webp') center / cover no-repeat fixed, #0b4a3f;
 }
-/* band A starts under the cards: the teal melts in from the hero's ivory fade, so the hero itself is not changed */
 :root:not([data-theme='dark']) .wrap.band-a::before {
   -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 150px); mask-image: linear-gradient(180deg, transparent 0, #000 150px);
 }
-:root:not([data-theme='dark']) .wrap.band-a { padding-bottom: 40px; }
-:root:not([data-theme='dark']) .wrap.band-b { margin-top: -1px; padding-top: 18px; padding-bottom: 8px; }
-:root:not([data-theme='dark']) .wrap.band-b::before { background-position: center bottom; }
-:root:not([data-theme='dark']) .wrap.band-b::after {
-  content: ''; position: absolute; z-index: -1; pointer-events: none; top: 0; left: 50%; width: 100vw; height: 3px; translate: -50% 0;
-  background: linear-gradient(90deg, transparent, rgba(242, 181, 96, .8) 20%, rgba(255, 226, 168, .95) 50%, rgba(242, 181, 96, .8) 80%, transparent);
-}
 @media (max-width: 760px) {
   :root:not([data-theme='dark']) .wrap.band-a::before,
-  :root:not([data-theme='dark']) .wrap.band-b::before { background-image: url('/mudra/kathakali-festival-bg-mobile.webp'); }
+  :root:not([data-theme='dark']) .wrap.band-b::before { background: url('/mudra/page-light-teal-kathakali-mobile.webp') center bottom / cover no-repeat fixed, #0b4a3f; }
 }
 
 /* ticker sits on the teal now */
@@ -453,22 +449,22 @@
 
 /* ==========================================================================
    FOOTER · home page · light theme
-   Other light pages let the teal Kerala painting show through the footer's wash (it is the fixed
-   page background there). The home page has no such background, so the footer gets the same
-   painting itself, and the ivory gap above it is removed. Footer content/ornaments are unchanged.
+   Same as the Catalogue and the other light pages: there the plain teal painting is fixed behind the page
+   and shows through the footer's wash. The home page has no such layer, so the footer paints that same
+   fixed painting itself (no Kathakali figure, as on the other tabs). Footer content is unchanged.
    ========================================================================== */
 html:root:root:not([data-theme='dark']) body:has(#quick-links) main { padding-bottom: 0; }
 html:root:root:not([data-theme='dark']) body:has(#quick-links) .site-footer {
   background:
     linear-gradient(180deg, rgba(3, 26, 21, 0) 0%, rgba(3, 26, 21, .72) 42%, rgba(3, 26, 21, .9) 100%),
-    var(--cbl-bg) center bottom / cover no-repeat,
+    var(--cbl-bg) center / cover no-repeat fixed,
     #0b4a3f;
 }
 @media (max-width: 760px) {
   html:root:root:not([data-theme='dark']) body:has(#quick-links) .site-footer {
     background:
       linear-gradient(180deg, rgba(3, 26, 21, 0) 0%, rgba(3, 26, 21, .72) 42%, rgba(3, 26, 21, .9) 100%),
-      var(--cbl-bg-mobile) center bottom / cover no-repeat,
+      var(--cbl-bg-mobile) center bottom / cover no-repeat fixed,
       #0b4a3f;
   }
 }
