@@ -90,7 +90,6 @@ export function TopSectionDark({
         </div>
         <div className="layer l-glow" aria-hidden="true" />
         <div className="layer l-motes" aria-hidden="true" />
-        <div className="layer l-fade" aria-hidden="true" />
 
         <div className="wrap hero-inner">
           <div className="hero-copy">
