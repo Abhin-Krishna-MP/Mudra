@@ -3,6 +3,8 @@ import { getActor } from '@/lib/session';
 import { listRecords, listFlags } from '@/lib/repo';
 import { listRequestsForSteward } from '@/lib/repo-grants';
 import { reviewFormAction, logoutAction, assignStewardAction } from '@/app/actions';
+import '../reuse/reuse.css';
+import './signin.css';
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
 import { PageSheet } from '@/components/PageSheet';
@@ -13,7 +15,7 @@ export const metadata = { title: 'Reviewer console' };
 export default async function Review({ searchParams }: { searchParams: Promise<{ msg?: string }> }) {
   const sp = await searchParams;
   const actor = await getActor();
-  if (!actor || !['reviewer', 'admin'].includes(actor.role)) return (<div className="wrap page"><PageSheet title="Reviewer sign-in" lede="For reviewers only. The README lists a demo account."><LoginForm /></PageSheet></div>);
+  if (!actor || !['reviewer', 'admin'].includes(actor.role)) return (<div className="wrap page reuse-page signin-page"><PageSheet eyebrow="Reviewer Access" title="Reviewer Sign-In" lede="For reviewers only. The README lists a demo account."><LoginForm /></PageSheet></div>);
   const db = await getDb();
   const records = await listRecords(db, { reviewer: true });
   const rows = (await db.execute("SELECT id, status, verification_level, disputed, title FROM records WHERE status != 'removed' ORDER BY (status = 'pending') DESC, created_at DESC")).rows;
