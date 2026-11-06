@@ -11,9 +11,12 @@
   --ease: cubic-bezier(.2, .7, .2, 1); --stageH: clamp(360px, 118vw, 600px);
   min-height: clamp(660px, 100svh, 940px);
   align-items: flex-start;
-  background: #04201c;
+  position: relative;
+  isolation: isolate;
+  background: radial-gradient(110% 90% at 75% 35%, #0f4d40 0%, #082d25 50%, #031814 100%);
 }
-.lt-hero.dh .hero-stage { container-type: size; perspective: 1500px; perspective-origin: 62% 42%; z-index: -2; }
+.lt-hero.dh .hero-stage { container-type: size; perspective: 1500px; perspective-origin: 62% 42%; z-index: 1; }
+.lt-hero.dh .hero-stage::after { display: none !important; }
 .lt-hero.dh .stage-3d {
   inset: 0; transform-style: preserve-3d; will-change: transform;
   transform: rotateY(calc(var(--dx) * -1.3deg)) rotateX(calc(var(--dy) * .9deg));
@@ -29,7 +32,7 @@
 }
 .lt-hero.dh .sun-pool {
   position: absolute; left: 50.5%; top: 37.5%; width: 46%; aspect-ratio: 1; translate: -50% -50%;
-  background: radial-gradient(closest-side, rgba(255, 214, 140, .62), rgba(255, 150, 50, .22) 45%, transparent 72%);
+  background: radial-gradient(closest-side, rgba(255, 235, 170, .9), rgba(255, 175, 65, .38) 45%, transparent 75%);
   mix-blend-mode: screen; animation: sun-breathe 7s ease-in-out infinite alternate;
 }
 .lt-hero.dh .sun-rays {
@@ -57,26 +60,41 @@
 html.motion .lt-hero.dh .mist { animation: mist-drift2 26s ease-in-out infinite alternate; }
 @keyframes mist-drift2 { from { translate: -4% 0; } to { translate: 4% 0; } }
 
-/* 3 · KATHAKALI: turns slightly toward the pointer, lit by a torch that follows it */
+/* 3 · KATHAKALI: prominent, vibrant focal figure with warm golden backlight aura and theatrical follow-spot */
 .lt-hero.dh .d-kath {
-  right: calc(var(--u) * -0.6);
-  top: calc(var(--u) * -4.2);
+  right: calc(var(--u) * -0.5);
+  top: calc(var(--u) * -4.5);
   bottom: auto;
-  height: calc(var(--u) * 54);
+  height: calc(var(--u) * 55);
   aspect-ratio: 1303 / 1207;
   transform: translate3d(calc(var(--dx) * -18px), calc(var(--dy) * -9px + var(--ds) * .05px), 30px) rotateY(calc(var(--dx) * -3deg));
-  filter: drop-shadow(-22px 18px 40px rgba(0, 0, 0, .58)) drop-shadow(0 0 32px rgba(255, 180, 80, .4));
+  filter: drop-shadow(-18px 20px 38px rgba(0, 0, 0, .45)) drop-shadow(0 0 45px rgba(255, 205, 110, .48));
+}
+.lt-hero.dh .d-kath::before {
+  content: '';
+  position: absolute;
+  inset: -12% -18%;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgba(255, 225, 135, 0.52) 0%, rgba(255, 175, 65, 0.25) 45%, rgba(255, 130, 30, 0.06) 70%, transparent 85%);
+  mix-blend-mode: screen;
+  filter: blur(28px);
 }
 .lt-hero.dh .kath-light {
-  position: absolute; inset: 0; mix-blend-mode: soft-light; opacity: .55; transition: opacity .5s;
-  background: radial-gradient(circle 46% at var(--lx) var(--ly), rgba(255, 230, 160, .98), transparent 72%);
-  -webkit-mask-image: var(--fig); mask-image: var(--fig); -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  position: absolute; inset: 0;
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  transition: opacity 0.4s ease;
+  background: radial-gradient(circle 50% at var(--lx, 55%) var(--ly, 40%), rgba(255, 245, 200, 0.75) 0%, rgba(255, 215, 120, 0.35) 45%, transparent 75%);
+  -webkit-mask-image: var(--fig); mask-image: var(--fig);
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
 }
-.lt-hero.dh.is-over .kath-light { opacity: 1; }
+.lt-hero.dh.is-over .kath-light { opacity: 0.9; }
 
-/* 4 · KASAVU SILK, lamp and hibiscus in front; its bottom edge hands over to the page below */
+/* 4 · KASAVU SILK, lamp and hibiscus in front; frames bottom edge */
 .lt-hero.dh .d-kasavu {
-  left: -1%; right: -1%; bottom: -7%; aspect-ratio: 1767 / 890;
+  left: -1%; right: -1%; bottom: -8%; aspect-ratio: 1767 / 890;
   transform: translate3d(calc(var(--dx) * -34px), calc(var(--dy) * -14px + var(--ds) * -.12px), 90px) scale(.93);
   filter: drop-shadow(0 -10px 30px rgba(0, 0, 0, .35));
 }
@@ -87,36 +105,37 @@ html.motion .lt-hero.dh .mist { animation: mist-drift2 26s ease-in-out infinite 
 }
 .lt-hero.dh .lamp-bloom {
   position: absolute; left: 9.6%; top: 37%; width: 18%; aspect-ratio: 1; translate: -50% -50%; pointer-events: none;
-  background: radial-gradient(closest-side, rgba(255, 200, 100, .75), rgba(255, 150, 40, .25) 50%, transparent 75%);
+  background: radial-gradient(closest-side, rgba(255, 235, 150, .95), rgba(255, 175, 55, .45) 48%, transparent 75%);
   mix-blend-mode: screen; animation: flame 3.2s ease-in-out infinite alternate;
 }
 .lt-hero.dh.is-lamp .lamp-bloom { opacity: 1; scale: 1.5; }
 @keyframes flame { 0% { opacity: .65; scale: .92; } 40% { opacity: 1; scale: 1.06; } 100% { opacity: .8; scale: .98; } }
 
-/* Readability scrim for the copy, vignette for the navbar, nothing over the art itself */
+/* Readability scrim for the copy, keeps text crisp while leaving the right side crystal clear */
 .lt-hero.dh .hero-bg {
-  transform: none; transition: none; z-index: -1;
-  background: linear-gradient(90deg, rgba(3, 22, 19, .78) 0%, rgba(3, 22, 19, .5) 32%, transparent 60%), linear-gradient(180deg, rgba(3, 18, 16, .55), transparent 22%);
+  position: absolute; inset: 0; transform: none; transition: none; z-index: 2; pointer-events: none;
+  background: linear-gradient(90deg, rgba(3, 24, 20, 0.72) 0%, rgba(3, 24, 20, 0.4) 36%, transparent 65%);
 }
-.lt-hero.dh .hero-bg::after { display: none; }
+.lt-hero.dh .hero-bg::after { display: none !important; }
 
 /* Copy sits clear of the lamp on the left; wording, buttons and navbar are unchanged */
 .lt-hero.dh .wrap.hero-inner {
+  position: relative; z-index: 5;
   max-width: none; margin: 0; width: 100%; padding-left: clamp(24px, 15vw, 280px); padding-right: 24px;
 }
 .lt-hero.dh .hero-copy { transform: none; transition: none; }
-.lt-hero.dh .scroll-cue { color: #fff1cf; text-shadow: 0 1px 10px rgba(0, 0, 0, .55); bottom: 22px; }
+.lt-hero.dh .scroll-cue { color: #fff1cf; text-shadow: 0 1px 10px rgba(0, 0, 0, .55); bottom: 22px; z-index: 6; }
 .lt-hero.dh .scroll-cue i { border-color: #f3c76e; }
 .lt-hero.dh .btn:focus-visible, .lt-hero.dh .scroll-cue:focus-visible { outline: 3px solid #ffe2a8; outline-offset: 4px; }
 
-/* Entrance: planes arrive from different depths once the curtain lifts (individual props, so the parallax transform is never overridden) */
-@keyframes sky-in   { from { opacity: 0; scale: 1.22; } }
-@keyframes kath-in  { from { opacity: 0; translate: 6% 4%; filter: blur(14px); } }
-@keyframes silk-in  { from { opacity: 0; translate: 0 14%; } }
+/* Entrance: planes arrive smoothly from their depths with crystal-clear focus (no blur) */
+@keyframes sky-in   { from { opacity: 0; scale: 1.14; } to { opacity: 1; scale: 1; } }
+@keyframes kath-in  { from { opacity: 0; translate: 2% 1%; } to { opacity: 1; translate: 0 0; } }
+@keyframes silk-in  { from { opacity: 0; translate: 0 8%; } to { opacity: 1; translate: 0 0; } }
 @keyframes silk-idle { from { translate: -.6% 0; } to { translate: .6% -.4%; } }
-html.motion .lt-hero.dh .d-sky img   { animation: sky-in 2.6s var(--ease) .7s backwards; }
-html.motion .lt-hero.dh .d-kath img  { animation: kath-in 2s var(--ease) 1.5s backwards; }
-html.motion .lt-hero.dh .d-kasavu img { animation: silk-in 1.8s var(--ease) 1.1s backwards, silk-idle 10s ease-in-out 3s infinite alternate; }
+html.motion .lt-hero.dh .d-sky img   { animation: sky-in 1.8s var(--ease) .4s backwards; }
+html.motion .lt-hero.dh .d-kath img  { animation: kath-in 1.4s var(--ease) .6s backwards; }
+html.motion .lt-hero.dh .d-kasavu img { animation: silk-in 1.5s var(--ease) .5s backwards, silk-idle 10s ease-in-out 2.5s infinite alternate; }
 html.motion .lt-hero.dh .sun-pool, html.motion .lt-hero.dh .sun-rays, html.motion .lt-hero.dh .water-glint { animation-delay: 0s; }
 
 /* Gold dust: keep the existing drifting motes, just lift them above the figure but under the silk */
@@ -130,7 +149,7 @@ html.motion .lt-hero.dh .sun-pool, html.motion .lt-hero.dh .sun-rays, html.motio
   .lt-hero.dh .d-kath { top: -12%; bottom: auto; height: 114%; right: -10%; }
   .lt-hero.dh .d-kasavu { left: -16%; right: auto; width: 150%; bottom: -6%; }
   .lt-hero.dh .wrap.hero-inner { padding: calc(var(--stageH) + 8px) 20px 56px !important; }
-  .lt-hero.dh .hero-bg { background: linear-gradient(180deg, rgba(3, 18, 16, .55), transparent 70px, transparent calc(var(--stageH) - 70px), #04201c calc(var(--stageH) + 24px), #04201c 100%); }
+  .lt-hero.dh .hero-bg { background: linear-gradient(180deg, rgba(3, 18, 16, .55), transparent 70px, transparent calc(var(--stageH) - 70px), #09332b calc(var(--stageH) + 24px), #09332b 100%); }
   .lt-hero.dh .scroll-cue { display: none; }
   html.motion .lt-hero.dh .stage-3d { animation: sway2 14s ease-in-out infinite alternate; }
 }
@@ -142,6 +161,7 @@ html.motion .lt-hero.dh .sun-pool, html.motion .lt-hero.dh .sun-rays, html.motio
   .lt-hero.dh .stage-3d { transform: none !important; }
 }
 
-/* Art grading: lift the painted plates so the scene reads as sunset light, not night */
-.lt-hero.dh .d-sky img { filter: brightness(1.22) saturate(1.15) contrast(1.04); }
-.lt-hero.dh .d-kath img { filter: brightness(1.10) saturate(1.24) contrast(1.08); }
+/* Art grading: vibrant, high-definition presence matching dark Theyyam's spotlight focus */
+.lt-hero.dh .d-sky img { filter: brightness(1.45) saturate(1.35) contrast(1.06); }
+.lt-hero.dh .d-kath img { filter: brightness(1.22) saturate(1.42) contrast(1.14); }
+.lt-hero.dh .d-kasavu img { filter: brightness(1.14) saturate(1.2) contrast(1.05); }
