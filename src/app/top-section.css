@@ -313,7 +313,8 @@
 /* =========================================================================
    3. HERO COPY & CALLS TO ACTION (Matches Light Theme 1:1)
    ========================================================================= */
-.hero.mx-hero.dk-hero .hero-inner {
+.hero.mx-hero.dk-hero .hero-inner,
+.hero.lt-hero.mh .hero-inner {
   position: relative;
   z-index: 10;
   width: 100%;
@@ -321,13 +322,15 @@
   padding-bottom: 110px !important;
 }
 
-.hero.mx-hero.dk-hero .hero-copy {
+.hero.mx-hero.dk-hero .hero-copy,
+.hero.lt-hero.mh .hero-copy {
   max-width: 680px;
   position: relative;
   z-index: 10;
 }
 
-.hero.mx-hero.dk-hero .eyebrow {
+.hero.mx-hero.dk-hero .eyebrow,
+.hero.lt-hero.mh .eyebrow {
   display: inline-flex;
   align-items: center;
   gap: 14px;
@@ -337,14 +340,16 @@
   color: var(--m-gold);
   margin: 0 0 18px;
 }
-.hero.mx-hero.dk-hero .eyebrow::before {
+.hero.mx-hero.dk-hero .eyebrow::before,
+.hero.lt-hero.mh .eyebrow::before {
   content: '';
   width: 44px;
   height: 1px;
   background: linear-gradient(90deg, transparent, var(--m-gold));
 }
 
-.hero.mx-hero.dk-hero h1 {
+.hero.mx-hero.dk-hero h1,
+.hero.lt-hero.mh h1 {
   font-family: var(--m-serif);
   font-size: clamp(2.3rem, 4.4vw, 3.8rem);
   line-height: 1.08;
@@ -354,19 +359,22 @@
   white-space: normal;
   text-wrap: balance;
 }
-.hero.mx-hero.dk-hero h1 em {
+.hero.mx-hero.dk-hero h1 em,
+.hero.lt-hero.mh h1 em {
   display: block;
   font-style: italic;
   font-weight: 500;
   color: var(--m-gold);
   text-shadow: 0 0 20px rgba(245, 191, 100, .45);
 }
-.hero.mx-hero.dk-hero .dot {
+.hero.mx-hero.dk-hero .dot,
+.hero.lt-hero.mh .dot {
   color: var(--m-gold);
   padding: 0 .12em;
 }
 
-.hero.mx-hero.dk-hero .lede {
+.hero.mx-hero.dk-hero .lede,
+.hero.lt-hero.mh .lede {
   font-family: var(--m-sans);
   font-size: 1.05rem;
   line-height: 1.6;
@@ -376,7 +384,8 @@
   text-shadow: 0 1px 12px rgba(0, 0, 0, .7);
 }
 
-.hero.mx-hero.dk-hero .cta {
+.hero.mx-hero.dk-hero .cta,
+.hero.lt-hero.mh .cta {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
@@ -406,7 +415,7 @@
   width: 1px;
   height: 28px;
   background: linear-gradient(180deg, var(--m-gold) 0%, transparent 100%);
-  animation: mx-cue-drop 2s ease-in-out infinite;
+  animation: none !important;
 }
 @keyframes mx-cue-drop {
   0%   { transform: scaleY(0); transform-origin: top; opacity: 0; }

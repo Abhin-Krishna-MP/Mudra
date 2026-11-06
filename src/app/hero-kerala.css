@@ -1,0 +1,297 @@
+/* ==========================================================================
+   MUDRA · LAYERED 3D KERALA HERO (Light Theme)
+   Sunset backwaters, Kathakali figure, Kasavu cloth, lamp & foliage.
+   Every rule scoped to .lt-hero.mh so the dark hero is untouched.
+   ========================================================================== */
+
+.hero.lt-hero.mh {
+  --mx: 0;
+  --my: 0;
+  --ksy: 0;
+  --cgx: 60%;
+  --cgy: 75%;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  min-height: clamp(660px, 100svh, 940px);
+  height: max(680px, min(100svh, 54vw));
+  background: #06181c;
+  color: #fff;
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  perspective: 1400px;
+  display: block;
+}
+
+:root[data-theme='dark'] .hero.lt-hero.mh {
+  display: none !important;
+}
+
+.hero.lt-hero.mh * {
+  box-sizing: border-box;
+}
+
+.hero.lt-hero.mh .layer {
+  position: absolute;
+  will-change: transform;
+  pointer-events: none;
+}
+
+/* 1 · Backwaters plate (painted sunset gradients + backwaters layer) */
+.hero.lt-hero.mh .l-bg {
+  inset: -3%;
+  z-index: 1;
+  background:
+    url(/mudra/depth-sky.webp) 50% 50%/cover no-repeat,
+    radial-gradient(ellipse 70% 55% at 60% 40%, rgba(255, 230, 160, .35) 0%, rgba(255, 150, 50, .22) 30%, transparent 65%),
+    radial-gradient(circle at 51% 38%, #fff6d0 0 .6%, #ffb347 1.4%, rgba(255, 120, 30, .55) 7%, transparent 28%),
+    linear-gradient(180deg, #091e26 0%, #102e37 25%, #6a3a1c 38%, #14323a 46%, #091f26 72%, #051519 100%);
+  transform: translate3d(calc(var(--mx) * -12px), calc(var(--my) * -8px + var(--ksy, 0) * .12px), 0) scale(1.04);
+  animation: none !important;
+}
+
+.hero.lt-hero.mh .l-shade {
+  inset: 0;
+  z-index: 2;
+  background:
+    linear-gradient(90deg, rgba(3, 16, 19, .88) 0, rgba(3, 16, 19, .55) 28%, transparent 52%),
+    linear-gradient(180deg, rgba(3, 12, 15, .45) 0%, transparent 20%);
+}
+
+.hero.lt-hero.mh .l-mist {
+  inset: auto 0 28% 0;
+  height: 30%;
+  z-index: 3;
+  opacity: .5;
+  background:
+    radial-gradient(60% 100% at 30% 60%, rgba(190, 230, 220, .22), transparent 70%),
+    radial-gradient(50% 90% at 75% 50%, rgba(255, 210, 160, .16), transparent 70%);
+  animation: mist 18s ease-in-out infinite alternate;
+}
+
+@keyframes mist {
+  to { transform: translateX(5%); }
+}
+
+/* 2 · Kathakali plate */
+.hero.lt-hero.mh .l-fig {
+  position: absolute;
+  left: 53%;
+  top: -15%;
+  width: 56%;
+  z-index: 4;
+  height: auto;
+  filter: drop-shadow(0 8px 24px rgba(160, 70, 15, .2)) saturate(1.08);
+  transform: translate3d(calc(var(--mx) * -34px), calc(var(--my) * -18px + var(--ksy, 0) * -.08px), 0) rotateY(calc(var(--mx) * -3.8deg)) rotateX(calc(var(--my) * 2.2deg));
+  transition: none !important;
+  will-change: transform;
+  pointer-events: none;
+  animation: none !important;
+}
+
+/* Kathakali eyes: patches of the same artwork, iris slides inside the eye opening */
+.hero.lt-hero.mh .l-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero.lt-hero.mh .eye {
+  position: absolute;
+  background-image: url(/mudra/kathakali.webp);
+  background-repeat: no-repeat;
+  background-position: calc(var(--bx) + var(--ex, 0) * 1px) calc(var(--by) + var(--ey, 0) * 1px);
+  clip-path: ellipse(46% 44% at 50% 50%);
+  pointer-events: none;
+}
+
+/* 3 · Cloth, lamp and foliage — three depth slices of one plate */
+.hero.lt-hero.mh .l-fg {
+  left: 0;
+  right: 0;
+  top: 9%;
+  height: 100%;
+  z-index: 6;
+}
+
+.hero.lt-hero.mh .l-fg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 100%;
+  display: block;
+}
+
+.hero.lt-hero.mh .fg-mid {
+  transform: translate3d(calc(var(--mx) * -26px), calc(var(--my) * -10px + var(--ksy, 0) * -.12px), 0) scale(1.02);
+  -webkit-mask-image: linear-gradient(90deg, transparent 12%, #000 20%, #000 80%, transparent 88%), linear-gradient(180deg, transparent 40%, #000 52%);
+  mask-image: linear-gradient(90deg, transparent 12%, #000 20%, #000 80%, transparent 88%), linear-gradient(180deg, transparent 40%, #000 52%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.hero.lt-hero.mh .fg-left {
+  z-index: 7;
+  transform: translate3d(calc(var(--mx) * -48px), calc(var(--my) * -18px + var(--ksy, 0) * -.16px), 0) scale(1.04);
+  transform-origin: 0 100%;
+  -webkit-mask-image: linear-gradient(90deg, #000 12%, transparent 20%);
+  mask-image: linear-gradient(90deg, #000 12%, transparent 20%);
+}
+
+.hero.lt-hero.mh .fg-right {
+  z-index: 7;
+  transform: translate3d(calc(var(--mx) * -48px), calc(var(--my) * -18px + var(--ksy, 0) * -.16px), 0) scale(1.04);
+  transform-origin: 100% 100%;
+  -webkit-mask-image: linear-gradient(270deg, #000 12%, transparent 20%), linear-gradient(180deg, transparent 52%, #000 62%);
+  mask-image: linear-gradient(270deg, #000 12%, transparent 20%), linear-gradient(180deg, transparent 52%, #000 62%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+.hero.lt-hero.mh .lamp-glow {
+  position: absolute;
+  left: 9.6%;
+  top: 37%;
+  width: 16vw;
+  height: 16vw;
+  translate: -50% -50%;
+  z-index: 8;
+  mix-blend-mode: screen;
+  background: radial-gradient(circle, rgba(255, 196, 90, .7), rgba(255, 150, 40, .22) 38%, transparent 68%);
+  animation: flame 2.6s ease-in-out infinite;
+}
+
+@keyframes flame {
+  0%, 100% { opacity: .75; scale: 1; }
+  30% { opacity: 1; scale: 1.08; }
+  60% { opacity: .8; scale: .96; }
+}
+
+.hero.lt-hero.mh .l-glow {
+  inset: 0;
+  z-index: 9;
+  mix-blend-mode: soft-light;
+  opacity: 0;
+  transition: opacity .5s;
+  background: radial-gradient(28vw 18vw at var(--cgx) var(--cgy), rgba(255, 226, 150, .95), transparent 70%);
+}
+
+.hero.lt-hero.mh.is-over .l-glow {
+  opacity: .9;
+}
+
+.hero.lt-hero.mh .l-motes {
+  inset: 0;
+  z-index: 10;
+  overflow: hidden;
+}
+
+.hero.lt-hero.mh .l-motes i {
+  position: absolute;
+  bottom: -10px;
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: #ffd98a;
+  box-shadow: 0 0 8px 2px rgba(255, 200, 100, .8);
+  opacity: 0;
+  animation: mote var(--d) linear var(--dl) infinite;
+}
+
+@keyframes mote {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: .9; }
+  100% { opacity: 0; transform: translate(var(--x), -75vh); }
+}
+
+.hero.lt-hero.mh .l-fade {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 12%;
+  z-index: 11;
+  background: linear-gradient(180deg, transparent, #fbf3e2);
+}
+
+/* Headline animation */
+.hero.lt-hero.mh h1 .w {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(18px);
+  animation: rise .7s cubic-bezier(.2, .8, .2, 1) calc(.2s + var(--i, 0) * .1s) forwards;
+}
+
+.hero.lt-hero.mh h1 em.w {
+  display: block;
+}
+
+.hero.lt-hero.mh .lede {
+  opacity: 0;
+  animation: rise .7s ease .5s forwards;
+}
+
+.hero.lt-hero.mh .cta {
+  opacity: 0;
+  animation: rise .7s ease .65s forwards;
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Scroll cue */
+.hero.lt-hero.mh .mh-scroll,
+.hero.lt-hero.mh .scroll-cue {
+  position: absolute;
+  z-index: 20;
+  left: 50%;
+  bottom: 5%;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  color: #2a1408;
+  text-decoration: none;
+  font-size: .7rem;
+  letter-spacing: .26em;
+  font-weight: 600;
+  animation: none !important;
+}
+
+/* Mobile & Tablet */
+@media (max-width: 899px) {
+  .hero.lt-hero.mh {
+    height: auto;
+    min-height: 860px;
+    padding: 120px 22px 260px;
+  }
+  .hero.lt-hero.mh .l-fig {
+    left: 28%;
+    width: 78%;
+    top: -4%;
+    opacity: .55;
+  }
+  .hero.lt-hero.mh .l-fg {
+    top: 30%;
+  }
+  .hero.lt-hero.mh .lamp-glow {
+    width: 34vw;
+    height: 34vw;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero.lt-hero.mh * {
+    animation: none !important;
+  }
+  .hero.lt-hero.mh h1 .w,
+  .hero.lt-hero.mh .lede,
+  .hero.lt-hero.mh .cta {
+    opacity: 1;
+    transform: none;
+  }
+}

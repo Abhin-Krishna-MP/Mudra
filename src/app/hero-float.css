@@ -64,7 +64,7 @@ html.motion .l-cloth {
 }
 .scroll-cue i { width: 11px; height: 11px; border-right: 2px solid #8c2c25; border-bottom: 2px solid #8c2c25; transform: rotate(45deg); }
 @keyframes cue { 0%, 100% { translate: 0 0; opacity: .5; } 50% { translate: 0 7px; opacity: 1; } }
-html.motion .scroll-cue i { animation: cue 1.8s ease-in-out infinite; }
+html.motion .scroll-cue i { animation: none !important; }
 
 /* ---------- the cards wait below the screen and rise into it ---------- */
 :root:not([data-theme='dark']) .quick { margin-top: 28px; }
@@ -161,18 +161,6 @@ html.motion .l-lamp {
   animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .75s both, lamp-flick 3.4s ease-in-out 3.2s infinite;
 }
 @media (prefers-reduced-motion: reduce) { .l-lamp { animation: none !important; } }
-
-/* ==========================================================================
-   Headline: two lines instead of three, so the words and buttons stay clear
-   of the cloth. (desktop only)
-   ========================================================================== */
-@media (min-width: 900px) {
-  :root:not([data-theme='dark']) .hero .hero-copy { max-width: 880px; }
-  :root:not([data-theme='dark']) .hero h1 { font-size: clamp(2rem, 3.4vw, 3.2rem); margin-bottom: 14px; }
-}
-@media (min-width: 900px) and (max-height: 760px) {
-  :root:not([data-theme='dark']) .hero .lede { display: none !important; }
-}
 
 /* The background plate is nudged right to save the lamp, which opens a thin gap at the far left.
    A solid dark-foliage colour fills the stage behind the whole scene so any gap during pointer

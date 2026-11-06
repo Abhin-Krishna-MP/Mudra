@@ -24,13 +24,13 @@
   position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 78% 0;
   max-width: none; user-select: none; -webkit-user-drag: none;
 }
-.l-bg  { transform: translate3d(0, calc(var(--sy, 0) * .16px), -140px) scale(1.12); }
-.l-fig {
+.hero-stage .l-bg  { transform: translate3d(0, calc(var(--sy, 0) * .16px), -140px) scale(1.12); }
+.hero-stage .l-fig {
   transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96);
   filter: drop-shadow(0 0 24px rgba(255, 176, 70, .32)) drop-shadow(0 14px 22px rgba(20, 8, 2, .35));
 }
 /* Mist drifting across the water, between the two plates */
-.mist {
+.hero-stage .mist {
   position: absolute; left: -10%; right: -10%; top: 40%; height: 26%; filter: blur(14px); opacity: .9;
   transform: translate3d(0, 0, -30px);
   background:
@@ -49,9 +49,9 @@
 @keyframes fig-in { from { opacity: 0; transform: translate3d(90px, 0, 60px) scale(1.02); } to { opacity: 1; transform: translate3d(0, calc(var(--sy, 0) * .04px), 60px) scale(.96); } }
 @keyframes mist-drift { from { transform: translate3d(-4%, 0, -30px); } to { transform: translate3d(4%, 0, -30px); } }
 @keyframes sway { from { transform: rotateY(-2.2deg) rotateX(.7deg); } to { transform: rotateY(2.2deg) rotateX(-.7deg); } }
-html.motion .l-bg  { animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .75s both; }
-html.motion .l-fig { animation: fig-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.75s both; }
-html.motion .mist  { animation: mist-drift 24s ease-in-out infinite alternate; }
+html.motion .hero-stage .l-bg  { animation: bg-in 2.4s cubic-bezier(.2, .7, .2, 1) .75s both; }
+html.motion .hero-stage .l-fig { animation: fig-in 1.9s cubic-bezier(.2, .7, .2, 1) 1.75s both; }
+html.motion .hero-stage .mist  { animation: mist-drift 24s ease-in-out infinite alternate; }
 /* Touch screens have no pointer, so the stage sways gently on its own */
 @media (hover: none) { html.motion .stage-3d { animation: sway 14s ease-in-out infinite alternate; } }
 

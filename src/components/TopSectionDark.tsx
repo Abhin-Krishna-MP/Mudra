@@ -3,6 +3,7 @@
 import React from 'react';
 import { Icon } from './Icons';
 import { HeroMotion } from './HeroMotion';
+import { HeroKerala } from './HeroKerala';
 
 export interface TopSectionDarkProps {
   includeCurtain?: boolean;
@@ -47,23 +48,50 @@ export function TopSectionDark({
       )}
 
       {/* ===================================================================
-          2. LIGHT THEME HERO (Kathakali, Ivory Silk, Floating Kasavu Gold)
+          2. LIGHT THEME HERO (Kathakali, Sunset Backwaters, Kasavu & Lamp)
           Shown only when: :root:not([data-theme='dark'])
           =================================================================== */}
-      <section className="hero hero-light lt-hero" aria-labelledby="hero-lt-h" suppressHydrationWarning>
-        <div className="hero-stage" aria-hidden="true" suppressHydrationWarning>
-          <div className="stage-3d" suppressHydrationWarning>
-            <img className="layer l-bg lt" src="/mudra/hero-bg.webp" alt="" fetchPriority="high" decoding="async" />
-            <img className="layer l-bg l-lamp lt" src="/mudra/hero-lamp-glow.webp" alt="" decoding="async" />
-            <div className="mist" />
-            <img className="layer l-fig l-under lt" src="/mudra/hero-figure.webp" alt="" decoding="async" />
-            <img className="layer l-fig lt" src="/mudra/hero-figure-top.webp" alt="" fetchPriority="high" decoding="async" />
-            <img className="layer l-cloth lt" src="/mudra/hero-cloth.webp" alt="" fetchPriority="high" decoding="async" />
-            <div className="cloth-sheen lt" />
-            <div className="cloth-glow lt" />
-          </div>
+      <section className="hero hero-light lt-hero mh" id="home" aria-labelledby="hero-lt-h" suppressHydrationWarning>
+        <div className="layer l-bg" aria-hidden="true" />
+        <div className="layer l-shade" aria-hidden="true" />
+        <div className="layer l-mist" aria-hidden="true" />
+        <div className="layer l-fig" aria-hidden="true">
+          <img src="/mudra/kathakali.webp" alt="" fetchPriority="high" decoding="async" />
+          <i
+            className="eye eye-l"
+            style={{
+              left: '47.813%',
+              top: '46.147%',
+              width: '3.377%',
+              height: '2.237%',
+              backgroundSize: '2961.36% auto',
+              '--bx': '49.484%',
+              '--by': '47.203%',
+            } as React.CSSProperties}
+          />
+          <i
+            className="eye eye-r"
+            style={{
+              left: '56.025%',
+              top: '44.988%',
+              width: '4.912%',
+              height: '2.320%',
+              backgroundSize: '2035.94% auto',
+              '--bx': '58.918%',
+              '--by': '46.056%',
+            } as React.CSSProperties}
+          />
         </div>
-        <div className="hero-bg" aria-hidden="true" />
+        <div className="layer l-fg" aria-hidden="true">
+          <img className="fg-mid" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
+          <img className="fg-left" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
+          <img className="fg-right" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
+          <div className="lamp-glow" />
+        </div>
+        <div className="layer l-glow" aria-hidden="true" />
+        <div className="layer l-motes" aria-hidden="true" />
+        <div className="layer l-fade" aria-hidden="true" />
+
         <div className="wrap hero-inner">
           <div className="hero-copy">
             <p className="eyebrow">Kerala’s Living Heritage</p>
@@ -95,10 +123,15 @@ export function TopSectionDark({
             </div>
           </div>
         </div>
-        <a className="scroll-cue" href={scrollCueHref} aria-label="Scroll to explore">
-          <span>Scroll</span>
-          <i />
+
+        <a className="mh-scroll scroll-cue" href={scrollCueHref} aria-label="Scroll to explore">
+          <span>SCROLL</span>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+            <path d="m6 9 6 6 6-6M6 5l6 6 6-6" opacity=".9" />
+          </svg>
         </a>
+
+        <HeroKerala />
       </section>
 
       {/* ===================================================================
