@@ -33,26 +33,23 @@
 /* =========================================================================
    1. DUAL-THEME SWITCHING
    ========================================================================= */
-/* In Light Theme: hide the dark Theyyam hero, show the Kathakali light hero */
-:root:not([data-theme='dark']) .dk-hero {
+/* In Light Theme: hide the dark Theyyam hero completely */
+:root:not([data-theme='dark']) .dk-hero,
+:root:not([data-theme='dark']) .hero.dk-hero,
+:root:not([data-theme='dark']) .hero.mx-hero {
   display: none !important;
-}
-:root:not([data-theme='dark']) .lt-hero {
-  display: flex !important;
 }
 
-/* In Dark Theme: hide the light Kathakali hero, show the redesigned Theyyam hero */
-:root[data-theme='dark'] .lt-hero {
+/* In Dark Theme: hide the light Kathakali hero completely */
+:root[data-theme='dark'] .lt-hero,
+:root[data-theme='dark'] .hero.lt-hero {
   display: none !important;
-}
-:root[data-theme='dark'] .dk-hero {
-  display: flex !important;
 }
 
 /* =========================================================================
    2. REDESIGNED DARK HERO (.dk-hero / .mx-hero)
    ========================================================================= */
-.hero.mx-hero.dk-hero {
+:root[data-theme='dark'] .hero.mx-hero.dk-hero {
   --mx: 0; --my: 0; --msy: 0;
   position: relative;
   isolation: isolate;
@@ -415,7 +412,7 @@
    4. RESPONSIVE HERO
    ========================================================================= */
 @media (max-width: 960px) {
-  .hero.mx-hero.dk-hero {
+  :root[data-theme='dark'] .hero.mx-hero.dk-hero {
     min-height: 0;
     display: flex !important;
   }
@@ -436,6 +433,28 @@
 
 @media (max-height: 760px) and (min-width: 961px) {
   .hero.mx-hero.dk-hero .hero-inner { padding-bottom: 70px !important; }
+}
+
+/* Fail-safe theme lock: guaranteed exclusion in light theme */
+:root:not([data-theme='dark']) .dk-hero,
+:root:not([data-theme='dark']) .mx-hero,
+:root:not([data-theme='dark']) #mx-home {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+:root[data-theme='dark'] .lt-hero,
+:root[data-theme='dark'] .hero-light {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
 }
 
 @media (prefers-reduced-motion: reduce) {
