@@ -40,6 +40,11 @@ export function HeroKerala() {
     let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     let rafId: number | null = null;
 
+    const fig = hero.querySelector<HTMLElement>('.l-fig');
+    const eyes = hero.querySelectorAll<HTMLElement>('.eye');
+    let egx = 0;
+    let egy = 0;
+
     const onPointerMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
       if (document.documentElement.getAttribute('data-theme') === 'dark') return;
@@ -122,6 +127,31 @@ export function HeroKerala() {
       ksy += (tks - ksy) * 0.18;
       gx += (tgx - gx) * 0.1;
       gy += (tgy - gy) * 0.1;
+
+      /* Kathakali eyes: follow pointer; when idle, glance around and roll every few seconds */
+      let tgx2 = tx;
+      let tgy2 = ty;
+      if (idle) {
+        const q = (t % 7000) / 7000;
+        if (q < 0.25) {
+          const a2 = (q / 0.25) * Math.PI * 2;
+          tgx2 = Math.cos(a2);
+          tgy2 = Math.sin(a2) * 0.6;
+        } else {
+          tgx2 = Math.sin(t / 1700) * 0.6;
+          tgy2 = Math.cos(t / 2300) * 0.25;
+        }
+      }
+      egx += (tgx2 - egx) * 0.12;
+      egy += (tgy2 - egy) * 0.12;
+
+      if (fig) {
+        const k = (fig.clientWidth / 1303) * 8;
+        eyes.forEach((eye) => {
+          eye.style.setProperty('--ex', (egx * k).toFixed(2));
+          eye.style.setProperty('--ey', (egy * k * 0.7).toFixed(2));
+        });
+      }
 
       hero.style.setProperty('--mx', mx.toFixed(3));
       hero.style.setProperty('--my', my.toFixed(3));

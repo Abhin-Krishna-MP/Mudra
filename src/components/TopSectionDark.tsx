@@ -57,7 +57,33 @@ export function TopSectionDark({
         <div className="layer l-rays" aria-hidden="true" />
         <div className="layer l-shade" aria-hidden="true" />
         <div className="layer l-mist" aria-hidden="true" />
-        <img className="layer l-fig" src="/mudra/kathakali.webp" alt="" fetchPriority="high" decoding="async" />
+        <div className="layer l-fig" aria-hidden="true">
+          <img src="/mudra/kathakali.webp" alt="" fetchPriority="high" decoding="async" />
+          <i
+            className="eye eye-l"
+            style={{
+              left: '51.573%',
+              top: '39.519%',
+              width: '3.223%',
+              height: '2.071%',
+              backgroundSize: '3102.38% auto',
+              '--bx': '53.291%',
+              '--by': '40.355%',
+            } as React.CSSProperties}
+          />
+          <i
+            className="eye eye-r"
+            style={{
+              left: '59.862%',
+              top: '38.111%',
+              width: '4.758%',
+              height: '2.154%',
+              backgroundSize: '2101.61% auto',
+              '--bx': '62.853%',
+              '--by': '38.950%',
+            } as React.CSSProperties}
+          />
+        </div>
         <div className="layer l-fg" aria-hidden="true">
           <img className="fg-mid" src="/mudra/plants-cloth.webp" alt="" decoding="async" />
           <img className="fg-left" src="/mudra/plants-cloth.webp" alt="" decoding="async" />

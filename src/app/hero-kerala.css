@@ -115,6 +115,22 @@
   animation: none !important;
 }
 
+/* Kathakali eyes: patches of the same artwork, iris slides inside the eye opening */
+.hero.lt-hero.mh .l-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.hero.lt-hero.mh .eye {
+  position: absolute;
+  background-image: url(/mudra/kathakali.webp);
+  background-repeat: no-repeat;
+  background-position: calc(var(--bx) + var(--ex, 0) * 1px) calc(var(--by) + var(--ey, 0) * 1px);
+  clip-path: ellipse(46% 44% at 50% 50%);
+  pointer-events: none;
+}
+
 /* 3 · Cloth, lamp and foliage — three depth slices of one plate */
 .hero.lt-hero.mh .l-fg {
   left: 0;
