@@ -29,8 +29,8 @@ export function HeroKerala() {
     let my = 0;
     let tx = 0;
     let ty = 0;
-    let sy = 0;
-    let ts = 0;
+    let ksy = 0;
+    let tks = 0;
     let gx = 60;
     let gy = 75;
     let tgx = 60;
@@ -66,7 +66,7 @@ export function HeroKerala() {
     };
 
     const onScroll = () => {
-      ts = Math.min(window.scrollY, 900);
+      tks = Math.min(window.scrollY, 900);
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -114,18 +114,18 @@ export function HeroKerala() {
         return;
       }
       const idle = t - last > 1800;
-      const a = idle ? Math.sin(t / 2200) * 0.5 : tx;
-      const b = idle ? Math.cos(t / 2800) * 0.38 : ty;
+      const a = idle ? Math.sin(t / 2200) * 0.45 : tx;
+      const b = idle ? Math.cos(t / 2800) * 0.32 : ty;
 
       mx += (a - mx) * 0.08;
       my += (b - my) * 0.08;
-      sy += (ts - sy) * 0.1;
+      ksy += (tks - ksy) * 0.18;
       gx += (tgx - gx) * 0.1;
       gy += (tgy - gy) * 0.1;
 
       hero.style.setProperty('--mx', mx.toFixed(3));
       hero.style.setProperty('--my', my.toFixed(3));
-      hero.style.setProperty('--sy', sy.toFixed(1));
+      hero.style.setProperty('--ksy', ksy.toFixed(1));
       hero.style.setProperty('--cgx', `${gx.toFixed(1)}%`);
       hero.style.setProperty('--cgy', `${gy.toFixed(1)}%`);
 
