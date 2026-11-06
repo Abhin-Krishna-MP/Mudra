@@ -9,6 +9,7 @@ import './hero-kerala.css';
 import './explore-dark.css';
 import './footer-dark.css';
 import './kerala-backdrop.css';
+import './kerala-light-backdrop.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
