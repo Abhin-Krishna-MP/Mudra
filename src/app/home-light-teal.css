@@ -149,24 +149,28 @@
 /* The card is its own size container so the arch's top radius is exactly half its width (cqw), leaving the bottom corners truly rounded. */
 :root:not([data-theme='dark']) .explore .tile-compact { container-type: inline-size; }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link {
-  aspect-ratio: 1 / 1.5; border-radius: 50cqw 50cqw 26px 26px; border: 2px solid transparent; color: #2a0c0a;
+  aspect-ratio: 1 / 1.5; border-radius: 50cqw 50cqw 26px 26px; border: 3px solid transparent; color: #2a0c0a;
   background:
     linear-gradient(180deg, #fffaf2 0%, #f6ecd8 100%) padding-box,
-    linear-gradient(180deg, #c73a30 0%, #9e2a22 42%, #5e1613 100%) border-box;
+    linear-gradient(180deg, #d32f2f 0%, #b71c1c 45%, #7f1d1d 100%) border-box;
   box-shadow:
-    0 0 0 1px rgba(168, 42, 35, .35),
-    0 14px 34px rgba(0, 38, 30, .35),
-    0 0 22px rgba(140, 44, 37, .18),
-    inset 0 0 0 1px rgba(255, 255, 255, .5);
+    0 0 0 1.5px rgba(220, 38, 38, .75),
+    0 0 20px rgba(220, 38, 38, .55),
+    0 0 40px rgba(185, 28, 28, .45),
+    0 0 60px rgba(153, 27, 27, .28),
+    0 16px 36px rgba(0, 20, 16, .5),
+    inset 0 0 0 1px rgba(255, 255, 255, .7);
   transition: box-shadow .35s, transform .2s;
 }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link:hover,
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link:focus-visible {
   box-shadow:
-    0 0 0 1px rgba(184, 58, 48, .5),
-    0 22px 46px rgba(0, 38, 30, .45),
-    0 0 32px rgba(184, 58, 48, .35),
-    inset 0 0 0 1px rgba(255, 255, 255, .65);
+    0 0 0 2px rgba(239, 68, 68, .9),
+    0 0 26px rgba(239, 68, 68, .75),
+    0 0 54px rgba(220, 38, 38, .6),
+    0 0 80px rgba(185, 28, 28, .45),
+    0 22px 48px rgba(0, 20, 16, .6),
+    inset 0 0 0 1px rgba(255, 255, 255, .85);
 }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link::before { inset: -1px; padding: 2px; }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-art {
@@ -361,24 +365,28 @@
   position: relative; inset: auto; height: 100%; min-height: 200px; gap: 8px; padding: 26px 18px 20px;
   display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: flex-start;
   border-radius: 24px;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   background:
     linear-gradient(180deg, #fffcf5 0%, #f6ecd8 100%) padding-box,
-    linear-gradient(180deg, #c62828 0%, #991b1b 45%, #6f1212 100%) border-box;
+    linear-gradient(180deg, #d32f2f 0%, #b71c1c 45%, #7f1d1d 100%) border-box;
   box-shadow:
-    0 0 0 1px rgba(180, 30, 30, .4),
-    0 16px 34px rgba(0, 38, 30, .35),
-    0 0 22px rgba(160, 30, 30, .22),
-    inset 0 0 0 1px rgba(255, 255, 255, .55);
+    0 0 0 1.5px rgba(220, 38, 38, .75),
+    0 0 20px rgba(220, 38, 38, .55),
+    0 0 40px rgba(185, 28, 28, .45),
+    0 0 60px rgba(153, 27, 27, .28),
+    0 18px 40px rgba(0, 20, 16, .5),
+    inset 0 0 0 1px rgba(255, 255, 255, .7);
   transition: box-shadow .35s, transform .2s;
 }
 :root:not([data-theme='dark']) .pillars .flip:hover .face.front,
 :root:not([data-theme='dark']) .pillars .flip:focus-visible .face.front {
   box-shadow:
-    0 0 0 1px rgba(200, 30, 30, .6),
-    0 22px 42px rgba(0, 38, 30, .45),
-    0 0 32px rgba(184, 30, 30, .35),
-    inset 0 0 0 1px rgba(255, 255, 255, .7);
+    0 0 0 2px rgba(239, 68, 68, .9),
+    0 0 28px rgba(239, 68, 68, .75),
+    0 0 54px rgba(220, 38, 38, .6),
+    0 0 80px rgba(185, 28, 28, .45),
+    0 24px 50px rgba(0, 20, 16, .6),
+    inset 0 0 0 1px rgba(255, 255, 255, .85);
 }
 /* faint mandala watermark in corners */
 :root:not([data-theme='dark']) .pillars .face.front::before {
@@ -393,12 +401,12 @@
 }
 :root:not([data-theme='dark']) .pillars .face.front .q-ico {
   width: 62px; height: 62px; border-radius: 50%; color: #f7d070;
-  border: 2px solid #d49a38;
+  border: 2.5px solid #d49a38;
   background: radial-gradient(circle at 35% 28%, #851c18, #3e0a09);
   box-shadow:
-    0 0 0 1px rgba(247, 208, 112, .45),
+    0 0 0 1px rgba(247, 208, 112, .6),
+    0 0 16px rgba(212, 154, 56, .45),
     0 6px 16px rgba(0, 0, 0, .4),
-    0 0 14px rgba(212, 154, 56, .35),
     inset 0 0 0 2px rgba(62, 10, 9, .75);
   display: flex; align-items: center; justify-content: center; margin: 0 auto;
 }
@@ -439,17 +447,18 @@
    on hover or focus only. Colours stay in the light palette (cream, gold, maroon).
    ========================================================================== */
 :root:not([data-theme='dark']) .quick {
-  margin: -72px 0 0; padding: 18px 20px; overflow: visible; border: 2.5px solid transparent; border-radius: 28px;
+  margin: -72px 0 0; padding: 18px 20px; overflow: visible; border: 3px solid transparent; border-radius: 28px;
   -webkit-backdrop-filter: none; backdrop-filter: none;
   background:
     linear-gradient(180deg, #fffaf0 0%, #f6ead2 100%) padding-box,
-    linear-gradient(180deg, #c73a30 0%, #9e2a22 42%, #5e1613 100%) border-box;
+    linear-gradient(180deg, #d32f2f 0%, #b71c1c 45%, #7f1d1d 100%) border-box;
   box-shadow:
-    0 0 0 1px rgba(168, 42, 35, .45),
-    0 0 18px rgba(184, 58, 48, .4),
-    0 0 34px rgba(140, 44, 37, .32),
-    0 18px 44px rgba(0, 38, 30, .38),
-    inset 0 0 0 1px rgba(255, 255, 255, .35),
+    0 0 0 1.5px rgba(220, 38, 38, .75),
+    0 0 20px rgba(220, 38, 38, .55),
+    0 0 40px rgba(185, 28, 28, .42),
+    0 0 60px rgba(153, 27, 27, .25),
+    0 18px 44px rgba(0, 20, 16, .5),
+    inset 0 0 0 1px rgba(255, 255, 255, .5),
     inset 0 -10px 24px rgba(233, 185, 73, .12);
 }
 :root:not([data-theme='dark']) .quick::before { display: none; animation: none; }
