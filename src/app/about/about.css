@@ -1,0 +1,331 @@
+/* About page: cards, limits panel, "What Mudra does", detail blocks. Scoped to .about-page. */
+
+/* ---------- header touches (eyebrow + short underline, as in the reference) ---------- */
+.about-page .eyebrow-sm { color: var(--hero-gold); letter-spacing: .16em; font-weight: 700; }
+.about-page .sheet-head-text::after {
+  content: ''; display: block; width: 92px; height: 5px; border-radius: 4px; margin-top: 18px;
+  background: linear-gradient(90deg, #f0894a, #c45a18);
+}
+:root:not([data-theme='dark']) .about-page .sheet-head-text::after { background: linear-gradient(90deg, #e9b949, #b9780f); }
+
+.about-page .sheet-body { display: flex; flex-direction: column; gap: 18px; }
+
+/* ---------- shared bits ---------- */
+.about-page .ab-ico {
+  flex: none; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 16px;
+  background: var(--tile-icon-bg); color: var(--tile-icon-ink);
+  border: 1px solid rgba(240, 137, 74, .38);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, .28), inset 0 1px 0 rgba(255, 255, 255, .1);
+}
+:root:not([data-theme='dark']) .about-page .ab-ico { border-color: rgba(233, 185, 73, .5); box-shadow: 0 6px 14px rgba(60, 20, 10, .25), inset 0 1px 0 rgba(255, 255, 255, .16); }
+.about-page .ab-ico .icon { width: 26px; height: 26px; stroke-width: 1.6; }
+.about-page .ab-ico-sm { width: 52px; height: 52px; border-radius: 14px; }
+.about-page .ab-sep { flex: none; align-self: stretch; width: 1px; margin: 4px 0; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--hero-gold) 55%, transparent), transparent); }
+
+.about-page .ab-title {
+  position: relative; margin: 0 0 18px; padding-bottom: 10px; font-size: clamp(1.3rem, 2.4vw, 1.6rem);
+}
+.about-page .ab-title::after {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 72px; height: 4px; border-radius: 3px;
+  background: linear-gradient(90deg, #f0894a, #c45a18);
+}
+:root:not([data-theme='dark']) .about-page .ab-title::after { background: linear-gradient(90deg, #e9b949, #b9780f); }
+
+/* ---------- 1. three cards ---------- */
+.about-page .ab-cards { display: grid; gap: 14px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.about-page .ab-card {
+  position: relative; overflow: hidden; display: flex; align-items: center; gap: 16px; padding: 18px 20px; border-radius: 20px;
+  border: 1px solid rgba(240, 137, 74, .42);
+  background: linear-gradient(135deg, rgba(150, 78, 28, .32), rgba(36, 18, 11, .78));
+  box-shadow: inset 0 1px 0 rgba(255, 220, 170, .08), 0 8px 22px rgba(0, 0, 0, .3);
+  transition: transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+:root:not([data-theme='dark']) .about-page .ab-card {
+  border-color: #d6c196; background: linear-gradient(135deg, #fffaf0, #f6e8cc);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .8), 0 8px 20px rgba(70, 36, 12, .1);
+}
+.about-page .ab-card:hover { transform: translateY(-3px); border-color: rgba(240, 137, 74, .75); }
+.about-page .ab-card-text { position: relative; z-index: 1; min-width: 0; }
+.about-page .ab-card h2 { margin: 0 0 4px; font-size: 1.28rem; }
+.about-page .ab-card p { margin: 0; color: var(--muted); font-size: .95rem; line-height: 1.4; }
+.about-page .ab-lotus { position: absolute; right: -10px; bottom: -14px; width: 92px; height: 92px; opacity: .13; color: var(--hero-gold); stroke-width: 1.1; pointer-events: none; }
+
+/* ---------- 2. limits panel ---------- */
+.about-page .ab-limits {
+  position: relative; overflow: hidden; display: flex; align-items: center; gap: 28px; padding: 26px 30px; border-radius: 22px;
+  border: 1px solid rgba(190, 150, 70, .4);
+  background: linear-gradient(100deg, rgba(48, 66, 36, .55), rgba(30, 38, 24, .6) 55%, rgba(24, 28, 20, .7));
+  box-shadow: inset 0 1px 0 rgba(255, 240, 200, .06);
+}
+:root:not([data-theme='dark']) .about-page .ab-limits {
+  border-color: #c9d1a6; background: linear-gradient(100deg, #eef0d8, #f6f1de 60%, #fbf5e8);
+}
+.about-page .ab-limits::after {            /* soft Kerala wave line, bottom right */
+  content: ''; position: absolute; right: 0; bottom: 0; width: 46%; height: 46px; opacity: .5; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='40' viewBox='0 0 120 40' fill='none' stroke='%23c9a24a' stroke-width='1.2'%3E%3Cpath d='M0 30c15 0 15-14 30-14s15 14 30 14 15-14 30-14 15 14 30 14'/%3E%3Cpath d='M0 38c15 0 15-14 30-14s15 14 30 14' opacity='.6'/%3E%3C/svg%3E") repeat-x right bottom / 120px 40px;
+}
+.about-page .ab-limits-text { position: relative; z-index: 1; min-width: 0; flex: 1; }
+.about-page .ab-limits-text h2 { margin: 0 0 8px; font-size: clamp(1.35rem, 2.6vw, 1.75rem); }
+.about-page .ab-limits-text p { margin: 0 0 14px; max-width: 62ch; }
+.about-page .ab-pill {
+  display: inline-flex; align-items: center; gap: 8px; margin: 0 !important; padding: 8px 16px 8px 12px; border-radius: 999px;
+  border: 1px solid rgba(240, 137, 74, .5); background: rgba(20, 12, 8, .55); font-size: .92rem; font-weight: 500;
+}
+.about-page .ab-pill .icon { color: #f0b04a; flex: none; }
+:root:not([data-theme='dark']) .about-page .ab-pill { background: rgba(255, 252, 240, .85); border-color: #d9b45a; }
+:root:not([data-theme='dark']) .about-page .ab-pill .icon { color: #8c6914; }
+
+/* ---------- 3. what Mudra does ---------- */
+.about-page .ab-does { padding: 6px 6px 0; }
+.about-page .ab-does-grid {
+  list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.about-page .ab-does-grid li { display: flex; align-items: flex-start; gap: 14px; padding: 4px 22px; }
+.about-page .ab-does-grid li:first-child { padding-left: 0; }
+.about-page .ab-does-grid li + li { border-left: 1px solid color-mix(in srgb, var(--hero-gold) 30%, transparent); }
+.about-page .ab-does-grid h3 { margin: 2px 0 4px; font: 700 1.05rem/1.2 var(--font-ui); }
+.about-page .ab-does-grid p { margin: 0; color: var(--muted); font-size: .92rem; line-height: 1.45; }
+.about-page .ab-passport {
+  margin: 22px 0 0; padding: 16px 18px; border-radius: 14px; font-size: .96rem;
+  border: 1px dashed color-mix(in srgb, var(--hero-gold) 45%, transparent);
+  background: color-mix(in srgb, var(--surface-2) 70%, transparent);
+}
+
+/* ---------- 4. detail blocks ---------- */
+.about-page .ab-details { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
+.about-page .ab-block {
+  padding: 22px 24px; border-radius: 20px; border: 1px solid var(--panel-border);
+  background: color-mix(in srgb, var(--surface-2) 80%, transparent);
+}
+.about-page .ab-block p { margin: 0; }
+.about-page .ab-two { display: grid; gap: 16px; grid-template-columns: 1.4fr 1fr; }
+.about-page .ab-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 12px; }
+.about-page .ab-list li {
+  position: relative; padding-left: 26px; margin: 0; line-height: 1.5;
+}
+.about-page .ab-list li::before {
+  content: ''; position: absolute; left: 4px; top: .55em; width: 9px; height: 9px; transform: rotate(45deg);
+  background: linear-gradient(135deg, #f6d27a, #c45a18); border-radius: 2px;
+}
+.about-page .ab-table { margin: 0; border-radius: 14px; border: 1px solid var(--panel-border); overflow: auto; }
+.about-page .ab-table table { width: 100%; border-collapse: collapse; font-size: .92rem; }
+.about-page .ab-table th { text-align: left; padding: 12px 14px; background: color-mix(in srgb, var(--hero-gold) 16%, transparent); font: 700 .8rem var(--font-ui); letter-spacing: .06em; text-transform: uppercase; }
+.about-page .ab-table td { padding: 12px 14px; vertical-align: top; border-top: 1px solid var(--panel-border); line-height: 1.5; }
+.about-page .ab-table td:first-child { font-weight: 600; white-space: nowrap; }
+
+/* ---------- tablet ---------- */
+@media (max-width: 960px) {
+  .about-page .ab-cards { grid-template-columns: 1fr; }
+  .about-page .ab-does-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 22px; }
+  .about-page .ab-does-grid li { padding: 4px 18px; }
+  .about-page .ab-does-grid li:nth-child(odd) { padding-left: 0; border-left: 0; }
+  .about-page .ab-two { grid-template-columns: 1fr; }
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 640px) {
+  .about-page .sheet-body { gap: 14px; }
+  .about-page .sheet-head-text::after { width: 70px; height: 4px; margin-top: 14px; }
+
+  .about-page .ab-card { padding: 14px 16px; gap: 14px; border-radius: 18px; }
+  .about-page .ab-ico { width: 50px; height: 50px; border-radius: 14px; }
+  .about-page .ab-card h2 { font-size: 1.12rem; }
+
+  .about-page .ab-limits { flex-direction: column; align-items: stretch; gap: 14px; padding: 20px 18px 24px; border-radius: 18px; }
+  .about-page .ab-limits-art { flex: none; width: min(78%, 260px); margin: 0 auto; }
+  .about-page .ab-limits .ab-sep { width: 100%; height: 1px; margin: 0; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--hero-gold) 55%, transparent), transparent); }
+  .about-page .ab-limits-text { text-align: left; }
+  .about-page .ab-pill { align-items: flex-start; border-radius: 16px; }
+
+  .about-page .ab-does { padding: 4px 2px 0; }
+  .about-page .ab-does-grid { grid-template-columns: 1fr; row-gap: 0; }
+  .about-page .ab-does-grid li,
+  .about-page .ab-does-grid li:nth-child(odd) { padding: 14px 0; border-left: 0; }
+  .about-page .ab-does-grid li + li { border-top: 1px solid color-mix(in srgb, var(--hero-gold) 26%, transparent); }
+  .about-page .ab-ico-sm { width: 48px; height: 48px; }
+
+  .about-page .ab-block { padding: 18px 16px; border-radius: 16px; }
+  .about-page .ab-passport { padding: 14px; }
+
+  /* checks table becomes stacked cards */
+  .about-page .ab-table { border: 0; overflow: visible; }
+  .about-page .ab-table table, .about-page .ab-table tbody, .about-page .ab-table tr, .about-page .ab-table td { display: block; width: 100%; }
+  .about-page .ab-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .about-page .ab-table tr { margin-bottom: 12px; border: 1px solid var(--panel-border); border-radius: 14px; overflow: hidden; background: color-mix(in srgb, var(--surface-2) 60%, transparent); }
+  .about-page .ab-table td { border-top: 0; padding: 10px 14px; white-space: normal !important; }
+  .about-page .ab-table td:first-child { background: color-mix(in srgb, var(--hero-gold) 16%, transparent); font-family: var(--font-display); font-size: 1rem; }
+  .about-page .ab-table td + td { border-top: 1px solid var(--panel-border); }
+  .about-page .ab-table td[data-label]:not(:first-child)::before {
+    content: attr(data-label); display: block; margin-bottom: 2px; font: 700 .7rem var(--font-ui); letter-spacing: .08em; text-transform: uppercase; color: var(--muted);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) { .about-page .ab-card { transition: none; } .about-page .ab-card:hover { transform: none; } }
+
+
+/* =====================================================================
+   Match the reference design (dark theme): page backdrop, wider sheet,
+   bigger banner type, taller cards, scene illustration, bottom waves.
+   ===================================================================== */
+:root[data-theme='dark'] body:has(.about-page) {
+  background-color: #1a0d07;
+  background-image: url('/mudra/about-bg.webp');
+  background-size: cover; background-position: center bottom; background-attachment: fixed;
+}
+:root[data-theme='dark'] body:has(.about-page) main { position: relative; padding-bottom: 96px; }
+:root[data-theme='dark'] body:has(.about-page) main::after {       /* gold waves along the bottom edge */
+  content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 84px; z-index: 0; pointer-events: none; opacity: .55;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='60' viewBox='0 0 160 60' fill='none' stroke='%23b8672c' stroke-width='1.3'%3E%3Cpath d='M0 40c20 0 20-22 40-22s20 22 40 22 20-22 40-22 20 22 40 22'/%3E%3Cpath d='M0 50c20 0 20-22 40-22s20 22 40 22 20-22 40-22 20 22 40 22' opacity='.7'/%3E%3Cpath d='M0 60c20 0 20-22 40-22s20 22 40 22 20-22 40-22 20 22 40 22' opacity='.45'/%3E%3C/svg%3E") repeat-x center bottom / 160px 60px;
+  -webkit-mask-image: linear-gradient(0deg, #000 30%, transparent); mask-image: linear-gradient(0deg, #000 30%, transparent);
+}
+.about-page { position: relative; z-index: 1; }
+
+:root[data-theme='dark'] .about-page .sheet {
+  background: linear-gradient(180deg, rgba(20, 11, 8, .84), rgba(14, 8, 6, .9));
+  border-color: rgba(240, 137, 74, .28);
+  -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(255, 190, 120, .1);
+}
+:root[data-theme='dark'] .about-page .sheet-head { border-bottom-color: rgba(240, 137, 74, .5); }
+
+/* banner type */
+.about-page .sheet-head.has-depth { min-height: 214px; }
+.about-page .sheet-head h1 { font-size: clamp(2.3rem, 4.6vw, 3.4rem); line-height: 1.05; }
+.about-page .lede-sm { font-style: italic; font-size: clamp(1rem, 1.5vw, 1.15rem); color: var(--ink); opacity: .92; max-width: 40ch; }
+.about-page .eyebrow-sm { font-size: .95rem; letter-spacing: .08em; }
+.about-page .sheet-body { padding: 18px 28px 34px; }
+
+/* cards: a little taller, bigger type */
+.about-page .ab-card { min-height: 117px; padding: 18px 24px; gap: 20px; border-radius: 22px; }
+.about-page .ab-ico { width: 66px; height: 66px; border-radius: 17px; background: linear-gradient(150deg, rgba(120, 66, 28, .45), rgba(30, 16, 10, .85)); }
+:root:not([data-theme='dark']) .about-page .ab-ico { background: var(--tile-icon-bg); }
+.about-page .ab-ico .icon { width: 30px; height: 30px; stroke-width: 1.4; }
+.about-page .ab-card h2 { font-size: 1.45rem; margin-bottom: 6px; }
+.about-page .ab-card p { font-size: 1rem; color: var(--ink); opacity: .85; }
+.about-page .ab-card .ab-sep { margin: 14px 0; }
+
+/* limits panel: the reference illustration */
+.about-page .ab-limits { gap: 30px; padding: 22px 34px 22px 28px; min-height: 176px; }
+:root[data-theme='dark'] .about-page .ab-limits { background: linear-gradient(100deg, rgba(40, 46, 26, .92), rgba(30, 33, 20, .94) 55%, rgba(26, 27, 18, .96)); border-color: rgba(190, 150, 70, .45); }
+.about-page .ab-limits-art { flex: 0 0 min(30%, 290px); }
+.about-page .ab-limits-art img {
+  display: block; width: 100%; height: auto; mix-blend-mode: screen;
+  -webkit-mask-image: radial-gradient(ellipse 72% 78% at 50% 52%, #000 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 78% at 50% 52%, #000 55%, transparent 100%);
+}
+:root:not([data-theme='dark']) .about-page .ab-limits-art img { mix-blend-mode: multiply; filter: sepia(.2) contrast(.9) brightness(1.5) invert(.88) hue-rotate(160deg) saturate(.8); opacity: .7; }
+.about-page .ab-limits > .ab-sep { align-self: center; height: 104px; margin: 0; background: linear-gradient(180deg, transparent, #d9873a, transparent); }
+.about-page .ab-limits-text h2 { font-size: clamp(1.45rem, 2.6vw, 1.9rem); }
+.about-page .ab-limits-text p { color: var(--ink); opacity: .92; font-size: 1.02rem; }
+
+/* what Mudra does */
+.about-page .ab-does { padding: 14px 20px 6px; }
+.about-page .ab-does .ab-title { font-size: clamp(1.6rem, 3vw, 2.1rem); }
+.about-page .ab-does-grid li { align-items: center; padding: 6px 24px; }
+.about-page .ab-does-grid h3 { font-size: 1.15rem; }
+.about-page .ab-does-grid p { color: var(--ink); opacity: .82; font-size: .96rem; }
+.about-page .ab-ico-sm { width: 64px; height: 64px; }
+.about-page .ab-ico-sm .icon { width: 28px; height: 28px; }
+
+/* collapsed full details */
+.about-page .ab-more { margin-top: 10px; }
+.about-page .ab-more > summary {
+  list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: fit-content; margin: 0 auto;
+  padding: 10px 20px; border-radius: 999px; font: 600 .92rem var(--font-ui); color: var(--ink);
+  border: 1px solid color-mix(in srgb, var(--hero-gold) 55%, transparent); background: rgba(20, 12, 8, .45); min-height: 44px;
+  transition: background .2s, border-color .2s;
+}
+:root:not([data-theme='dark']) .about-page .ab-more > summary { background: rgba(255, 252, 240, .8); }
+.about-page .ab-more > summary::-webkit-details-marker { display: none; }
+.about-page .ab-more > summary:hover { border-color: var(--hero-gold); }
+.about-page .ab-more > summary .icon { transition: transform .25s; }
+.about-page .ab-more[open] > summary .icon { transform: rotate(180deg); }
+.about-page .ab-more > .ab-details { margin-top: 18px; }
+.about-page .ab-passport { margin: 0; }
+
+@media (max-width: 960px) {
+  .about-page .ab-does { padding: 10px 6px 0; }
+  .about-page .ab-limits-art { flex-basis: min(34%, 240px); }
+}
+@media (max-width: 640px) {
+  .about-page .sheet-head.has-depth { min-height: 170px; }
+  .about-page .sheet-head h1 { font-size: clamp(2rem, 9vw, 2.5rem); }
+  .about-page .sheet-body { padding: 14px 14px 26px; }
+  .about-page .ab-card { min-height: 0; padding: 14px 16px; gap: 14px; }
+  .about-page .ab-ico { width: 54px; height: 54px; }
+  .about-page .ab-ico .icon { width: 26px; height: 26px; }
+  .about-page .ab-card h2 { font-size: 1.2rem; }
+  .about-page .ab-limits { padding: 18px 16px 22px; min-height: 0; }
+  .about-page .ab-limits-art { flex: none; width: min(86%, 300px); margin: 0 auto; }
+  .about-page .ab-limits > .ab-sep { align-self: stretch; height: 1px; background: linear-gradient(90deg, transparent, #d9873a, transparent); }
+  .about-page .ab-does-grid li, .about-page .ab-does-grid li:nth-child(odd) { padding: 14px 0; }
+  .about-page .ab-ico-sm { width: 54px; height: 54px; }
+  :root[data-theme='dark'] body:has(.about-page) { background-position: 22% bottom; }
+  :root[data-theme='dark'] body:has(.about-page) main { padding-bottom: 70px; }
+}
+
+
+/* =====================================================================
+   Mobile / tablet polish (dark theme matches the reference)
+   ===================================================================== */
+
+/* Illustration: fade the picture's own box into the panel on every size */
+.about-page .ab-limits-art img {
+  -webkit-mask-image: radial-gradient(ellipse 58% 64% at 50% 52%, #000 38%, transparent 100%);
+  mask-image: radial-gradient(ellipse 58% 64% at 50% 52%, #000 38%, transparent 100%);
+}
+
+@media (max-width: 640px) {
+  /* Banner: keep the copy clear of the Theyyam face with a soft left-to-right scrim */
+  .about-page .sheet-head-text { position: relative; isolation: isolate; max-width: 70%; }
+  .about-page .sheet-head-text::before {
+    content: ''; position: absolute; z-index: -1; inset: -28px -48px -28px -28px; pointer-events: none;
+    background: linear-gradient(90deg, rgba(14, 8, 6, .92) 0%, rgba(14, 8, 6, .78) 60%, rgba(14, 8, 6, 0) 100%);
+  }
+  :root:not([data-theme='dark']) .about-page .sheet-head-text::before { display: none; }
+  .about-page .lede-sm { font-size: .98rem; line-height: 1.5; max-width: none; }
+  .about-page .sheet-head.has-depth { min-height: 230px; }
+
+  /* "What Mudra Does": no stray vertical rules when the list is stacked */
+  .about-page .ab-does-grid li + li { border-left: 0; }
+  .about-page .ab-does-grid li { align-items: center; }
+
+  /* Limits panel: tidy illustration + pill */
+  .about-page .ab-limits-art { width: min(80%, 260px); }
+  .about-page .ab-pill { align-items: center; border-radius: 18px; }
+  .about-page .ab-limits-text p { font-size: 1rem; }
+
+  /* Leave room above the fixed bottom tab bar */
+  :root[data-theme='dark'] body:has(.about-page) main { padding-bottom: 96px; }
+}
+
+@media (max-width: 380px) {
+  .about-page .sheet-head-text { max-width: 78%; }
+  .about-page .ab-card { gap: 12px; padding: 12px 14px; }
+  .about-page .ab-card h2 { font-size: 1.1rem; }
+  .about-page .ab-card p { font-size: .94rem; }
+}
+
+
+/* navbar floats straight over the artwork, same size as reuse studio */
+html:root:root body:has(.about-page) .site-header.padippura-header {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-bottom: 0 !important;
+}
+body:has(.about-page) .site-header::after { display: none; }
+.about-page.page { padding-top: 14px; }
+
+/* feather all four edges so the picture never shows a box */
+.about-page .ab-limits-art img {
+  -webkit-mask-image:
+    linear-gradient(90deg, transparent 0, #000 20%, #000 80%, transparent 100%),
+    linear-gradient(180deg, transparent 0, #000 24%, #000 76%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    linear-gradient(90deg, transparent 0, #000 20%, #000 80%, transparent 100%),
+    linear-gradient(180deg, transparent 0, #000 24%, #000 76%, transparent 100%);
+  mask-composite: intersect;
+}
