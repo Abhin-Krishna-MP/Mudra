@@ -194,12 +194,12 @@ body:has(.cat-page) .site-header::after { display: none; }
 }
 :root:not([data-theme='dark']) .tile-cat .tile-link {
   background: var(--surface-2);
-  border: 2px solid rgba(185, 28, 28, .5);
-  box-shadow: 0 0 0 1px rgba(220, 38, 38, .4), 0 0 16px rgba(185, 28, 28, .2), 0 12px 28px rgba(70, 36, 12, .18);
+  border: 1.5px solid rgba(153, 27, 27, .35);
+  box-shadow: 0 0 10px rgba(153, 27, 27, .12), 0 10px 24px rgba(70, 36, 12, .14);
 }
 :root:not([data-theme='dark']) .tile-cat .tile-link:hover {
-  border-color: #b71c1c;
-  box-shadow: 0 0 0 1.5px rgba(239, 68, 68, .75), 0 0 24px rgba(220, 38, 38, .4), 0 16px 36px rgba(70, 36, 12, .25);
+  border-color: #991b1b;
+  box-shadow: 0 0 14px rgba(153, 27, 27, .22), 0 14px 28px rgba(70, 36, 12, .2);
 }
 .tile-cat .tile-link:hover { border-color: var(--cat-kind); }
 .tile-cat .tile-art { position: relative; inset: auto; flex: none; display: block; aspect-ratio: 4 / 3.2; background: #0d0807; overflow: hidden; }

@@ -149,28 +149,24 @@
 /* The card is its own size container so the arch's top radius is exactly half its width (cqw), leaving the bottom corners truly rounded. */
 :root:not([data-theme='dark']) .explore .tile-compact { container-type: inline-size; }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link {
-  aspect-ratio: 1 / 1.5; border-radius: 50cqw 50cqw 26px 26px; border: 3px solid transparent; color: #2a0c0a;
+  aspect-ratio: 1 / 1.5; border-radius: 50cqw 50cqw 26px 26px; border: 2px solid transparent; color: #2a0c0a;
   background:
     linear-gradient(180deg, #fffaf2 0%, #f6ecd8 100%) padding-box,
-    linear-gradient(180deg, #d32f2f 0%, #b71c1c 45%, #7f1d1d 100%) border-box;
+    linear-gradient(180deg, #991b1b 0%, #7f1d1d 50%, #5b1210 100%) border-box;
   box-shadow:
-    0 0 0 1.5px rgba(220, 38, 38, .75),
-    0 0 20px rgba(220, 38, 38, .55),
-    0 0 40px rgba(185, 28, 28, .45),
-    0 0 60px rgba(153, 27, 27, .28),
-    0 16px 36px rgba(0, 20, 16, .5),
-    inset 0 0 0 1px rgba(255, 255, 255, .7);
+    0 0 0 1px rgba(153, 27, 27, .35),
+    0 0 14px rgba(153, 27, 27, .2),
+    0 14px 32px rgba(0, 28, 22, .38),
+    inset 0 0 0 1px rgba(255, 255, 255, .6);
   transition: box-shadow .35s, transform .2s;
 }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link:hover,
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link:focus-visible {
   box-shadow:
-    0 0 0 2px rgba(239, 68, 68, .9),
-    0 0 26px rgba(239, 68, 68, .75),
-    0 0 54px rgba(220, 38, 38, .6),
-    0 0 80px rgba(185, 28, 28, .45),
-    0 22px 48px rgba(0, 20, 16, .6),
-    inset 0 0 0 1px rgba(255, 255, 255, .85);
+    0 0 0 1px rgba(185, 28, 28, .5),
+    0 0 20px rgba(185, 28, 28, .32),
+    0 18px 40px rgba(0, 28, 22, .45),
+    inset 0 0 0 1px rgba(255, 255, 255, .75);
 }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-link::before { inset: -1px; padding: 2px; }
 :root:not([data-theme='dark']) .explore .tile-compact .tile-art {
@@ -365,28 +361,24 @@
   position: relative; inset: auto; height: 100%; min-height: 200px; gap: 8px; padding: 26px 18px 20px;
   display: flex; flex-direction: column; align-items: center; text-align: center; justify-content: flex-start;
   border-radius: 24px;
-  border: 3px solid transparent;
+  border: 2px solid transparent;
   background:
     linear-gradient(180deg, #fffcf5 0%, #f6ecd8 100%) padding-box,
-    linear-gradient(180deg, #d32f2f 0%, #b71c1c 45%, #7f1d1d 100%) border-box;
+    linear-gradient(180deg, #991b1b 0%, #7f1d1d 50%, #5b1210 100%) border-box;
   box-shadow:
-    0 0 0 1.5px rgba(220, 38, 38, .75),
-    0 0 20px rgba(220, 38, 38, .55),
-    0 0 40px rgba(185, 28, 28, .45),
-    0 0 60px rgba(153, 27, 27, .28),
-    0 18px 40px rgba(0, 20, 16, .5),
-    inset 0 0 0 1px rgba(255, 255, 255, .7);
+    0 0 0 1px rgba(153, 27, 27, .35),
+    0 0 14px rgba(153, 27, 27, .2),
+    0 16px 36px rgba(0, 20, 16, .38),
+    inset 0 0 0 1px rgba(255, 255, 255, .6);
   transition: box-shadow .35s, transform .2s;
 }
 :root:not([data-theme='dark']) .pillars .flip:hover .face.front,
 :root:not([data-theme='dark']) .pillars .flip:focus-visible .face.front {
   box-shadow:
-    0 0 0 2px rgba(239, 68, 68, .9),
-    0 0 28px rgba(239, 68, 68, .75),
-    0 0 54px rgba(220, 38, 38, .6),
-    0 0 80px rgba(185, 28, 28, .45),
-    0 24px 50px rgba(0, 20, 16, .6),
-    inset 0 0 0 1px rgba(255, 255, 255, .85);
+    0 0 0 1px rgba(185, 28, 28, .5),
+    0 0 20px rgba(185, 28, 28, .32),
+    0 20px 42px rgba(0, 20, 16, .45),
+    inset 0 0 0 1px rgba(255, 255, 255, .75);
 }
 /* faint mandala watermark in corners */
 :root:not([data-theme='dark']) .pillars .face.front::before {
@@ -447,17 +439,15 @@
    on hover or focus only. Colours stay in the light palette (cream, gold, maroon).
    ========================================================================== */
 :root:not([data-theme='dark']) .quick {
-  margin: -72px 0 0; padding: 18px 20px; overflow: visible; border: 3px solid transparent; border-radius: 28px;
+  margin: -72px 0 0; padding: 18px 20px; overflow: visible; border: 2px solid transparent; border-radius: 28px;
   -webkit-backdrop-filter: none; backdrop-filter: none;
   background:
     linear-gradient(180deg, #fffaf0 0%, #f6ead2 100%) padding-box,
-    linear-gradient(180deg, #d32f2f 0%, #b71c1c 45%, #7f1d1d 100%) border-box;
+    linear-gradient(180deg, #991b1b 0%, #7f1d1d 50%, #5b1210 100%) border-box;
   box-shadow:
-    0 0 0 1.5px rgba(220, 38, 38, .75),
-    0 0 20px rgba(220, 38, 38, .55),
-    0 0 40px rgba(185, 28, 28, .42),
-    0 0 60px rgba(153, 27, 27, .25),
-    0 18px 44px rgba(0, 20, 16, .5),
+    0 0 0 1px rgba(153, 27, 27, .35),
+    0 0 14px rgba(153, 27, 27, .18),
+    0 16px 38px rgba(0, 20, 16, .35),
     inset 0 0 0 1px rgba(255, 255, 255, .5),
     inset 0 -10px 24px rgba(233, 185, 73, .12);
 }
