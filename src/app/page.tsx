@@ -21,10 +21,10 @@ const QUICK: { href: string; label: string; icon: IconName }[] = [
 const FORMS = ['Theyyam', 'Kathakali', 'Kerala murals', 'Handicrafts', 'Folk arts', 'Kalaripayattu'];
 const TICKER_ITEMS = [...FORMS, ...FORMS];
 
-const PILLARS: { word: string; text: string; cta: string; href: string; icon: IconName }[] = [
-  { word: 'Discover', text: 'Explore Kerala’s art, craft and cultural expressions.', cta: 'Explore Catalogue', href: '/catalogue', icon: 'book' },
-  { word: 'Credit', text: 'See who each work comes from, and credit them.', cta: 'Verify a record', href: '/verify', icon: 'shield' },
-  { word: 'Reuse', text: 'Know how you may reuse it, with the creators’ terms.', cta: 'Open Reuse Studio', href: '/reuse', icon: 'layers' },
+const PILLARS: { word: string; short: string; text: string; cta: string; href: string; icon: IconName }[] = [
+  { word: 'Discover', short: 'Explore verified cultural records', text: 'Explore Kerala’s art, craft and cultural expressions.', cta: 'Explore Catalogue', href: '/catalogue', icon: 'book' },
+  { word: 'Credit', short: 'Give proper attribution', text: 'See who each work comes from, and credit them.', cta: 'Verify a record', href: '/verify', icon: 'shield' },
+  { word: 'Reuse', short: 'Check permissions and reuse responsibly', text: 'Know how you may reuse it, with the creators’ terms.', cta: 'Open Reuse Studio', href: '/reuse', icon: 'layers' },
 ];
 
 export default async function Home() {
@@ -62,11 +62,12 @@ export default async function Home() {
           <div className="explore-head">
             <h2 id="explore-h">
               <LotusMark size={30} />
-              Explore Kerala’s Cultural Expressions
-              {all.length > 0 && <span className="count">{all.length} {all.length === 1 ? 'record' : 'records'}</span>}
+              <span className="eh-title">Explore Kerala’s <em>Cultural Expressions</em></span>
+              {all.length > 0 && <span className="count"><Icon name="layers" size={18} className="count-ico" />{all.length} {all.length === 1 ? 'record' : 'records'}</span>}
             </h2>
             <a className="view-all" href="/catalogue">View All <Icon name="arrow" size={18} /></a>
           </div>
+          <div className="explore-rule" aria-hidden="true"><i /></div>
           {shown.length === 0 ? (
             <p className="muted">No records are published yet. <a href="/submit">Submit a work</a>.</p>
           ) : (
@@ -74,6 +75,7 @@ export default async function Home() {
               {shown.map((r, i) => <RecordTile key={r.id} r={r} i={i} compact />)}
             </Carousel>
           )}
+          {shown.length > 0 && <a className="view-all view-all-foot" href="/catalogue">View all {all.length} records <Icon name="arrow" size={16} /></a>}
         </section>
 
         <section className="pillars" aria-labelledby="pill-h" data-reveal>
@@ -89,6 +91,7 @@ export default async function Home() {
                       <span className="face front" aria-hidden="true">
                         <span className="q-ico"><Icon name={p.icon} size={30} /></span>
                         <span className="flip-word">{p.word}</span>
+                        <span className="pill-desc">{p.short}</span>
                       </span>
                       <span className="face back">
                         <strong className="flip-word">{p.word}</strong>
