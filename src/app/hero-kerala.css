@@ -265,22 +265,185 @@
 /* Mobile & Tablet */
 @media (max-width: 899px) {
   .hero.lt-hero.mh {
-    height: auto;
-    min-height: 860px;
-    padding: 120px 22px 260px;
+    height: auto !important;
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    background: #06181c !important;
+  }
+
+  /* 1. Sunset backwaters background */
+  .hero.lt-hero.mh .l-bg {
+    inset: 0 0 auto 0 !important;
+    width: 100% !important;
+    transform: none !important;
+    background-size: cover !important;
+    background-position: 50% 45% !important;
+    -webkit-mask-image: linear-gradient(180deg, #000 68%, transparent 100%) !important;
+    mask-image: linear-gradient(180deg, #000 68%, transparent 100%) !important;
+  }
+
+  .hero.lt-hero.mh .l-shade {
+    inset: 0 0 auto 0 !important;
+    width: 100% !important;
+    background: linear-gradient(180deg, rgba(3, 14, 19, .45) 0%, rgba(3, 14, 19, .2) 35%, rgba(6, 24, 28, .85) 75%, #06181c 100%) !important;
+  }
+
+  /* 2. Kathakali figure */
+  .hero.lt-hero.mh .l-fig {
+    position: absolute !important;
+    left: auto !important;
+    height: auto !important;
+    opacity: 1 !important;
+    z-index: 4 !important;
+    transform: none !important;
+    filter: drop-shadow(-10px 14px 24px rgba(0, 0, 0, .6)) saturate(1.08) !important;
+    -webkit-mask-image: linear-gradient(180deg, #000 80%, transparent 100%) !important;
+    mask-image: linear-gradient(180deg, #000 80%, transparent 100%) !important;
+  }
+
+  /* 3. Kasavu silk cloth & lamp */
+  .hero.lt-hero.mh .l-fg {
+    position: absolute !important;
+    left: 0 !important;
+    right: 0 !important;
+    z-index: 6 !important;
+    pointer-events: none !important;
+    -webkit-mask-image: linear-gradient(180deg, #000 70%, transparent 100%) !important;
+    mask-image: linear-gradient(180deg, #000 70%, transparent 100%) !important;
+  }
+
+  .hero.lt-hero.mh .fg-mid,
+  .hero.lt-hero.mh .fg-left,
+  .hero.lt-hero.mh .fg-right {
+    transform: none !important;
+  }
+
+  .hero.lt-hero.mh .lamp-glow {
+    left: 12% !important;
+    top: 32% !important;
+    width: 28vw !important;
+    height: 28vw !important;
+  }
+
+  .hero.lt-hero.mh .l-fade {
+    display: none !important;
+  }
+
+  /* 4. Text & Buttons */
+  .hero.lt-hero.mh .hero-inner {
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  .hero.lt-hero.mh .hero-copy {
+    max-width: 100% !important;
+  }
+
+  .hero.lt-hero.mh .eyebrow {
+    font-size: .72rem !important;
+    letter-spacing: .28em !important;
+    margin: 0 0 14px !important;
+  }
+
+  .hero.lt-hero.mh .eyebrow::before {
+    width: 32px !important;
+  }
+
+  .hero.lt-hero.mh h1 {
+    font-size: clamp(2.1rem, 7.8vw, 2.9rem) !important;
+    line-height: 1.1 !important;
+    margin: 0 0 16px !important;
+  }
+
+  .hero.lt-hero.mh .lede {
+    font-size: .98rem !important;
+    line-height: 1.55 !important;
+    margin: 0 0 28px !important;
+    color: rgba(248, 238, 223, 0.9) !important;
+  }
+
+  .hero.lt-hero.mh .cta {
+    display: flex !important;
+    gap: 12px !important;
+    width: 100% !important;
+  }
+
+  .hero.lt-hero.mh .scroll-cue {
+    display: none !important;
+  }
+}
+
+/* Specific Phone rules (< 560px) */
+@media (max-width: 560px) {
+  .hero.lt-hero.mh .l-bg {
+    height: 105vw !important;
+  }
+  .hero.lt-hero.mh .l-shade {
+    height: 110vw !important;
+  }
+  .hero.lt-hero.mh .l-mist {
+    top: 60vw !important;
+    height: 35vw !important;
+    bottom: auto !important;
   }
   .hero.lt-hero.mh .l-fig {
-    left: 28%;
-    width: 78%;
-    top: -4%;
-    opacity: .55;
+    right: -10vw !important;
+    top: 54px !important;
+    width: 76vw !important;
+    max-width: 380px !important;
   }
   .hero.lt-hero.mh .l-fg {
-    top: 30%;
+    top: 48vw !important;
+    height: 55vw !important;
   }
-  .hero.lt-hero.mh .lamp-glow {
-    width: 34vw;
-    height: 34vw;
+  .hero.lt-hero.mh .hero-inner {
+    padding: 85vw 20px 48px !important;
+  }
+  .hero.lt-hero.mh .cta {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+  .hero.lt-hero.mh .cta .btn {
+    justify-content: center !important;
+    text-align: center !important;
+  }
+}
+
+/* Specific Tablet rules (561px to 899px) */
+@media (min-width: 561px) and (max-width: 899px) {
+  .hero.lt-hero.mh .l-bg {
+    height: 82vw !important;
+  }
+  .hero.lt-hero.mh .l-shade {
+    height: 88vw !important;
+  }
+  .hero.lt-hero.mh .l-mist {
+    top: 45vw !important;
+    height: 25vw !important;
+    bottom: auto !important;
+  }
+  .hero.lt-hero.mh .l-fig {
+    right: -4vw !important;
+    top: 48px !important;
+    width: 56vw !important;
+    max-width: 440px !important;
+  }
+  .hero.lt-hero.mh .l-fg {
+    top: 36vw !important;
+    height: 44vw !important;
+  }
+  .hero.lt-hero.mh .hero-inner {
+    padding: 70vw 28px 56px !important;
+  }
+  .hero.lt-hero.mh .hero-copy {
+    max-width: 620px !important;
+  }
+  .hero.lt-hero.mh .cta {
+    flex-direction: row !important;
+    align-items: center !important;
   }
 }
 
