@@ -59,20 +59,24 @@ html.motion .lt-hero.dh .mist { animation: mist-drift2 26s ease-in-out infinite 
 
 /* 3 · KATHAKALI: turns slightly toward the pointer, lit by a torch that follows it */
 .lt-hero.dh .d-kath {
-  right: -5%; bottom: 7%; height: 90%; aspect-ratio: 1303 / 1207;
+  right: calc(var(--u) * -0.6);
+  top: calc(var(--u) * -4.2);
+  bottom: auto;
+  height: calc(var(--u) * 54);
+  aspect-ratio: 1303 / 1207;
   transform: translate3d(calc(var(--dx) * -18px), calc(var(--dy) * -9px + var(--ds) * .05px), 30px) rotateY(calc(var(--dx) * -3deg));
-  filter: drop-shadow(0 0 28px rgba(255, 170, 60, .3)) drop-shadow(0 18px 26px rgba(8, 3, 1, .45));
+  filter: drop-shadow(-22px 18px 40px rgba(0, 0, 0, .58)) drop-shadow(0 0 32px rgba(255, 180, 80, .4));
 }
 .lt-hero.dh .kath-light {
-  position: absolute; inset: 0; mix-blend-mode: soft-light; opacity: 0; transition: opacity .5s;
-  background: radial-gradient(circle 42% at var(--lx) var(--ly), rgba(255, 226, 150, .95), transparent 70%);
+  position: absolute; inset: 0; mix-blend-mode: soft-light; opacity: .55; transition: opacity .5s;
+  background: radial-gradient(circle 46% at var(--lx) var(--ly), rgba(255, 230, 160, .98), transparent 72%);
   -webkit-mask-image: var(--fig); mask-image: var(--fig); -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
 }
 .lt-hero.dh.is-over .kath-light { opacity: 1; }
 
 /* 4 · KASAVU SILK, lamp and hibiscus in front; its bottom edge hands over to the page below */
 .lt-hero.dh .d-kasavu {
-  left: -1%; right: -1%; bottom: -3%; aspect-ratio: 1767 / 890;
+  left: -1%; right: -1%; bottom: -7%; aspect-ratio: 1767 / 890;
   transform: translate3d(calc(var(--dx) * -34px), calc(var(--dy) * -14px + var(--ds) * -.12px), 90px) scale(.93);
   filter: drop-shadow(0 -10px 30px rgba(0, 0, 0, .35));
 }
@@ -123,14 +127,14 @@ html.motion .lt-hero.dh .sun-pool, html.motion .lt-hero.dh .sun-rays, html.motio
   .lt-hero.dh { align-items: flex-end; height: auto !important; min-height: 100svh !important; }
   .lt-hero.dh .hero-stage { inset: 0 0 auto 0; height: var(--stageH); perspective-origin: 70% 40%; }
   .lt-hero.dh .hero-stage { -webkit-mask-image: linear-gradient(#000 calc(100% - 110px), transparent); mask-image: linear-gradient(#000 calc(100% - 110px), transparent); }
-  .lt-hero.dh .d-kath { right: -24%; bottom: 8%; height: 96%; }
-  .lt-hero.dh .d-kasavu { left: -16%; right: auto; width: 150%; bottom: -3%; }
+  .lt-hero.dh .d-kath { top: -12%; bottom: auto; height: 114%; right: -10%; }
+  .lt-hero.dh .d-kasavu { left: -16%; right: auto; width: 150%; bottom: -6%; }
   .lt-hero.dh .wrap.hero-inner { padding: calc(var(--stageH) + 8px) 20px 56px !important; }
   .lt-hero.dh .hero-bg { background: linear-gradient(180deg, rgba(3, 18, 16, .55), transparent 70px, transparent calc(var(--stageH) - 70px), #04201c calc(var(--stageH) + 24px), #04201c 100%); }
   .lt-hero.dh .scroll-cue { display: none; }
   html.motion .lt-hero.dh .stage-3d { animation: sway2 14s ease-in-out infinite alternate; }
 }
-@media (min-width: 560px) and (max-width: 899px) { .lt-hero.dh .d-kath { right: -3%; height: 92%; } .lt-hero.dh .d-kasavu { left: -6%; width: 125%; } }
+@media (min-width: 560px) and (max-width: 899px) { .lt-hero.dh .d-kath { top: -10%; bottom: auto; height: 110%; right: -2%; } .lt-hero.dh .d-kasavu { left: -6%; width: 125%; } }
 @keyframes sway2 { from { transform: rotateY(-1.6deg) rotateX(.5deg); } to { transform: rotateY(1.6deg) rotateX(-.5deg); } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -140,4 +144,4 @@ html.motion .lt-hero.dh .sun-pool, html.motion .lt-hero.dh .sun-rays, html.motio
 
 /* Art grading: lift the painted plates so the scene reads as sunset light, not night */
 .lt-hero.dh .d-sky img { filter: brightness(1.22) saturate(1.15) contrast(1.04); }
-.lt-hero.dh .d-kath img { filter: brightness(1.14) saturate(1.12); }
+.lt-hero.dh .d-kath img { filter: brightness(1.10) saturate(1.24) contrast(1.08); }
