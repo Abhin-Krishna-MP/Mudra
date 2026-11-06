@@ -45,7 +45,7 @@ export function Motion() {
       mo.observe(document.body, { childList: true, subtree: true });
       onScroll();
       placeLamp();
-    }, 0);
+    }, 150);
 
     window.addEventListener('resize', placeLamp, { passive: true });
 

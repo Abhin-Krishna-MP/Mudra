@@ -71,6 +71,16 @@
 :root[data-theme='dark'] .explore .car-stage { margin-inline: calc(-1 * var(--pad)); position: relative; }
 :root[data-theme='dark'] .explore .car-track {
   gap: var(--gap); padding: 14px var(--pad) 30px; perspective: none; scroll-padding-inline: var(--pad);
+  cursor: grab; user-select: none; -webkit-user-select: none; touch-action: pan-y;
+}
+:root[data-theme='dark'] .explore .car-track.is-dragging {
+  cursor: grabbing; scroll-behavior: auto !important; scroll-snap-type: none !important;
+}
+:root[data-theme='dark'] .explore .car-track.is-dragging * {
+  pointer-events: none !important; user-select: none !important;
+}
+:root[data-theme='dark'] .explore .car-track img {
+  -webkit-user-drag: none; pointer-events: none;
 }
 :root[data-theme='dark'] .explore .car-track > li {
   flex: 0 0 calc((100% - (var(--cols) - 1) * var(--gap)) / var(--cols)); min-width: 0;

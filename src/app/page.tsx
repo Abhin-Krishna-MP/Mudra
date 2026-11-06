@@ -58,7 +58,7 @@ export default async function Home() {
           </div>
         </div>
 
-        <section className="explore" aria-labelledby="explore-h" data-reveal>
+        <section className="explore" aria-labelledby="explore-h" data-reveal suppressHydrationWarning>
           <div className="explore-head">
             <h2 id="explore-h">
               <LotusMark size={30} />
@@ -78,7 +78,7 @@ export default async function Home() {
           {shown.length > 0 && <a className="view-all view-all-foot" href="/catalogue">View all {all.length} records <Icon name="arrow" size={16} /></a>}
         </section>
 
-        <section className="pillars" aria-labelledby="pill-h" data-reveal>
+        <section className="pillars" aria-labelledby="pill-h" data-reveal suppressHydrationWarning>
           <Lotus3D />
           <div className="pillars-body">
             <p className="eyebrow-line">Credit the Culture</p>
