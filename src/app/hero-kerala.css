@@ -110,7 +110,7 @@
   width: 56%;
   z-index: 4;
   height: auto;
-  filter: drop-shadow(0 14px 28px rgba(0, 0, 0, .38)) saturate(1.1);
+  filter: drop-shadow(0 8px 24px rgba(160, 70, 15, .2)) saturate(1.08);
   transform: translate3d(calc(var(--mx) * -34px), calc(var(--my) * -18px + var(--ksy, 0) * -.08px), 0) rotateY(calc(var(--mx) * -3.8deg)) rotateX(calc(var(--my) * 2.2deg));
   transition: none !important;
   will-change: transform;
