@@ -349,17 +349,7 @@ export default async function Review({
         {/* =========================================================================
             SECTION 2: PERMISSION REQUESTS
             ========================================================================= */}
-        <section className="rc-section-block" aria-labelledby="heading-permissions">
-          <div className="rc-section-header-wrap">
-            <h2 id="heading-permissions" className="rc-section-heading" style={{ margin: 0 }}>
-              <Icon name="users" size={22} />
-              <span>Permission Requests ({openPermissionCount} Active)</span>
-            </h2>
-            <span className="rc-section-tag requests">Ask First System</span>
-          </div>
-
-          <RequestsSection requests={requests} stewards={users} />
-        </section>
+        <RequestsSection requests={requests} stewards={users} />
 
         {/* =========================================================================
             SECTION 3: SYSTEM STEWARDS
