@@ -557,7 +557,7 @@ During v2.0 benchmarking, a thermal anomaly was diagnosed where background tabs 
      ```
    - Only drafts matching the steward's assigned jurisdiction appear in their queue, preserving cultural context and regional expertise.
 
-### 3.14 Steward KYC Verification & Hidden Admin Console
+### 3.14 Steward KYC Verification & Reviewer Governance Console
 1. **Identity Document Upload (`/apply-steward`):**
    - Authors with demonstrated community standing can upload proof of identity (PNG, JPEG, WebP, or PDF) to apply for steward elevation.
 2. **Private Storage Architecture (`src/lib/storage.ts`):**
@@ -566,9 +566,11 @@ During v2.0 benchmarking, a thermal anomaly was diagnosed where background tabs 
      - **Supabase Storage:** Authenticated bucket upload via service role key (`supabase://private-kyc/...`).
      - **Vercel Blob Storage:** Cloud-persisted private blob storage via `BLOB_READ_WRITE_TOKEN`.
      - **Serverless / Local Storage:** Automatically switches to `os.tmpdir()` (`/tmp/mudra_secure_kyc`) in read-only serverless runtimes (`/var/task`), preventing `ENOENT` filesystem crashes, with in-memory data URI fallback.
-3. **Hidden Admin Dashboard (`/admin`):**
-   - Admins review pending applications, view applicant profiles and current roles, and inspect identity documents via the secure authenticated stream `/api/admin/kyc-document/[id]`.
-   - The approval action atomically updates `steward_applications.status = 'approved'` and elevates `users.role = 'steward'` with the applicant's designated region and category.
+3. **Reviewer Console Verification Area (`/review`):**
+   - Reviewers and stewards directly inspect pending KYC submissions in the dedicated **Steward Verification Requests** section (`src/app/review/StewardApplicationsSection.tsx`) alongside a center-aligned real-time metrics box.
+   - Authorized users view private documents via authenticated route `/api/admin/kyc-document/[id]`, and can approve or reject applicants with instant database role elevation and tag jurisdiction assignment (`region` + `category`).
+4. **Admin Oversight (`/admin`):**
+   - System administrators retain full governance visibility and management capabilities on the administrative route.
 
 ### 3.15 Active AI Shield (W3C TDMRep Protocol)
 1. **Global Manifest (`/.well-known/tdmrep.json`):**
@@ -592,6 +594,17 @@ During v2.0 benchmarking, a thermal anomaly was diagnosed where background tabs 
 4. **Edit & Resubmission Flow:**
    - Clicking "Edit Draft" reopens the pre-filled submission form at `/submit?edit=[id]`.
    - Modifying and submitting the draft updates the record, clears the revision note, and resets the status back to `pending`, returning it to the steward's review queue.
+
+### 3.17 Serverless Artwork Submission Resilience & Next.js 10MB Body Limit
+1. **10MB Server Action Body Limit:**
+   - Next.js 15 App Router enforces a default 1MB request body limit on server actions. High-resolution mobile phone and DSLR camera artwork photos routinely range from 2MB to 8MB.
+   - Configured `experimental: { serverActions: { bodySizeLimit: '10mb' } }` in `next.config.mjs` to eliminate HTTP 413 / 500 body-parser rejections before action dispatching.
+2. **Serverless Storage Fallback:**
+   - In cloud serverless runtimes (such as Vercel AWS Lambda `/var/task` read-only environments), local disk writes fail with `EROFS` if an external Blob storage token is not configured.
+   - `storeUpload` and `readLocalAsset` in `src/lib/storage.ts` gracefully fall back to base64 `data:` URIs and `/tmp` storage, ensuring author submissions never crash due to storage infrastructure limitations.
+3. **Top-Level Error Isolation:**
+   - Wrapped `createRecordAction` in structured `try...catch` handling with `isRedirectError` detection.
+   - Prevents unhandled exceptions from triggering production `error.tsx` 500 boundaries while allowing Next.js redirect exceptions (`/submit?done=...`) to execute normally.
 
 ---
 

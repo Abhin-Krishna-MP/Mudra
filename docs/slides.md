@@ -56,8 +56,9 @@
 
 - **Role-Based Author Boundary:** Public sign-up (`/login?mode=signup`) assigns the `author` role; `/submit` is intercepted by Edge Middleware and verified against the database.
 - **Specific Steward Routing (Tag Matching):** Inbound drafts are tagged with `region` and `category`; steward consoles (`/review`) strictly filter pending drafts matching the steward's assigned expertise.
-- **Steward KYC Verification (`/apply-steward` & `/admin`):** Authors submit identity documents to private storage (Supabase / Vercel Blob / serverless tmp); hidden admin dashboard evaluates credentials and elevates roles to `steward`.
+- **Steward KYC Verification (`/apply-steward` & `/review`):** Authors submit identity documents to private storage (Supabase / Vercel Blob / serverless tmp); reviewers and stewards inspect private proofs via `/api/admin/kyc-document/[id]` and approve accounts directly in the **Steward Verification Requests** area on `/review` (featuring a centered overview metrics card).
 - **Asynchronous Revision Loop:** Stewards request specific edits via structured revision notes (`needs_revision`); authors review notes on `/author/dashboard` and one-click edit & resubmit back to `pending`.
+- **10MB Server Action Resilience:** Next.js 15 body limit configured to 10MB with serverless storage fallbacks to effortlessly handle large camera photos up to 8MB without crashes.
 
 ---
 

@@ -46,6 +46,7 @@
   > "Instead of a dead end, Mudra gives the creator an actionable next step: 'Request permission'. Four clean fields: who you are, private contact details, what you will make, and where. Mudra never leaks requester contact info to public logs or public audit chains."
 - **Visual (2:10 – 2:45):** 
   - Switch to the authenticated Reviewer / Steward console (`/review`).
+  - Highlight the top overview row with the centered *Steward Applications* metrics box, and the *Steward Verification Requests* section where reviewers inspect private KYC ID proofs and approve community steward candidates.
   - Show how drafts are tag-routed strictly to the steward whose assigned region (`Kannur`) and domain (`ritual`) match the submission.
   - Demonstrate the asynchronous feedback loop: rather than scheduling a chat, the steward clicks *Request Revision*, enters lineage verification notes, and sets the draft to `needs_revision`.
   - Briefly show the author's dashboard (`/author/dashboard`) receiving the alert and reopening the draft via *Edit & Resubmit*.
@@ -53,7 +54,7 @@
   - Click *Grant permission & issue signed grant*.
   - Enter specific conditions: `Must display Mudra credit line alongside label; maximum 200 units`. Click *Confirm and Sign*.
 - **Voiceover:**
-  > "Now we cut to the steward console. Submissions are never scattered: drafts automatically route to stewards matching their exact region and craft domain. Instead of endless chat, stewards can request specific revisions asynchronously, sending notes directly to the author's dashboard.
+  > "Now we cut to the steward console. Submissions are never scattered: drafts automatically route to stewards matching their exact region and craft domain. Reviewers can verify steward applicants right from the console with a single click. Instead of endless chat, stewards can request specific revisions asynchronously, sending notes directly to the author's dashboard.
   > When reviewing reuse requests, Mudra never consents on behalf of a community—only a verified cultural steward decides. The steward enters specific conditions, and Mudra cryptographically signs the grant certificate using Ed25519 over RFC 8785 canonical JSON, appending the event to the record's tamper-evident SHA-256 audit chain."
 
 ---
