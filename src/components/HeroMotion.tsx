@@ -8,7 +8,7 @@ import { useEffect } from 'react';
  *   --msy          eased scroll progress through the hero (0..1) — NO collision with site-wide --sy
  *   --lx / --ly    silky-smooth torchlight coordinates tracking the cursor
  *   --torch-op     torchlight intensity easing
- *   canvas embers  rising sparks with ambient glow physics
+ *   canvas embers  rising sparks with ambient glow physics (sprite-cached, GPU-accelerated)
  */
 export function HeroMotion() {
   useEffect(() => {
@@ -22,13 +22,6 @@ export function HeroMotion() {
     const cleanups: Array<() => void> = [];
     let visible = true;
     let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-
-    // Observe theme changes on <html>
-    const themeObserver = new MutationObserver(() => {
-      isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    });
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-    cleanups.push(() => themeObserver.disconnect());
 
     // Reveal on scroll (if needed)
     const rev = Array.from(document.querySelectorAll<HTMLElement>('.mx-reveal'));
@@ -57,7 +50,13 @@ export function HeroMotion() {
     let stx = 0, sty = 0, curStx = 0, curSty = 0;
     let torchOp = 0.55, targetTorchOp = 0.55;
     let ambientTorchOp = 0, targetAmbientTorchOp = 0;
-    let lastPointer = 0, raf = 0;
+    let lastPointer = 0;
+    let raf = 0;
+
+    // String caches to prevent redundant DOM style recalculations
+    let prevMx = '', prevMy = '', prevMsy = '';
+    let prevTpx = '', prevTpy = '', prevTorchOp = '';
+    let prevStx = '', prevSty = '', prevAmbOp = '';
 
     const onMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch' || !isDark) return;
@@ -80,6 +79,9 @@ export function HeroMotion() {
           tpy = Math.max(8, Math.min(92, ((e.clientY - f.top) / f.height) * 100));
           targetTorchOp = 0.95;
         }
+
+        // Ensure loop is awake
+        startFrameLoop();
       }
     };
 
@@ -90,11 +92,13 @@ export function HeroMotion() {
       tpy = 42;
       targetTorchOp = 0.55;
       targetAmbientTorchOp = 0;
+      startFrameLoop();
     };
 
     const onScroll = () => {
       const h = hero.offsetHeight || window.innerHeight;
       sy = Math.min(1, Math.max(0, window.scrollY / h));
+      startFrameLoop();
     };
 
     hero.addEventListener('pointermove', onMove, { passive: true });
@@ -107,8 +111,10 @@ export function HeroMotion() {
     });
 
     const frame = (t: number) => {
-      raf = requestAnimationFrame(frame);
-      if (!visible || !isDark) return;
+      if (!visible || !isDark || document.hidden) {
+        raf = 0;
+        return;
+      }
 
       const idle = t - lastPointer > 2500;
       const gx = idle ? Math.sin(t / 3200) * 0.35 : tx;
@@ -126,40 +132,90 @@ export function HeroMotion() {
       curSty += (sty - curSty) * 0.1;
       ambientTorchOp += (targetAmbientTorchOp - ambientTorchOp) * 0.08;
 
-      hero.style.setProperty('--mx', cx.toFixed(4));
-      hero.style.setProperty('--my', cy.toFixed(4));
-      hero.style.setProperty('--msy', csy.toFixed(4));
+      // Deduplicate DOM mutations to save CPU cycles and eliminate thermal throttle
+      const mxStr = cx.toFixed(4);
+      const myStr = cy.toFixed(4);
+      const msyStr = csy.toFixed(4);
+      if (mxStr !== prevMx || myStr !== prevMy || msyStr !== prevMsy) {
+        hero.style.setProperty('--mx', mxStr);
+        hero.style.setProperty('--my', myStr);
+        hero.style.setProperty('--msy', msyStr);
+        prevMx = mxStr; prevMy = myStr; prevMsy = msyStr;
+      }
 
-      fig.style.setProperty('--tpx', `${curTpx.toFixed(2)}%`);
-      fig.style.setProperty('--tpy', `${curTpy.toFixed(2)}%`);
-      fig.style.setProperty('--torch-op', torchOp.toFixed(3));
+      const tpxStr = `${curTpx.toFixed(2)}%`;
+      const tpyStr = `${curTpy.toFixed(2)}%`;
+      const torchOpStr = torchOp.toFixed(3);
+      if (tpxStr !== prevTpx || tpyStr !== prevTpy || torchOpStr !== prevTorchOp) {
+        fig.style.setProperty('--tpx', tpxStr);
+        fig.style.setProperty('--tpy', tpyStr);
+        fig.style.setProperty('--torch-op', torchOpStr);
+        prevTpx = tpxStr; prevTpy = tpyStr; prevTorchOp = torchOpStr;
+      }
 
       if (stageTorch) {
-        stageTorch.style.setProperty('--stx', `${curStx.toFixed(1)}px`);
-        stageTorch.style.setProperty('--sty', `${curSty.toFixed(1)}px`);
-        stageTorch.style.setProperty('--torch-ambient-op', ambientTorchOp.toFixed(3));
+        const stxStr = `${curStx.toFixed(1)}px`;
+        const styStr = `${curSty.toFixed(1)}px`;
+        const ambOpStr = ambientTorchOp.toFixed(3);
+        if (stxStr !== prevStx || styStr !== prevSty || ambOpStr !== prevAmbOp) {
+          stageTorch.style.setProperty('--stx', stxStr);
+          stageTorch.style.setProperty('--sty', styStr);
+          stageTorch.style.setProperty('--torch-ambient-op', ambOpStr);
+          prevStx = stxStr; prevSty = styStr; prevAmbOp = ambOpStr;
+        }
+      }
+
+      raf = requestAnimationFrame(frame);
+    };
+
+    const startFrameLoop = () => {
+      if (!raf && visible && isDark && !document.hidden) {
+        raf = requestAnimationFrame(frame);
       }
     };
 
-    raf = requestAnimationFrame(frame);
-    cleanups.push(() => cancelAnimationFrame(raf));
+    const stopFrameLoop = () => {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    };
 
-    if ('IntersectionObserver' in window) {
-      const vio = new IntersectionObserver(
-        (en) => { visible = en[0].isIntersecting; },
-        { threshold: 0 }
-      );
-      vio.observe(hero);
-      cleanups.push(() => vio.disconnect());
-    }
+    cleanups.push(() => stopFrameLoop());
 
-    /* ---- Canvas Rising Embers ---- */
+    /* ---- Canvas Rising Embers (High Efficiency Offscreen Sprite Engine) ---- */
+    let eraf = 0;
+    let sizeCanvas = () => {};
+
     if (canvas) {
       const g = canvas.getContext('2d');
       if (g) {
-        let W = 0, H = 0, eraf = 0;
+        let W = 0, H = 0;
+        let lastTick = 0;
         type Particle = { x: number; y: number; r: number; vy: number; ph: number; sw: number; life: number };
         const parts: Particle[] = [];
+
+        // Pre-render a single crisp 64x64 ember sprite offscreen once.
+        // Natively blitting this sprite via drawImage replaces thousands of gradient allocations
+        // and complex path fills per second with hardware-accelerated texture blits (0 CPU heat).
+        const spriteSize = 64;
+        let spriteCanvas: HTMLCanvasElement | null = null;
+        if (typeof document !== 'undefined') {
+          spriteCanvas = document.createElement('canvas');
+          spriteCanvas.width = spriteSize;
+          spriteCanvas.height = spriteSize;
+          const sg = spriteCanvas.getContext('2d');
+          if (sg) {
+            const sgr = sg.createRadialGradient(spriteSize / 2, spriteSize / 2, 0, spriteSize / 2, spriteSize / 2, spriteSize / 2);
+            sgr.addColorStop(0, 'rgba(255, 214, 140, 1)');
+            sgr.addColorStop(0.35, 'rgba(255, 140, 50, 0.5)');
+            sgr.addColorStop(1, 'rgba(255, 100, 20, 0)');
+            sg.fillStyle = sgr;
+            sg.beginPath();
+            sg.arc(spriteSize / 2, spriteSize / 2, spriteSize / 2, 0, Math.PI * 2);
+            sg.fill();
+          }
+        }
 
         const size = () => {
           const d = Math.min(2, window.devicePixelRatio || 1);
@@ -169,7 +225,13 @@ export function HeroMotion() {
           canvas.width = W * d;
           canvas.height = H * d;
           g.setTransform(d, 0, 0, d, 0, 0);
+
+          if (parts.length === 0) {
+            const n = W < 700 ? 26 : 70;
+            for (let i = 0; i < n; i++) parts.push(make(true));
+          }
         };
+        sizeCanvas = size;
 
         const make = (initial: boolean): Particle => {
           const fromTemple = Math.random() < 0.55;
@@ -185,13 +247,21 @@ export function HeroMotion() {
         };
 
         size();
-        const n = W < 700 ? 26 : 70;
-        for (let i = 0; i < n; i++) parts.push(make(true));
         window.addEventListener('resize', size, { passive: true });
+        cleanups.push(() => window.removeEventListener('resize', size));
 
         const tick = (t: number) => {
-          eraf = requestAnimationFrame(tick);
-          if (!visible || !isDark || document.hidden || W === 0 || H === 0) return;
+          if (!visible || !isDark || document.hidden || W === 0 || H === 0) {
+            eraf = 0;
+            return;
+          }
+
+          // Throttle to 60 FPS: prevents battery/GPU burn on 120Hz/144Hz monitors
+          if (t - lastTick < 15.5) {
+            eraf = requestAnimationFrame(tick);
+            return;
+          }
+          lastTick = t;
 
           g.clearRect(0, 0, W, H);
           g.globalCompositeOperation = 'lighter';
@@ -205,22 +275,74 @@ export function HeroMotion() {
               parts[i] = make(false);
               continue;
             }
-            const gr = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 5);
-            gr.addColorStop(0, `rgba(255,214,140,${a})`);
-            gr.addColorStop(0.35, `rgba(255,140,50,${a * 0.5})`);
-            gr.addColorStop(1, 'rgba(255,100,20,0)');
-            g.fillStyle = gr;
-            g.beginPath();
-            g.arc(p.x, p.y, p.r * 5, 0, 6.2832);
-            g.fill();
+
+            if (spriteCanvas) {
+              g.globalAlpha = a;
+              const d = p.r * 10;
+              g.drawImage(spriteCanvas, p.x - d / 2, p.y - d / 2, d, d);
+            }
+          }
+
+          eraf = requestAnimationFrame(tick);
+        };
+
+        const startEmberLoop = () => {
+          if (!eraf && visible && isDark && !document.hidden && W > 0 && H > 0) {
+            eraf = requestAnimationFrame(tick);
           }
         };
 
-        eraf = requestAnimationFrame(tick);
-        cleanups.push(() => {
-          cancelAnimationFrame(eraf);
-          window.removeEventListener('resize', size);
+        const stopEmberLoop = () => {
+          if (eraf) {
+            cancelAnimationFrame(eraf);
+            eraf = 0;
+          }
+        };
+
+        cleanups.push(() => stopEmberLoop());
+
+        // Master start/stop routines
+        const syncAllLoops = () => {
+          if (visible && isDark && !document.hidden) {
+            if (W === 0 || H === 0) size();
+            startFrameLoop();
+            startEmberLoop();
+          } else {
+            stopFrameLoop();
+            stopEmberLoop();
+          }
+        };
+
+        // Observe theme changes on <html>
+        const themeObserver = new MutationObserver(() => {
+          isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+          syncAllLoops();
         });
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        cleanups.push(() => themeObserver.disconnect());
+
+        // Observe hero visibility on screen
+        if ('IntersectionObserver' in window) {
+          const vio = new IntersectionObserver(
+            (en) => {
+              visible = en[0].isIntersecting;
+              syncAllLoops();
+            },
+            { threshold: 0 }
+          );
+          vio.observe(hero);
+          cleanups.push(() => vio.disconnect());
+        }
+
+        // Pause completely when tab is hidden to eliminate laptop heat
+        const onVisibility = () => {
+          syncAllLoops();
+        };
+        document.addEventListener('visibilitychange', onVisibility);
+        cleanups.push(() => document.removeEventListener('visibilitychange', onVisibility));
+
+        // Initial launch
+        syncAllLoops();
       }
     }
 
