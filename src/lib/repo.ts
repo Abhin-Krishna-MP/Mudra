@@ -188,7 +188,7 @@ export async function submitFlag(db: Db, i: FlagInput, key: Key = null): Promise
 /* -------------------------------------------------------------- review */
 
 export type ReviewInput =
-  | { recordId: string; action: 'approve' | 'needsChanges' | 'remove' | 'needsRevision' | 'requestRevision'; note?: string }
+  | { recordId: string; action: 'approve' | 'needsChanges' | 'remove' | 'deny' | 'restore' | 'needsRevision' | 'requestRevision'; note?: string }
   | { recordId: string; action: 'verify'; evidence: { source: string; url?: string; note: string } }
   | { recordId: string; action: 'resolveFlag'; flagId: string; note: string; outcome?: 'resolved' | 'dismissed' };
 
@@ -201,15 +201,36 @@ export async function reviewAction(db: Db, actor: (Actor) | null, i: ReviewInput
   switch (i.action) {
     case 'approve':
     case 'needsChanges':
-    case 'remove': {
-      const status: Status = i.action === 'approve' ? 'published' : i.action === 'remove' ? 'removed' : 'needs_changes';
+    case 'remove':
+    case 'deny': {
+      const isDenied = i.action === 'remove' || i.action === 'deny';
+      const status: Status = i.action === 'approve' ? 'published' : isDenied ? 'removed' : 'needs_changes';
+      const thirtyDaysLater = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+      const deletedAt = isDenied ? now : null;
+      const recycleUntil = isDenied ? thirtyDaysLater : null;
+
       await applyWithEvents(
         db, i.recordId,
         [
-          { sql: 'UPDATE records SET status = ?, published_at = COALESCE(published_at, ?) WHERE id = ?', args: [status, status === 'published' ? now : null, i.recordId] },
+          {
+            sql: 'UPDATE records SET status = ?, published_at = COALESCE(published_at, ?), deleted_at = ?, recycle_until = ? WHERE id = ?',
+            args: [status, status === 'published' ? now : null, deletedAt, recycleUntil, i.recordId],
+          },
           { sql: 'UPDATE drafts SET status = ? WHERE record_id = ? OR id = ?', args: [status, i.recordId, i.recordId] },
         ],
-        [{ actor: who, action: i.action === 'approve' ? 'approve' : i.action === 'remove' ? 'remove' : 'needs_changes', diff: { status } }],
+        [{ actor: who, action: i.action === 'approve' ? 'approve' : isDenied ? 'remove' : 'needs_changes', diff: { status } }],
+        key,
+      );
+      return { ok: true };
+    }
+    case 'restore': {
+      await applyWithEvents(
+        db, i.recordId,
+        [
+          { sql: "UPDATE records SET status = 'pending', deleted_at = NULL, recycle_until = NULL WHERE id = ?", args: [i.recordId] },
+          { sql: "UPDATE drafts SET status = 'pending' WHERE record_id = ? OR id = ?", args: [i.recordId, i.recordId] },
+        ],
+        [{ actor: who, action: 'restore', diff: { status: 'pending' } }],
         key,
       );
       return { ok: true };

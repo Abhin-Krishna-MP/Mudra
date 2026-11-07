@@ -15,6 +15,8 @@ export interface RecordItem {
   revision_note: string;
   asset_id?: string;
   asset_alt?: string;
+  deleted_at?: string;
+  recycle_until?: string;
 }
 
 export interface StewardUser {
@@ -34,6 +36,7 @@ interface Props {
 
 export default function RecordManagementCard({ record: r, linkedStewards, allStewards }: Props) {
   const [activeTab, setActiveTab] = useState<'moderation' | 'verification' | 'stewardship'>('moderation');
+  const [showReassignForm, setShowReassignForm] = useState(false);
 
   return (
     <section className="rc-record-card" aria-label={r.title}>
@@ -44,7 +47,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           {r.asset_id ? (
             <img src={`/api/assets/${r.asset_id}`} alt={r.asset_alt || r.title} />
           ) : (
-            <div style={{ color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ color: 'var(--rc-accent, #c47c1a)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <Icon name="image" size={32} />
             </div>
           )}
@@ -59,19 +62,19 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
             <span style={{ fontWeight: 400, fontSize: '0.92rem', color: 'var(--rc-muted)' }}>({r.id})</span>
           </h3>
 
-          {/* Chips matching user image */}
+          {/* Metadata Chips */}
           <ul className="rc-record-chips">
             <li
               className="chip"
               style={{
-                background: r.status === 'published' ? '#edf7ed' : '#fff3e0',
-                color: r.status === 'published' ? '#1b5e20' : '#b45309',
-                borderColor: r.status === 'published' ? '#c8e6c9' : '#fed7aa',
+                background: r.status === 'published' ? '#edf7ed' : r.status === 'removed' ? '#ffebee' : '#fff3e0',
+                color: r.status === 'published' ? '#1b5e20' : r.status === 'removed' ? '#c62828' : '#b45309',
+                borderColor: r.status === 'published' ? '#c8e6c9' : r.status === 'removed' ? '#ffcdd2' : '#fed7aa',
                 fontWeight: 600,
                 textTransform: 'capitalize',
               }}
             >
-              {String(r.status).replace('_', ' ')}
+              {r.status === 'removed' ? 'Recycle Bin (30d)' : String(r.status).replace('_', ' ')}
             </li>
 
             <li className="chip" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
@@ -91,9 +94,11 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
 
             {r.disputed ? <li className="chip ask">Open Report</li> : null}
 
-            {linkedStewards.length > 0 && (
+            {/* Assigned Stewards Badge with integrated inline removal button (No redundant red text) */}
+            {linkedStewards.map((s) => (
               <li
-                className="chip"
+                key={s.id}
+                className="chip chip-steward"
                 style={{
                   background: '#0d4734',
                   color: '#ffffff',
@@ -101,271 +106,356 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                   fontWeight: 600,
                   display: 'inline-flex',
                   alignItems: 'center',
-                  gap: 5,
+                  gap: 6,
+                  padding: '3px 8px 3px 10px',
                 }}
               >
                 <Icon name="user" size={13} />
-                <span>Steward: {linkedStewards.map((s) => s.name).join(', ')}</span>
-              </li>
-            )}
-          </ul>
-
-          {/* Assigned Stewards with Unlink chip */}
-          {linkedStewards.length > 0 && (
-            <div className="rc-assigned-row">
-              <span style={{ fontSize: '0.84rem', color: 'var(--rc-muted)', fontWeight: 600 }}>Assigned:</span>
-              {linkedStewards.map((s) => (
-                <form key={s.id} action={unassignStewardAction} style={{ display: 'inline', margin: 0 }}>
+                <span>Steward: {s.name}</span>
+                <form action={unassignStewardAction} style={{ display: 'inline', margin: 0, lineHeight: 1 }}>
                   <input type="hidden" name="recordId" value={r.id} />
                   <input type="hidden" name="userId" value={s.id} />
-                  <span className="rc-assigned-pill">
-                    <span>{s.name}</span>
-                    <button type="submit" title={`Unlink ${s.name}`}>
-                      ✕
-                    </button>
-                  </span>
+                  <button
+                    type="submit"
+                    title={`Unassign ${s.name}`}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.28)',
+                      border: 0,
+                      borderRadius: '50%',
+                      width: 17,
+                      height: 17,
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: '#ffffff',
+                      cursor: 'pointer',
+                      fontSize: '0.72rem',
+                      fontWeight: 700,
+                      padding: 0,
+                      marginLeft: 2,
+                    }}
+                  >
+                    ✕
+                  </button>
                 </form>
-              ))}
-            </div>
-          )}
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 
-      {/* Horizontal Tabs to switch between Moderation, Verification, and Stewardship */}
-      <div
-        role="tablist"
-        style={{
-          display: 'flex',
-          gap: 6,
-          marginTop: 18,
-          borderBottom: '1.5px solid var(--rc-panel-border, rgba(180, 140, 90, 0.25))',
-          paddingBottom: 0,
-          overflowX: 'auto',
-        }}
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'moderation'}
-          onClick={() => setActiveTab('moderation')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '8px 16px',
-            background: 'transparent',
-            border: 0,
-            borderBottom: activeTab === 'moderation' ? '3px solid var(--rc-maroon, #751b16)' : '3px solid transparent',
-            color: activeTab === 'moderation' ? 'var(--rc-maroon, #751b16)' : 'var(--rc-muted)',
-            fontWeight: activeTab === 'moderation' ? 700 : 500,
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Icon name="scale" size={14} />
-          <span>Moderation & Review</span>
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'verification'}
-          onClick={() => setActiveTab('verification')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '8px 16px',
-            background: 'transparent',
-            border: 0,
-            borderBottom: activeTab === 'verification' ? '3px solid var(--rc-maroon, #751b16)' : '3px solid transparent',
-            color: activeTab === 'verification' ? 'var(--rc-maroon, #751b16)' : 'var(--rc-muted)',
-            fontWeight: activeTab === 'verification' ? 700 : 500,
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Icon name="checkCircle" size={14} />
-          <span>Evidence Verification</span>
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === 'stewardship'}
-          onClick={() => setActiveTab('stewardship')}
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            padding: '8px 16px',
-            background: 'transparent',
-            border: 0,
-            borderBottom: activeTab === 'stewardship' ? '3px solid var(--rc-maroon, #751b16)' : '3px solid transparent',
-            color: activeTab === 'stewardship' ? 'var(--rc-maroon, #751b16)' : 'var(--rc-muted)',
-            fontWeight: activeTab === 'stewardship' ? 700 : 500,
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          <Icon name="users" size={14} />
-          <span>Stewardship ({linkedStewards.length})</span>
-        </button>
-      </div>
-
-      {/* Tab 1: Moderation */}
-      {activeTab === 'moderation' && (
-        <div className="rc-edit-note-box">
-          {r.revision_note && (
-            <div className="sb-callout" style={{ margin: '0 0 12px', padding: '8px 12px', borderRadius: 8 }}>
-              <strong>Current Revision Note:</strong> {r.revision_note}
-            </div>
-          )}
-
-          <form action={reviewFormAction}>
-            <input type="hidden" name="recordId" value={r.id} />
-
-            <label htmlFor={`n-${r.id}`} className="rc-edit-note-label">
-              <Icon name="quote" size={15} />
-              <span>Required edits or reviewer note (required when requesting revision)</span>
-            </label>
-            <input
-              id={`n-${r.id}`}
-              type="text"
-              name="note"
-              className="rc-edit-note-input"
-              placeholder="Describe edits for author (e.g. Please verify tradition lineage)..."
-            />
-
-            <div className="btn-row" style={{ marginTop: 14 }}>
-              <button type="submit" name="action" value="approve" className="btn pp-btn-maroon">
-                <Icon name="check" size={15} /> Approve
-              </button>
-              <button type="submit" name="action" value="requestRevision" className="secondary">
-                Request Revision
-              </button>
-              <button type="submit" name="action" value="remove" className="danger">
-                Deny
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Tab 2: Evidence Verification */}
-      {activeTab === 'verification' && (
-        <div style={{ paddingTop: 12 }}>
-          <form action={reviewFormAction}>
-            <input type="hidden" name="recordId" value={r.id} />
-            <input type="hidden" name="action" value="verify" />
-
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 12 }}>
-              <div>
-                <label htmlFor={`s-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem' }}>
-                  Evidence source *
-                </label>
-                <input
-                  id={`s-${r.id}`}
-                  type="text"
-                  name="source"
-                  required
-                  placeholder="e.g. State Folklore Academy Gazette / Gurukulam record"
-                  style={{ width: '100%', minHeight: 40, padding: '6px 12px', borderRadius: 8, border: '1.5px solid var(--rc-panel-border)' }}
-                />
-              </div>
-
-              <div>
-                <label htmlFor={`u-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem' }}>
-                  URL (optional)
-                </label>
-                <input
-                  id={`u-${r.id}`}
-                  type="url"
-                  name="url"
-                  placeholder="https://..."
-                  style={{ width: '100%', minHeight: 40, padding: '6px 12px', borderRadius: 8, border: '1.5px solid var(--rc-panel-border)' }}
-                />
-              </div>
-            </div>
-
-            <div style={{ marginTop: 10 }}>
-              <label htmlFor={`e-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem' }}>
-                Evidence note *
-              </label>
-              <textarea
-                id={`e-${r.id}`}
-                name="note"
-                required
-                rows={3}
-                placeholder="Details of the verification check performed against cultural evidence..."
-                style={{ width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: '0.9rem', border: '1.5px solid var(--rc-panel-border)' }}
-              />
-            </div>
-
-            <div className="btn-row" style={{ marginTop: 12 }}>
-              <button type="submit" className="btn pp-btn-maroon">
-                <Icon name="shield" size={15} /> Mark Verified with Evidence
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-
-      {/* Tab 3: Stewardship */}
-      {activeTab === 'stewardship' && (
-        <div style={{ paddingTop: 12 }}>
-          {/* Quick Assign Steward to this Record */}
-          <form
-            action={assignStewardAction}
-            style={{
-              padding: '12px 16px',
-              borderRadius: 12,
-              background: 'rgba(180, 140, 90, 0.08)',
-              border: '1px solid var(--rc-panel-border)',
-            }}
+      {/* Seamless Continuous Tab System */}
+      <div className="rc-tab-container">
+        {/* Horizontal Tab Buttons */}
+        <div className="rc-tab-bar" role="tablist">
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'moderation'}
+            onClick={() => setActiveTab('moderation')}
+            className={`rc-tab-btn ${activeTab === 'moderation' ? 'active' : ''}`}
           >
-            <input type="hidden" name="recordId" value={r.id} />
-            <label htmlFor={`link-steward-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem' }}>
-              Link a Steward to this record:
-            </label>
-            <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-              <select
-                id={`link-steward-${r.id}`}
-                name="userId"
-                required
-                style={{
-                  minHeight: 40,
-                  padding: '6px 12px',
-                  borderRadius: 8,
-                  fontSize: '0.88rem',
-                  flex: '1 1 240px',
-                  border: '1.5px solid var(--rc-panel-border)',
-                  background: 'var(--rc-card, #ffffff)',
-                  color: 'var(--rc-ink)',
-                }}
-              >
-                <option value="">— Select Steward / Reviewer —</option>
-                {allStewards.map((u) => (
-                  <option key={u.id} value={u.id}>
-                    {u.name} ({u.email}) [{u.role.toUpperCase()}{u.region ? ` · ${u.region}` : ''}]
-                  </option>
-                ))}
-              </select>
+            <Icon name="scale" size={15} />
+            <span>Moderation & Review</span>
+          </button>
 
-              <button
-                type="submit"
-                className="btn secondary"
-                style={{ minHeight: 40, padding: '0 16px', fontSize: '0.86rem', fontWeight: 600, borderRadius: 8 }}
-              >
-                <Icon name="check" size={14} /> Link Steward
-              </button>
-            </div>
-          </form>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'verification'}
+            onClick={() => setActiveTab('verification')}
+            className={`rc-tab-btn ${activeTab === 'verification' ? 'active' : ''}`}
+          >
+            <Icon name="shield" size={15} />
+            <span>Evidence Verification</span>
+          </button>
+
+          <button
+            type="button"
+            role="tab"
+            aria-selected={activeTab === 'stewardship'}
+            onClick={() => setActiveTab('stewardship')}
+            className={`rc-tab-btn ${activeTab === 'stewardship' ? 'active' : ''}`}
+          >
+            <Icon name="users" size={15} />
+            <span>Stewardship ({linkedStewards.length})</span>
+          </button>
         </div>
-      )}
+
+        {/* Tab Content Box — Continuous with Active Tab */}
+        <div className="rc-tab-content" role="tabpanel">
+          {/* Tab 1: Moderation & Review */}
+          {activeTab === 'moderation' && (
+            <div>
+              {r.revision_note && (
+                <div className="rc-callout" style={{ marginBottom: 14 }}>
+                  <Icon name="quote" size={16} />
+                  <div>
+                    <strong>Current Revision Note:</strong> {r.revision_note}
+                  </div>
+                </div>
+              )}
+
+              <form action={reviewFormAction}>
+                <input type="hidden" name="recordId" value={r.id} />
+
+                <label htmlFor={`n-${r.id}`} className="rc-edit-note-label">
+                  <Icon name="quote" size={15} />
+                  <span>Required edits or reviewer note (required when requesting revision)</span>
+                </label>
+                <input
+                  id={`n-${r.id}`}
+                  type="text"
+                  name="note"
+                  className="rc-edit-note-input"
+                  placeholder="Describe edits for author (e.g. Please verify tradition lineage)..."
+                />
+
+                <div className="btn-row" style={{ marginTop: 16 }}>
+                  {r.status !== 'published' ? (
+                    <button type="submit" name="action" value="approve" className="btn pp-btn-maroon" title="Approve and move to Catalogue">
+                      <Icon name="check" size={15} /> Approve (Move to Catalogue)
+                    </button>
+                  ) : (
+                    <span className="chip" style={{ background: '#edf7ed', color: '#1b5e20', borderColor: '#c8e6c9', fontWeight: 600 }}>
+                      <Icon name="checkCircle" size={14} /> Active in Catalogue
+                    </span>
+                  )}
+
+                  <button type="submit" name="action" value="requestRevision" className="btn secondary" title="Request author revisions with notes">
+                    Request Revision
+                  </button>
+
+                  {r.status === 'removed' ? (
+                    <button type="submit" name="action" value="restore" className="btn secondary" title="Restore from recycle bin to active review">
+                      <Icon name="refresh" size={14} /> Restore to Review
+                    </button>
+                  ) : (
+                    <button type="submit" name="action" value="deny" className="btn danger" title="Deny record and send to 30-day recycle bin">
+                      Deny (Recycle Bin - 30d)
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Tab 2: Evidence Verification */}
+          {activeTab === 'verification' && (
+            <div>
+              <form action={reviewFormAction}>
+                <input type="hidden" name="recordId" value={r.id} />
+                <input type="hidden" name="action" value="verify" />
+
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
+                  <div>
+                    <label htmlFor={`s-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                      Evidence source *
+                    </label>
+                    <input
+                      id={`s-${r.id}`}
+                      type="text"
+                      name="source"
+                      required
+                      placeholder="e.g. State Folklore Academy Gazette / Gurukulam record"
+                      className="rc-edit-note-input"
+                      style={{ minHeight: 42 }}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor={`u-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                      Evidence URL (optional)
+                    </label>
+                    <input
+                      id={`u-${r.id}`}
+                      type="url"
+                      name="url"
+                      placeholder="https://..."
+                      className="rc-edit-note-input"
+                      style={{ minHeight: 42 }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ marginTop: 14 }}>
+                  <label htmlFor={`e-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                    Evidence note *
+                  </label>
+                  <textarea
+                    id={`e-${r.id}`}
+                    name="note"
+                    required
+                    rows={3}
+                    placeholder="Details of the verification check performed against cultural evidence..."
+                    className="rc-edit-note-input"
+                    style={{ minHeight: 70 }}
+                  />
+                </div>
+
+                <div className="btn-row" style={{ marginTop: 14 }}>
+                  <button type="submit" className="btn pp-btn-maroon">
+                    <Icon name="shield" size={15} /> Mark Verified with Evidence
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* Tab 3: Stewardship (Resolves Conflicting Logic: Shows Profile Card when assigned, dropdown when 0) */}
+          {activeTab === 'stewardship' && (
+            <div>
+              {linkedStewards.length > 0 && !showReassignForm ? (
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 14 }}>
+                    <h4 style={{ margin: 0, fontSize: '0.98rem', display: 'flex', alignItems: 'center', gap: 7, color: 'var(--rc-ink)' }}>
+                      <Icon name="shield" size={17} />
+                      <span>Currently Assigned Steward{linkedStewards.length > 1 ? 's' : ''} ({linkedStewards.length})</span>
+                    </h4>
+
+                    <button
+                      type="button"
+                      onClick={() => setShowReassignForm(true)}
+                      className="btn secondary"
+                      style={{ minHeight: 34, padding: '4px 14px', fontSize: '0.84rem', fontWeight: 600, borderRadius: 8 }}
+                    >
+                      + Reassign / Link Another Steward
+                    </button>
+                  </div>
+
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 12 }}>
+                    {linkedStewards.map((steward) => {
+                      const details = allStewards.find((s) => s.id === steward.id);
+                      return (
+                        <div
+                          key={steward.id}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            padding: '14px 18px',
+                            borderRadius: 12,
+                            border: '1.5px solid var(--rc-panel-border)',
+                            background: 'rgba(13, 71, 52, 0.05)',
+                            gap: 14,
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                            <div
+                              style={{
+                                width: 42,
+                                height: 42,
+                                borderRadius: '50%',
+                                background: '#0d4734',
+                                color: '#ffffff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 700,
+                                fontSize: '1rem',
+                                flex: 'none',
+                              }}
+                            >
+                              {steward.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div>
+                              <strong style={{ display: 'block', fontSize: '0.95rem', color: 'var(--rc-ink)' }}>
+                                {steward.name}
+                              </strong>
+                              <span style={{ fontSize: '0.82rem', color: 'var(--rc-muted)' }}>
+                                {details?.region ? `${details.region} · ` : ''}
+                                {details?.category || 'Community Cultural Steward'}
+                              </span>
+                            </div>
+                          </div>
+
+                          <form action={unassignStewardAction} style={{ margin: 0 }}>
+                            <input type="hidden" name="recordId" value={r.id} />
+                            <input type="hidden" name="userId" value={steward.id} />
+                            <button
+                              type="submit"
+                              className="btn danger"
+                              style={{ minHeight: 34, padding: '4px 14px', fontSize: '0.82rem', borderRadius: 8 }}
+                              title={`Unassign ${steward.name}`}
+                            >
+                              Remove
+                            </button>
+                          </form>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  {linkedStewards.length > 0 && (
+                    <div style={{ marginBottom: 12, display: 'flex', justifyContent: 'flex-end' }}>
+                      <button
+                        type="button"
+                        onClick={() => setShowReassignForm(false)}
+                        className="btn secondary"
+                        style={{ minHeight: 30, padding: '2px 14px', fontSize: '0.82rem' }}
+                      >
+                        ← Back to Current Steward
+                      </button>
+                    </div>
+                  )}
+
+                  <form
+                    action={assignStewardAction}
+                    style={{
+                      padding: '16px 20px',
+                      borderRadius: 12,
+                      background: 'rgba(180, 140, 90, 0.05)',
+                      border: '1.5px solid var(--rc-panel-border)',
+                    }}
+                  >
+                    <input type="hidden" name="recordId" value={r.id} />
+                    <label
+                      htmlFor={`link-steward-${r.id}`}
+                      style={{ fontWeight: 600, display: 'block', marginBottom: 8, fontSize: '0.9rem', color: 'var(--rc-ink)' }}
+                    >
+                      {linkedStewards.length > 0 ? 'Select a steward to reassign or add:' : 'Link a Steward to this record:'}
+                    </label>
+                    <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                      <select
+                        id={`link-steward-${r.id}`}
+                        name="userId"
+                        required
+                        style={{
+                          minHeight: 42,
+                          padding: '6px 12px',
+                          borderRadius: 8,
+                          fontSize: '0.9rem',
+                          flex: '1 1 260px',
+                          border: '1.5px solid var(--rc-panel-border)',
+                          background: 'var(--rc-card, #ffffff)',
+                          color: 'var(--rc-ink, #2b1810)',
+                        }}
+                      >
+                        <option value="">— Select Steward / Reviewer —</option>
+                        {allStewards.map((u) => (
+                          <option key={u.id} value={u.id}>
+                            {u.name} ({u.email}) [{u.role.toUpperCase()}{u.region ? ` · ${u.region}` : ''}]
+                          </option>
+                        ))}
+                      </select>
+
+                      <button
+                        type="submit"
+                        className="btn pp-btn-maroon"
+                        style={{ minHeight: 42, padding: '0 20px', fontSize: '0.88rem', fontWeight: 700, borderRadius: 8 }}
+                      >
+                        <Icon name="check" size={15} /> Link Steward
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
     </section>
   );
 }

@@ -28,13 +28,13 @@ interface Props {
 
 export default function AddStewardSection({ users, records }: Props) {
   const [isOpen, setIsOpen] = useState(false);
-  const [mode, setMode] = useState<'assign' | 'create'>('assign');
+  const [mode, setMode] = useState<'create' | 'assign'>('create');
 
   const stewardsList = users.filter((u) => u.role === 'steward' || u.role === 'reviewer' || u.role === 'admin');
 
   return (
     <div style={{ margin: '18px 0 24px' }}>
-      {/* Top action bar with separate Add Steward button matching user image */}
+      {/* Top action bar: Renamed to Manage System Stewards / Register New Steward to avoid confusion */}
       <div className="rc-steward-trigger-row">
         <button
           type="button"
@@ -53,7 +53,7 @@ export default function AddStewardSection({ users, records }: Props) {
           aria-expanded={isOpen}
         >
           <Icon name="shield" size={17} />
-          <span>{isOpen ? 'Close Steward Section' : '+ Add / Assign Steward'}</span>
+          <span>{isOpen ? 'Close System Stewards' : 'Manage System Stewards'}</span>
         </button>
 
         <span className="rc-steward-count" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.9rem', color: 'var(--rc-muted)' }}>
@@ -70,7 +70,7 @@ export default function AddStewardSection({ users, records }: Props) {
             marginTop: 14,
             padding: '24px 28px',
             borderRadius: 18,
-            border: '2px solid var(--rc-accent, #c47c1a)',
+            border: '2px solid var(--rc-panel-border, #d5c3b0)',
             background: 'var(--rc-panel, #ffffff)',
             color: 'var(--rc-ink, #2b1810)',
             boxShadow: '0 12px 34px rgba(80, 45, 20, 0.08)',
@@ -81,29 +81,15 @@ export default function AddStewardSection({ users, records }: Props) {
             <div>
               <h3 style={{ margin: '0 0 4px', fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: 9, color: 'var(--rc-maroon, #751b16)' }}>
                 <Icon name="users" size={22} />
-                <span>Steward Management Console</span>
+                <span>System Stewards & Onboarding Console</span>
               </h3>
               <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--rc-muted)' }}>
-                Assign verified community stewards to cultural catalogue records, or onboard a new steward.
+                Register new community stewards with cultural domain expertise, or link them to catalogue records.
               </p>
             </div>
 
             {/* Mode Switcher Buttons */}
             <div style={{ display: 'inline-flex', background: 'rgba(180, 140, 90, 0.12)', padding: 4, borderRadius: 12, border: '1px solid var(--rc-panel-border, #e0d0be)' }}>
-              <button
-                type="button"
-                onClick={() => setMode('assign')}
-                className={`btn ${mode === 'assign' ? 'pp-btn-maroon' : 'secondary'}`}
-                style={{
-                  minHeight: 34,
-                  padding: '4px 16px',
-                  fontSize: '0.85rem',
-                  borderRadius: 8,
-                  fontWeight: mode === 'assign' ? 700 : 500,
-                }}
-              >
-                Assign to Record
-              </button>
               <button
                 type="button"
                 onClick={() => setMode('create')}
@@ -117,6 +103,20 @@ export default function AddStewardSection({ users, records }: Props) {
                 }}
               >
                 + Register New Steward
+              </button>
+              <button
+                type="button"
+                onClick={() => setMode('assign')}
+                className={`btn ${mode === 'assign' ? 'pp-btn-maroon' : 'secondary'}`}
+                style={{
+                  minHeight: 34,
+                  padding: '4px 16px',
+                  fontSize: '0.85rem',
+                  borderRadius: 8,
+                  fontWeight: mode === 'assign' ? 700 : 500,
+                }}
+              >
+                Assign to Record
               </button>
             </div>
           </div>

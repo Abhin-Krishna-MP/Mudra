@@ -120,17 +120,18 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                 <div
                   style={{
                     marginTop: 12,
-                    padding: '12px 16px',
+                    padding: '14px 18px',
                     borderRadius: 12,
-                    background: 'rgba(24, 15, 11, 0.6)',
-                    border: '1.5px solid rgba(245, 158, 11, 0.4)',
+                    background: 'var(--rc-card, #ffffff)',
+                    border: '1.5px solid #f3d19c',
+                    color: 'var(--rc-ink, #2b1810)',
                   }}
                 >
-                  <strong style={{ fontSize: '0.9rem', color: '#fbbf24', display: 'flex', alignItems: 'center', gap: 6 }}>
+                  <strong style={{ fontSize: '0.9rem', color: '#b45309', display: 'flex', alignItems: 'center', gap: 6 }}>
                     <Icon name="shield" size={15} />
                     Assign Steward to Unblock this Request
                   </strong>
-                  <p className="muted" style={{ margin: '4px 0 10px', fontSize: '0.84rem' }}>
+                  <p style={{ margin: '4px 0 10px', fontSize: '0.84rem', color: 'var(--rc-muted)' }}>
                     Assigning a steward to <strong>{r.record_id}</strong> will automatically resume this request to active review status.
                   </p>
 
@@ -145,6 +146,9 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                         borderRadius: 8,
                         fontSize: '0.88rem',
                         flex: '1 1 240px',
+                        background: 'var(--rc-card, #ffffff)',
+                        color: 'var(--rc-ink, #2b1810)',
+                        border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
                       }}
                     >
                       <option value="">— Select Steward to Link —</option>
@@ -182,10 +186,10 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
           const threadIds = thread.items.map((i) => i.id).join(',');
 
           return (
-            <div key={thread.threadKey} className="panel ui" style={{ marginTop: 18, marginBottom: 20 }}>
+            <div key={thread.threadKey} className="rc-record-card" style={{ marginTop: 18, marginBottom: 20 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', flexWrap: 'wrap', gap: 8 }}>
-                <h3 style={{ margin: 0, fontSize: '1.2rem' }}>
-                  Request for <a href={`/r/${r.record_id}`}>{r.record_id}</a>
+                <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--rc-ink)' }}>
+                  Request for <a href={`/r/${r.record_id}`} style={{ color: 'var(--rc-maroon, #751b16)' }}>{r.record_id}</a>
                 </h3>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
                   {thread.items.length > 1 && (
@@ -208,13 +212,13 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                 </div>
               </div>
 
-              <p style={{ margin: '8px 0 4px' }}>
+              <p style={{ margin: '8px 0 4px', fontSize: '0.94rem' }}>
                 <strong>From:</strong> {r.requester_name} · <strong>Purpose:</strong> {r.use_key.replace(/_/g, ' ')}
               </p>
-              <p style={{ margin: '4px 0' }}>
+              <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
                 <strong>What:</strong> {r.scope?.whatYouWillMake || '—'}
               </p>
-              <p style={{ margin: '4px 0' }}>
+              <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
                 <strong>Where & duration:</strong> {r.scope?.whereAndHowLong || '—'}
               </p>
               <p className="muted" style={{ margin: '4px 0 16px', fontSize: '0.85rem' }}>
@@ -224,7 +228,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
               {/* Duplicate submissions accordion if thread has multiple submissions */}
               {thread.items.length > 1 && (
                 <details style={{ margin: '8px 0 14px', fontSize: '0.86rem' }}>
-                  <summary style={{ cursor: 'pointer', color: 'var(--pp-accent)' }}>
+                  <summary style={{ cursor: 'pointer', color: 'var(--rc-accent, #c47c1a)', fontWeight: 600 }}>
                     View all {thread.items.length} identical submissions in this thread
                   </summary>
                   <ul style={{ margin: '8px 0 0', paddingLeft: 20 }}>
@@ -239,44 +243,60 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
 
               {/* Decision form */}
               <details className="evidence" open style={{ marginTop: 12 }}>
-                <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Decide request</summary>
+                <summary style={{ cursor: 'pointer', fontWeight: 600, color: 'var(--rc-ink)' }}>Decide request</summary>
                 <form action={grantDecisionAction} style={{ marginTop: 12 }}>
                   <input type="hidden" name="requestId" value={r.id} />
                   <input type="hidden" name="threadRequestIds" value={threadIds} />
 
-                  <label htmlFor={`cond-${r.id}`}>Conditions (one per line, optional)</label>
+                  <label htmlFor={`cond-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                    Conditions (one per line, optional)
+                  </label>
                   <textarea
                     id={`cond-${r.id}`}
                     name="conditions"
                     rows={2}
                     placeholder="e.g. Credit must accompany every print&#10;Limited run of 500 copies"
+                    className="rc-edit-note-input"
+                    style={{ minHeight: 60, marginBottom: 12 }}
                   />
 
-                  <label htmlFor={`credit-${r.id}`}>Required credit line (optional)</label>
+                  <label htmlFor={`credit-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                    Required credit line (optional)
+                  </label>
                   <input
                     id={`credit-${r.id}`}
                     type="text"
                     name="creditText"
                     placeholder="e.g. Courtesy of the Community Custodians via Mudra"
+                    className="rc-edit-note-input"
+                    style={{ minHeight: 42, marginBottom: 12 }}
                   />
 
-                  <div className="two" style={{ marginTop: 8 }}>
+                  <div className="two" style={{ marginTop: 8, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
                     <div>
-                      <label htmlFor={`vf-${r.id}`}>Valid from</label>
-                      <input id={`vf-${r.id}`} type="date" name="validFrom" defaultValue={today} required />
+                      <label htmlFor={`vf-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                        Valid from
+                      </label>
+                      <input id={`vf-${r.id}`} type="date" name="validFrom" defaultValue={today} required className="rc-edit-note-input" style={{ minHeight: 42 }} />
                     </div>
                     <div>
-                      <label htmlFor={`vu-${r.id}`}>Valid until (optional)</label>
-                      <input id={`vu-${r.id}`} type="date" name="validUntil" />
+                      <label htmlFor={`vu-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                        Valid until (optional)
+                      </label>
+                      <input id={`vu-${r.id}`} type="date" name="validUntil" className="rc-edit-note-input" style={{ minHeight: 42 }} />
                     </div>
                   </div>
 
-                  <label htmlFor={`note-${r.id}`}>Decision note (optional for grant; required if declining)</label>
+                  <label htmlFor={`note-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                    Decision note (optional for grant; required if declining)
+                  </label>
                   <input
                     id={`note-${r.id}`}
                     type="text"
                     name="note"
                     placeholder="Note to requester"
+                    className="rc-edit-note-input"
+                    style={{ minHeight: 42 }}
                   />
 
                   <div className="btn-row" style={{ marginTop: 16 }}>
@@ -342,8 +362,9 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                         fontSize: '0.88rem',
                         padding: '7px 18px',
                         borderRadius: 999,
-                        border: '1.5px solid var(--pp-accent, #e8782a)',
-                        color: 'var(--pp-ink)',
+                        border: '1.5px solid var(--rc-maroon, #751b16)',
+                        color: 'var(--rc-maroon, #751b16)',
+                        background: 'var(--rc-card, #ffffff)',
                         textDecoration: 'none',
                       }}
                     >
