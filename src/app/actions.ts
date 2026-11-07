@@ -290,7 +290,21 @@ export async function grantDecisionAction(f: FormData): Promise<void> {
     validFrom: String(f.get('validFrom') ?? new Date().toISOString()),
     validUntil: String(f.get('validUntil') ?? '') || undefined,
   };
-  const res = await decideRequest(await getDb(), actor, input, signingKey());
+  const db = await getDb();
+  const res = await decideRequest(db, actor, input, signingKey());
+
+  // Also resolve any duplicate requests in the same thread
+  const threadIds = String(f.get('threadRequestIds') ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (threadIds.length > 1) {
+    const otherIds = threadIds.filter((id) => id !== input.requestId);
+    for (const oid of otherIds) {
+      await db.execute(
+        "UPDATE permission_requests SET status = ?, decision_note = ?, decided_at = ? WHERE id = ? AND status = 'open'",
+        [input.decision, `Resolved as part of request thread with ${input.requestId}. ${input.note}`.trim(), new Date().toISOString(), oid],
+      );
+    }
+  }
+
   revalidatePath('/review');
   if (!res.ok) redirect(`/review?msg=${encodeURIComponent(res.error)}`);
   redirect(`/review?msg=Decision+recorded.`);
@@ -312,10 +326,18 @@ export async function assignStewardAction(f: FormData): Promise<void> {
   if (!recordId || !userId || isNaN(userId)) {
     redirect('/review?msg=Please+select+both+a+record+and+a+steward.');
   }
-  await assignSteward(await getDb(), actor, recordId, userId);
+  const db = await getDb();
+  await assignSteward(db, actor, recordId, userId);
+
+  // Automatically unblock any stalled/forwarded requests for this record and resume them to open status
+  await db.execute(
+    "UPDATE permission_requests SET status = 'open', decision_note = 'Steward assigned. Request resumed for active review.' WHERE record_id = ? AND status = 'forwarded'",
+    [recordId],
+  );
+
   revalidatePath(`/review`);
   revalidatePath(`/r/${recordId}`);
-  redirect('/review?msg=Steward+assigned+successfully.');
+  redirect('/review?msg=Steward+assigned+successfully.+Stalled+requests+resumed.');
 }
 
 export async function unassignStewardAction(f: FormData): Promise<void> {
