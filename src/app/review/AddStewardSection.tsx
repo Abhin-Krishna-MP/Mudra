@@ -337,7 +337,7 @@ export default function AddStewardSection({ users, records }: Props) {
                 >
                   <Icon name="shield" size={12} />
                   <strong>{s.name}</strong>
-                  {s.region && <span style={{ opacity: 0.85 }}>({s.region})</span>}
+                  {Boolean(s.region) && <span style={{ opacity: 0.85 }}>({s.region})</span>}
                 </span>
               ))}
             </div>
