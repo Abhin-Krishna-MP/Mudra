@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Icon, type IconName } from './Icons';
+import { InstallAppButton } from './PwaRegister';
 
 export const TABS: { href: string; label: string; icon: IconName; match: (p: string) => boolean }[] = [
   { href: '/', label: 'Home', icon: 'home', match: (p) => p === '/' },
@@ -41,6 +42,7 @@ export function MobileChrome() {
             {MORE.map((m) => (
               <li key={m.href}><a href={m.href} aria-current={path.startsWith(m.href) ? 'page' : undefined}><Icon name={m.icon} size={20} />{m.label}</a></li>
             ))}
+            <li><InstallAppButton /></li>
           </ul>
         </nav>
       </div>

@@ -6,6 +6,7 @@ import { LotusMark } from './Ornaments';
 import { Icon } from './Icons';
 import { TAGLINE } from '@/lib/copy';
 import { TABS, MORE } from './MobileChrome';
+import { InstallAppButton } from './PwaRegister';
 
 export function PadippuraNavbar() {
   const path = usePathname() || '/';
@@ -167,6 +168,9 @@ export function PadippuraNavbar() {
                     </a>
                   </li>
                 ))}
+                <li>
+                  <InstallAppButton />
+                </li>
               </ul>
             </nav>
           </div>
