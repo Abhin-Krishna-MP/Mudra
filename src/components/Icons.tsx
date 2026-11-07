@@ -53,6 +53,8 @@ const P: Record<string, ReactNode> = {
   link: <><path d="M10 14a4 4 0 0 0 5.7 0l3-3A4 4 0 0 0 13 5.3l-1 1" /><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1-1" /></>,
   refresh: <><path d="M19.5 12a7.5 7.5 0 0 1-13 5" /><path d="M4.5 12a7.5 7.5 0 0 1 13-5" /><path d="M17.5 3.5V7H14M6.5 20.5V17H10" /></>,
   calendar: <><rect x="4" y="5.5" width="16" height="14.5" rx="2" /><path d="M4 10h16M8.5 3.5v4M15.5 3.5v4" /></>,
+  camera: <><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" /><circle cx="12" cy="13" r="3" /></>,
+  handshake: <><path d="m11 17 2 2a1 1 0 0 0 1.4 0l4.3-4.3a1 1 0 0 0 0-1.4l-3-3a1 1 0 0 0-1.4 0L13 11.6M18 10l-1.3-1.3a1 1 0 0 0-1.4 0l-3 3M7 11.5 5.7 10.2a1 1 0 0 0-1.4 0l-1.6 1.6a1 1 0 0 0 0 1.4l4.6 4.6a1 1 0 0 0 1.4 0L11 15.5" /><path d="m8.5 8.5 3 3M11 6l2 2" /></>,
 };
 
 export type IconName = keyof typeof P;
