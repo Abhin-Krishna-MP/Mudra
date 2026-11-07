@@ -175,51 +175,29 @@ export default async function Review({
 
   return (
     <div className="wrap page review-console-page">
-      <div className="rc-container">
-        {/* 1. Top Brand & Signout Header matching user image */}
-        <div className="rc-topbar">
-          <div className="rc-brand">
-            <Icon name="lotus" size={22} />
-            <span>Mudra</span>
-            <span className="rc-bar">|</span>
-          </div>
-
-          <form action={logoutAction} style={{ margin: 0 }}>
-            <button type="submit" className="rc-signout-btn">
+      <PageSheet
+        title={isSteward ? 'Steward Dashboard' : 'Reviewer console'}
+        lede={
+          isSteward
+            ? `Signed in as Steward ${actor.name} (${stewardRegion || 'All Regions'} · ${stewardCategory || 'All Categories'})`
+            : `Signed in as ${actor.name}.`
+        }
+        headExtra={
+          <form action={logoutAction} className="sheet-action" style={{ margin: 0 }}>
+            <button className="secondary signout-btn" type="submit">
               <Icon name="user" size={15} />
               <span>Sign out ({actor.name})</span>
             </button>
           </form>
-        </div>
-
-        {/* 2. Hero Banner with Kathakali illustration and icon box */}
-        <div className="rc-hero">
-          <div className="rc-hero-left">
-            <div className="rc-hero-icon">
-              <Icon name="file" size={24} />
-            </div>
-            <div>
-              <h1 className="rc-hero-title">
-                {isSteward ? 'Steward Dashboard' : 'Reviewer Console'}
-              </h1>
-              <p className="rc-hero-subtitle">
-                {isSteward
-                  ? `Signed in as Steward ${actor.name} (${stewardRegion || 'All Regions'} · ${stewardCategory || 'All Categories'})`
-                  : `Signed in as ${actor.name}.`}
-              </p>
-            </div>
+        }
+      >
+        {/* Status Alert Banner (e.g. Done.) */}
+        {sp.msg && (
+          <div className="rc-alert-done" role="status">
+            <Icon name="checkCircle" size={18} />
+            <span>{sp.msg}</span>
           </div>
-        </div>
-
-        {/* 3. Main Console Body */}
-        <div className="rc-body">
-          {/* Status Alert Banner (e.g. Done.) */}
-          {sp.msg && (
-            <div className="rc-alert-done" role="status">
-              <Icon name="checkCircle" size={18} />
-              <span>{sp.msg}</span>
-            </div>
-          )}
+        )}
 
           {/* Steward routing note if active */}
           {isSteward && (
@@ -346,8 +324,7 @@ export default async function Review({
               ))
             )}
           </section>
-        </div>
-      </div>
+      </PageSheet>
     </div>
   );
 }
