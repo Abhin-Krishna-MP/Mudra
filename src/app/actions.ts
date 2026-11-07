@@ -1,6 +1,7 @@
 'use server';
 import { createHash } from 'node:crypto';
 import { redirect } from 'next/navigation';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { revalidatePath } from 'next/cache';
 import { getDb } from '@/lib/db';
 import { createRecord, submitFlag, reviewAction, updateDraft, type CreateInput, type FlagInput, type ReviewInput } from '@/lib/repo';
@@ -12,74 +13,85 @@ import { getSubmitter, UNAUTHORIZED_URL } from '@/lib/authz';
 import { getActor, startSession, endSession } from '@/lib/session';
 import type { ActionResult, Actor } from '@/lib/contracts';
 import type { Capability, CulturalState } from '@/lib/permissions';
-import { createPermissionRequest, decideRequest, revokeGrant, assignSteward, type RequestInput, type DecisionInput } from '@/lib/repo-grants';
+import { createPermissionRequest, decideRequest, revokeGrant, assignSteward, removeSteward, type RequestInput, type DecisionInput } from '@/lib/repo-grants';
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? '');
 
 /* ---------------------------------------------------------------- submit */
 export async function createRecordAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
-  // Server actions are public POST endpoints, so the author check must be repeated here
-  const submitter = await getSubmitter();
-  if (!submitter) redirect(UNAUTHORIZED_URL);
-  const actor: Actor = (await getActor()) ?? { role: 'author', name: submitter.name, id: submitter.id };
-  const db = await getDb();
-  const draftId = str(f, 'draftId');
-  const file = f.get('image');
-  let asset: CreateInput['asset'] | undefined;
-  if (file instanceof File && file.size > 0) {
-    try {
-      const p = await processImage(Buffer.from(await file.arrayBuffer()));
-      const location = await storeUpload(p.buffer, p.sha256, p.mime);
-      asset = { location, mime: p.mime, alt: str(f, 'alt'), sourceNote: str(f, 'imageSourceNote'), sha256: p.sha256, dhash: p.dhash, width: p.width, height: p.height, bytes: p.bytes };
-    } catch (e) {
-      return { ok: false, error: 'Please fix the highlighted fields.', fieldErrors: { asset: (e as Error).message } };
+  try {
+    // Server actions are public POST endpoints, so the author check must be repeated here
+    const submitter = await getSubmitter();
+    if (!submitter) redirect(UNAUTHORIZED_URL);
+    const actor: Actor = (await getActor()) ?? { role: 'author', name: submitter.name, id: submitter.id };
+    const db = await getDb();
+    const draftId = str(f, 'draftId');
+    const file = f.get('image');
+    let asset: CreateInput['asset'] | undefined;
+    if (file instanceof File && file.size > 0) {
+      try {
+        const p = await processImage(Buffer.from(await file.arrayBuffer()));
+        const location = await storeUpload(p.buffer, p.sha256, p.mime);
+        asset = { location, mime: p.mime, alt: str(f, 'alt'), sourceNote: str(f, 'imageSourceNote'), sha256: p.sha256, dhash: p.dhash, width: p.width, height: p.height, bytes: p.bytes };
+      } catch (e) {
+        return { ok: false, error: 'Please fix the highlighted fields.', fieldErrors: { asset: (e as Error).message } };
+      }
     }
-  }
-  const credits = [0, 1, 2, 3].map((i) => ({ name: str(f, `credit_name_${i}`), role: str(f, `credit_role_${i}`), collective: f.get(`credit_collective_${i}`) === 'on' }));
-  const perm = (k: string) => (str(f, `perm_${k}`) || 'unspecified') as CulturalState;
-  const category = (str(f, 'category') || str(f, 'workType')).trim();
-  const workType = (str(f, 'workType') || category).trim();
+    const credits = [0, 1, 2, 3].map((i) => ({ name: str(f, `credit_name_${i}`), role: str(f, `credit_role_${i}`), collective: f.get(`credit_collective_${i}`) === 'on' }));
+    const perm = (k: string) => (str(f, `perm_${k}`) || 'unspecified') as CulturalState;
+    const category = (str(f, 'category') || str(f, 'workType')).trim();
+    const workType = (str(f, 'workType') || category).trim();
 
-  if (draftId) {
-    // Re-submission of an edited draft flagged for revision
-    const input: Partial<CreateInput> = {
-      title: str(f, 'title'),
-      region: str(f, 'region'),
-      category,
-      workType,
-      language: str(f, 'language'),
-      culturalContext: str(f, 'culturalContext'),
-      contextSources: str(f, 'contextSources').split('\n').map((s) => s.trim()).filter(Boolean),
-      sourceUrl: str(f, 'sourceUrl'),
-      sensitivity: str(f, 'sensitivity') as CreateInput['sensitivity'],
-      submissionBasis: str(f, 'submissionBasis') as CreateInput['submissionBasis'],
-      licence: str(f, 'licence') as CreateInput['licence'],
-      licenceSourceNote: str(f, 'licenceSourceNote'),
-      attributionRequired: f.get('attributionRequired') === 'on',
-      custodian: str(f, 'custodian'),
-      credits,
+    if (draftId) {
+      // Re-submission of an edited draft flagged for revision
+      const input: Partial<CreateInput> = {
+        title: str(f, 'title'),
+        region: str(f, 'region'),
+        category,
+        workType,
+        language: str(f, 'language'),
+        culturalContext: str(f, 'culturalContext'),
+        contextSources: str(f, 'contextSources').split('\n').map((s) => s.trim()).filter(Boolean),
+        sourceUrl: str(f, 'sourceUrl'),
+        sensitivity: str(f, 'sensitivity') as CreateInput['sensitivity'],
+        submissionBasis: str(f, 'submissionBasis') as CreateInput['submissionBasis'],
+        licence: str(f, 'licence') as CreateInput['licence'],
+        licenceSourceNote: str(f, 'licenceSourceNote'),
+        attributionRequired: f.get('attributionRequired') === 'on',
+        custodian: str(f, 'custodian'),
+        credits,
+        permissions: { share: perm('share'), commercial: perm('commercial'), adapt: perm('adapt'), ai_training: perm('ai_training') } as Record<Capability, CulturalState>,
+      };
+      const res = await updateDraft(db, draftId, input, actor, { key: signingKey() });
+      if (!res.ok) return res;
+      revalidatePath('/author/dashboard');
+      revalidatePath('/review');
+      redirect(`/author/dashboard?resubmitted=${encodeURIComponent(draftId)}`);
+    }
+
+    const input: CreateInput = {
+      title: str(f, 'title'), workType, region: str(f, 'region'), category, language: str(f, 'language'),
+      culturalContext: str(f, 'culturalContext'), contextSources: str(f, 'contextSources').split('\n').map((s) => s.trim()).filter(Boolean),
+      sourceUrl: str(f, 'sourceUrl'), sensitivity: str(f, 'sensitivity') as CreateInput['sensitivity'],
+      submissionBasis: str(f, 'submissionBasis') as CreateInput['submissionBasis'], licence: str(f, 'licence') as CreateInput['licence'],
+      licenceSourceNote: str(f, 'licenceSourceNote'), attributionRequired: f.get('attributionRequired') === 'on', custodian: str(f, 'custodian'),
       permissions: { share: perm('share'), commercial: perm('commercial'), adapt: perm('adapt'), ai_training: perm('ai_training') } as Record<Capability, CulturalState>,
+      credits, asset: asset as CreateInput['asset'], honeypot: str(f, 'website'),
+      authorId: submitter.id,
     };
-    const res = await updateDraft(db, draftId, input, actor, { key: signingKey() });
+    const res = await createRecord(db, input, { role: 'author', name: submitter.name, id: submitter.id }, { key: signingKey() });
     if (!res.ok) return res;
-    revalidatePath('/author/dashboard');
-    revalidatePath('/review');
-    redirect(`/author/dashboard?resubmitted=${encodeURIComponent(draftId)}`);
+    redirect(`/submit?done=${encodeURIComponent(res.id!)}`);
+  } catch (err) {
+    if (isRedirectError(err) || (typeof (err as any)?.digest === 'string' && (err as any).digest.startsWith('NEXT_REDIRECT'))) {
+      throw err;
+    }
+    console.error('createRecordAction error:', err);
+    return {
+      ok: false,
+      error: (err as Error)?.message || 'Submission failed. Please check your inputs and try again.',
+    };
   }
-
-  const input: CreateInput = {
-    title: str(f, 'title'), workType, region: str(f, 'region'), category, language: str(f, 'language'),
-    culturalContext: str(f, 'culturalContext'), contextSources: str(f, 'contextSources').split('\n').map((s) => s.trim()).filter(Boolean),
-    sourceUrl: str(f, 'sourceUrl'), sensitivity: str(f, 'sensitivity') as CreateInput['sensitivity'],
-    submissionBasis: str(f, 'submissionBasis') as CreateInput['submissionBasis'], licence: str(f, 'licence') as CreateInput['licence'],
-    licenceSourceNote: str(f, 'licenceSourceNote'), attributionRequired: f.get('attributionRequired') === 'on', custodian: str(f, 'custodian'),
-    permissions: { share: perm('share'), commercial: perm('commercial'), adapt: perm('adapt'), ai_training: perm('ai_training') } as Record<Capability, CulturalState>,
-    credits, asset: asset as CreateInput['asset'], honeypot: str(f, 'website'),
-    authorId: submitter.id,
-  };
-  const res = await createRecord(db, input, { role: 'author', name: submitter.name, id: submitter.id }, { key: signingKey() });
-  if (!res.ok) return res;
-  redirect(`/submit?done=${encodeURIComponent(res.id!)}`);
 }
 
 /* ----------------------------------------------------------------- flags */
@@ -263,7 +275,7 @@ export async function rejectStewardAction(f: FormData): Promise<void> {
 }
 
 /* ------------------------------------------------- permission requests */
-export async function requestPermissionAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+export async function requestPermissionAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult & { token?: string; requestId?: string; recordId?: string; useKey?: string }> {
   const recordId = String(f.get('recordId') ?? '');
   const input: RequestInput = {
     recordId,
@@ -276,7 +288,7 @@ export async function requestPermissionAction(_prev: ActionResult | null, f: For
   };
   const res = await createPermissionRequest(await getDb(), input, signingKey());
   if (!res.ok) return res;
-  redirect(`/request/${res.token}?sent=1`);
+  return { ok: true, token: res.token, requestId: res.requestId, recordId, useKey: input.useKey };
 }
 
 export async function grantDecisionAction(f: FormData): Promise<void> {
@@ -290,7 +302,21 @@ export async function grantDecisionAction(f: FormData): Promise<void> {
     validFrom: String(f.get('validFrom') ?? new Date().toISOString()),
     validUntil: String(f.get('validUntil') ?? '') || undefined,
   };
-  const res = await decideRequest(await getDb(), actor, input, signingKey());
+  const db = await getDb();
+  const res = await decideRequest(db, actor, input, signingKey());
+
+  // Also resolve any duplicate requests in the same thread
+  const threadIds = String(f.get('threadRequestIds') ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (threadIds.length > 1) {
+    const otherIds = threadIds.filter((id) => id !== input.requestId);
+    for (const oid of otherIds) {
+      await db.execute(
+        "UPDATE permission_requests SET status = ?, decision_note = ?, decided_at = ? WHERE id = ? AND status = 'open'",
+        [input.decision, `Resolved as part of request thread with ${input.requestId}. ${input.note}`.trim(), new Date().toISOString(), oid],
+      );
+    }
+  }
+
   revalidatePath('/review');
   if (!res.ok) redirect(`/review?msg=${encodeURIComponent(res.error)}`);
   redirect(`/review?msg=Decision+recorded.`);
@@ -307,11 +333,81 @@ export async function revokeGrantAction(f: FormData): Promise<void> {
 
 export async function assignStewardAction(f: FormData): Promise<void> {
   const actor = await getActor();
-  const recordId = String(f.get('recordId') ?? '');
+  const recordId = String(f.get('recordId') ?? '').trim();
   const userId = Number(f.get('userId'));
-  await assignSteward(await getDb(), actor, recordId, userId);
+  if (!recordId || !userId || isNaN(userId)) {
+    redirect('/review?msg=Please+select+both+a+record+and+a+steward.');
+  }
+  const db = await getDb();
+  await assignSteward(db, actor, recordId, userId);
+
+  // Automatically unblock any stalled/forwarded requests for this record and resume them to open status
+  await db.execute(
+    "UPDATE permission_requests SET status = 'open', decision_note = 'Steward assigned. Request resumed for active review.' WHERE record_id = ? AND status = 'forwarded'",
+    [recordId],
+  );
+
   revalidatePath(`/review`);
-  redirect('/review?msg=Steward+assigned.');
+  revalidatePath(`/r/${recordId}`);
+  redirect('/review?msg=Steward+assigned+successfully.+Stalled+requests+resumed.');
+}
+
+export async function unassignStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  const recordId = String(f.get('recordId') ?? '').trim();
+  const userId = Number(f.get('userId'));
+  if (recordId && userId && !isNaN(userId)) {
+    await removeSteward(await getDb(), actor, recordId, userId);
+    revalidatePath(`/review`);
+    revalidatePath(`/r/${recordId}`);
+    redirect('/review?msg=Steward+unassigned+successfully.');
+  }
+  redirect('/review?msg=Unable+to+unassign+steward.');
+}
+
+export async function createOrPromoteStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  if (!actor || !['reviewer', 'admin', 'steward'].includes(actor.role)) {
+    throw new Error('Unauthorized');
+  }
+  const name = String(f.get('name') ?? '').trim();
+  const email = String(f.get('email') ?? '').trim().toLowerCase();
+  const region = String(f.get('region') ?? '').trim();
+  const category = String(f.get('category') ?? '').trim();
+  const recordId = String(f.get('recordId') ?? '').trim();
+
+  if (!name || !email) {
+    redirect('/review?msg=Name+and+email+are+required+to+add+a+steward.');
+  }
+
+  const db = await getDb();
+  const existing = (await db.execute('SELECT id, role FROM users WHERE email = ?', [email])).rows[0];
+  let stewardUserId: number;
+
+  if (existing) {
+    stewardUserId = Number(existing.id);
+    await db.execute(
+      "UPDATE users SET role = 'steward', name = ?, region = ?, category = ? WHERE id = ?",
+      [name, region, category, stewardUserId],
+    );
+  } else {
+    // Generate a default demo password hash for new steward
+    const passHash = 'scrypt:32768:8:1:demo-hash';
+    await db.execute(
+      "INSERT INTO users (name, email, role, password_hash, region, category) VALUES (?, ?, 'steward', ?, ?, ?)",
+      [name, email, passHash, region, category],
+    );
+    const created = (await db.execute('SELECT id FROM users WHERE email = ?', [email])).rows[0];
+    stewardUserId = Number(created?.id);
+  }
+
+  if (recordId && stewardUserId) {
+    await assignSteward(db, actor, recordId, stewardUserId);
+  }
+
+  revalidatePath('/review');
+  if (recordId) revalidatePath(`/r/${recordId}`);
+  redirect('/review?msg=Steward+added+successfully.');
 }
 
 /* --------------------------------------------------- sandbox tamper simulation */

@@ -33,7 +33,7 @@ export function RecordTile({ r, compact, catalogue, i = 0 }: { r: RecordSummary;
     return (
       <li className="tile tile-cat" suppressHydrationWarning style={{ '--i': i % 8 } as React.CSSProperties}>
         <a className="tile-link" href={`/r/${r.id}`} data-tilt="6">
-          <span className="tile-art">
+          <span className="tile-art" style={r.thumbUrl ? { backgroundImage: `url("${r.thumbUrl}")` } : undefined}>
             {r.thumbUrl ? <img src={r.thumbUrl} alt={r.alt} loading="lazy" /> : <span className="tile-withheld">Image withheld</span>}
           </span>
           <span className="tile-cap">

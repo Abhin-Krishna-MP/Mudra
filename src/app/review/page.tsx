@@ -1,4 +1,3 @@
-
 import { getDb } from '@/lib/db';
 import { getActor } from '@/lib/session';
 import { listFlags } from '@/lib/repo';
@@ -7,13 +6,16 @@ import {
   reviewFormAction,
   logoutAction,
   assignStewardAction,
+  unassignStewardAction,
 } from '@/app/actions';
 
-import '../reuse/reuse.css';
 import './signin.css';
+import './review.css';
 
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
+import AddStewardSection from './AddStewardSection';
+import RecordManagementCard, { RecordItem } from './RecordManagementCard';
 import { PageSheet } from '@/components/PageSheet';
 import { Icon } from '@/components/Icons';
 
@@ -61,65 +63,66 @@ export default async function Review({
 
   const stewardRegion = String(stewardUser?.region || '').trim();
   const stewardCategory = String(stewardUser?.category || '').trim();
-
-  // Specific Steward Routing (Tag Matching).
-  // Stewards only see pending drafts matching their region and category.
   const isSteward = actor.role === 'steward';
-
-  let rows;
-
-  if (isSteward) {
-    rows = (
-      await db.execute(
-        `SELECT
-          id,
-          status,
-          verification_level,
-          disputed,
-          title,
-          region,
-          COALESCE(NULLIF(category, ''), work_type) as category,
-          revision_note
-        FROM records
-        WHERE status = 'pending'
-          AND region = ?
-          AND (category = ? OR work_type = ?)
-        ORDER BY created_at DESC`,
-        [stewardRegion, stewardCategory, stewardCategory],
-      )
-    ).rows;
-  } else {
-    rows = (
-      await db.execute(
-        `SELECT
-          id,
-          status,
-          verification_level,
-          disputed,
-          title,
-          region,
-          COALESCE(NULLIF(category, ''), work_type) as category,
-          revision_note
-        FROM records
-        WHERE status != 'removed'
-        ORDER BY (status = 'pending') DESC, created_at DESC`,
-      )
-    ).rows;
-  }
 
   // Load dashboard data.
   const flags = await listFlags(db, actor);
   const requests = await listRequestsForSteward(db, actor);
 
-  // Load users for steward assignment.
+  // Load users with roles and regions for steward assignment.
   const users = (
     await db.execute(
-      'SELECT id, name, email FROM users ORDER BY name',
+      "SELECT id, name, email, role, region, category FROM users ORDER BY (role = 'steward') DESC, (role = 'reviewer') DESC, name ASC",
     )
   ).rows.map((u) => ({
     id: Number(u.id),
     name: String(u.name),
     email: String(u.email),
+    role: String(u.role),
+    region: String(u.region || ''),
+    category: String(u.category || ''),
+  }));
+
+  // Load all records with their asset IDs so thumbnails render
+  const recordRows: RecordItem[] = (
+    await db.execute(
+      `SELECT
+        r.id,
+        r.status,
+        r.verification_level,
+        r.disputed,
+        r.title,
+        r.region,
+        COALESCE(NULLIF(r.category, ''), r.work_type) as category,
+        r.revision_note,
+        r.created_at,
+        a.id as asset_id,
+        a.alt as asset_alt
+      FROM records r
+      LEFT JOIN assets a ON a.record_id = r.id
+      WHERE r.status != 'removed'
+      ORDER BY r.created_at DESC`,
+    )
+  ).rows.map((r) => ({
+    id: String(r.id),
+    status: String(r.status),
+    verification_level: String(r.verification_level),
+    disputed: Number(r.disputed),
+    title: String(r.title),
+    region: String(r.region),
+    category: String(r.category),
+    revision_note: String(r.revision_note || ''),
+    asset_id: r.asset_id ? String(r.asset_id) : undefined,
+    asset_alt: r.asset_alt ? String(r.asset_alt) : undefined,
+  }));
+
+  // Options for steward assignment dropdown
+  const recordOptions = recordRows.map((r) => ({
+    id: r.id,
+    title: r.title,
+    region: r.region,
+    category: r.category,
+    status: r.status,
   }));
 
   // Load currently assigned stewards.
@@ -141,396 +144,210 @@ export default async function Review({
 
   for (const s of stewardRows) {
     const list = stewardsByRecord.get(String(s.record_id)) ?? [];
-
     list.push({
       id: Number(s.user_id),
       name: String(s.name),
     });
-
     stewardsByRecord.set(String(s.record_id), list);
   }
 
+  // Separate records into:
+  // 1. Pending Verification / Review tasks:
+  //    (status = 'pending' or disputed)
+  const pendingRecords = isSteward
+    ? recordRows.filter(
+        (r) =>
+          r.status === 'pending' &&
+          (!stewardRegion || r.region === stewardRegion) &&
+          (!stewardCategory || r.category === stewardCategory),
+      )
+    : recordRows.filter((r) => r.status === 'pending' || r.disputed === 1);
+
+  // 2. Past Records (kept at last, matching image):
+  const pastRecords = isSteward
+    ? recordRows.filter((r) => r.status !== 'pending')
+    : recordRows.filter((r) => r.status !== 'pending' && r.disputed !== 1);
+
+  // Open permission requests count
+  const openPermissionCount = requests.filter(
+    (r) => r.status === 'open' || r.status === 'forwarded',
+  ).length;
+
   return (
-    <div className="wrap page">
-      <PageSheet
-        title={isSteward ? 'Steward Dashboard' : 'Reviewer console'}
-        lede={
-          isSteward
-            ? `Signed in as Steward ${actor.name} (Assigned Region: ${
-                stewardRegion || 'Any'
-              } · Category: ${stewardCategory || 'Any'})`
-            : `Signed in as ${actor.name}.`
-        }
-        headExtra={
-          <form action={logoutAction} className="sheet-action">
-            <button
-              className="secondary signout-btn"
-              type="submit"
-            >
+    <div className="wrap page review-console-page">
+      <div className="rc-container">
+        {/* 1. Top Brand & Signout Header matching user image */}
+        <div className="rc-topbar">
+          <div className="rc-brand">
+            <Icon name="lotus" size={22} />
+            <span>Mudra</span>
+            <span className="rc-bar">|</span>
+          </div>
+
+          <form action={logoutAction} style={{ margin: 0 }}>
+            <button type="submit" className="rc-signout-btn">
               <Icon name="user" size={15} />
               <span>Sign out ({actor.name})</span>
             </button>
           </form>
-        }
-      >
-        {/* Status message */}
-        {sp.msg && (
-          <p className="notice" role="status">
-            {sp.msg}
-          </p>
-        )}
+        </div>
 
-        {/* Steward routing information */}
-        {isSteward && (
-          <div
-            className="sb-callout"
-            style={{ marginBottom: 20 }}
-          >
-            <p>
-              <strong>
-                Steward Tag Matching Routing Active:
-              </strong>{' '}
-              You are viewing pending drafts automatically routed to
-              your expertise in{' '}
-              <strong>
-                {stewardRegion || 'All Regions'}
-              </strong>{' '}
-              and{' '}
-              <strong>
-                {stewardCategory || 'All Categories'}
-              </strong>.
-            </p>
+        {/* 2. Hero Banner with Kathakali illustration and icon box */}
+        <div className="rc-hero">
+          <div className="rc-hero-left">
+            <div className="rc-hero-icon">
+              <Icon name="file" size={24} />
+            </div>
+            <div>
+              <h1 className="rc-hero-title">
+                {isSteward ? 'Steward Dashboard' : 'Reviewer Console'}
+              </h1>
+              <p className="rc-hero-subtitle">
+                {isSteward
+                  ? `Signed in as Steward ${actor.name} (${stewardRegion || 'All Regions'} · ${stewardCategory || 'All Categories'})`
+                  : `Signed in as ${actor.name}.`}
+              </p>
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* Reviewer and Admin sections */}
-        {!isSteward && (
-          <>
-            {/* Open reports */}
-            <h2 style={{ marginTop: 0 }}>
-              Open reports ({flags.length})
-            </h2>
+        {/* 3. Main Console Body */}
+        <div className="rc-body">
+          {/* Status Alert Banner (e.g. Done.) */}
+          {sp.msg && (
+            <div className="rc-alert-done" role="status">
+              <Icon name="checkCircle" size={18} />
+              <span>{sp.msg}</span>
+            </div>
+          )}
 
-            {flags.length === 0 ? (
-              <p className="muted">No open reports.</p>
-            ) : (
-              flags.map((f) => (
+          {/* Steward routing note if active */}
+          {isSteward && (
+            <div className="sb-callout" style={{ marginBottom: 20 }}>
+              <p>
+                <strong>Steward Tag Matching Routing Active:</strong> You are viewing records & requests routed to your expertise in{' '}
+                <strong>{stewardRegion || 'All Regions'}</strong> and <strong>{stewardCategory || 'All Categories'}</strong>.
+              </p>
+            </div>
+          )}
+
+          {/* 4. Top Overview Stats Cards (Matching user image) */}
+          <div className="rc-stats-row">
+            <div className="rc-stat-card">
+              <div className="rc-stat-icon">
+                <Icon name="file" size={22} />
+              </div>
+              <div className="rc-stat-mid">
+                <span className="rc-stat-label">Open Reports</span>
+                <span className="rc-stat-num">{flags.length}</span>
+              </div>
+              <div className="rc-stat-divider" />
+              <div className="rc-stat-text">
+                {flags.length === 0 ? 'No open reports.' : `${flags.length} open report(s)`}
+              </div>
+            </div>
+
+            <div className="rc-stat-card">
+              <div className="rc-stat-icon">
+                <Icon name="users" size={22} />
+              </div>
+              <div className="rc-stat-mid">
+                <span className="rc-stat-label">Permission Requests</span>
+                <span className="rc-stat-num">{openPermissionCount}</span>
+              </div>
+              <div className="rc-stat-divider" />
+              <div className="rc-stat-text">
+                {openPermissionCount === 0 ? 'No open requests at this time.' : `${openPermissionCount} open request(s)`}
+              </div>
+            </div>
+          </div>
+
+          {/* 5. SEPARATE SECTION: Ask First Requests (Permission Requests & Past Requests) */}
+          <RequestsSection requests={requests} stewards={users} />
+
+          {/* 6. SEPARATE SECTION: Verify Requests & Open Reports */}
+          {(pendingRecords.length > 0 || flags.length > 0) && (
+            <section style={{ marginTop: 28 }}>
+              <h2 className="rc-section-heading">
+                <Icon name="shield" size={22} />
+                <span>Verification Requests ({pendingRecords.length + flags.length})</span>
+              </h2>
+
+              {/* Open reports resolution */}
+              {flags.map((f) => (
                 <form
                   key={f.id}
                   action={reviewFormAction}
                   className="panel ui"
+                  style={{ marginBottom: 16 }}
                 >
-                  <input
-                    type="hidden"
-                    name="action"
-                    value="resolveFlag"
-                  />
-
-                  <input
-                    type="hidden"
-                    name="recordId"
-                    value={f.record_id}
-                  />
-
-                  <input
-                    type="hidden"
-                    name="flagId"
-                    value={f.id}
-                  />
+                  <input type="hidden" name="action" value="resolveFlag" />
+                  <input type="hidden" name="recordId" value={f.record_id} />
+                  <input type="hidden" name="flagId" value={f.id} />
 
                   <p>
-                    <strong>
-                      {f.type.replace(/_/g, ' ')}
-                    </strong>{' '}
-                    on{' '}
+                    <strong>{f.type.replace(/_/g, ' ')}</strong> on{' '}
                     <a href={`/r/${f.record_id}`}>
                       {f.title} ({f.record_id})
                     </a>
                   </p>
-
-                  <p style={{ whiteSpace: 'pre-line' }}>
-                    {f.text}
-                  </p>
-
+                  <p style={{ whiteSpace: 'pre-line' }}>{f.text}</p>
                   {f.reporter_contact && (
-                    <p className="muted">
+                    <p className="muted" style={{ fontSize: '0.85rem' }}>
                       Reporter: {f.reporter_contact}
                     </p>
                   )}
 
-                  <label htmlFor={`fn-${f.id}`}>
+                  <label htmlFor={`fn-${f.id}`} style={{ fontWeight: 600 }}>
                     Resolution note
                   </label>
+                  <textarea id={`fn-${f.id}`} name="note" required rows={2} />
 
-                  <textarea
-                    id={`fn-${f.id}`}
-                    name="note"
-                    required
-                  />
-
-                  <div
-                    className="btn-row"
-                    style={{ marginTop: 14 }}
-                  >
-                    <button type="submit">
+                  <div className="btn-row" style={{ marginTop: 12 }}>
+                    <button type="submit" className="btn pp-btn-maroon">
                       Resolve report
                     </button>
                   </div>
                 </form>
+              ))}
+
+              {/* Pending records to verify */}
+              {pendingRecords.map((r) => (
+                <RecordManagementCard
+                  key={r.id}
+                  record={r}
+                  linkedStewards={stewardsByRecord.get(String(r.id)) ?? []}
+                  allStewards={users}
+                />
+              ))}
+            </section>
+          )}
+
+          {/* 7. SEPARATE SECTION: Add / Assign Steward Section (Correct Light Theme styling) */}
+          <AddStewardSection users={users} records={recordOptions} />
+
+          {/* 8. SEPARATE SECTION: Past Records (Keep it at last, exactly as requested) */}
+          <section style={{ marginTop: 32 }}>
+            <h2 className="rc-section-heading">
+              <Icon name="layers" size={22} />
+              <span>Records ({pastRecords.length})</span>
+            </h2>
+
+            {pastRecords.length === 0 ? (
+              <p className="muted">No published records to display.</p>
+            ) : (
+              pastRecords.map((r) => (
+                <RecordManagementCard
+                  key={r.id}
+                  record={r}
+                  linkedStewards={stewardsByRecord.get(String(r.id)) ?? []}
+                  allStewards={users}
+                />
               ))
             )}
-
-            {/* Steward requests */}
-            <RequestsSection requests={requests} />
-          </>
-        )}
-
-        {/* Records / Pending drafts */}
-        <h2>
-          {isSteward
-            ? `Pending Drafts Matching Your Expertise (${rows.length})`
-            : `Records (${rows.length})`}
-        </h2>
-
-        {rows.length === 0 && (
-          <p className="muted">
-            {isSteward
-              ? 'No pending drafts matching your region and category.'
-              : 'No records to display.'}
-          </p>
-        )}
-
-        {rows.map((r) => {
-          const linkedStewards =
-            stewardsByRecord.get(String(r.id)) ?? [];
-
-          return (
-            <section
-              key={r.id}
-              className="panel ui"
-              aria-label={r.title}
-            >
-              <h3>
-                <a href={`/r/${r.id}`}>
-                  {r.title}
-                </a>{' '}
-                <span className="muted">
-                  ({r.id})
-                </span>
-              </h3>
-
-              {/* Record information */}
-              <ul className="chips">
-                <li className="chip">
-                  {String(r.status).replace('_', ' ')}
-                </li>
-
-                <li className="chip">
-                  {r.region}
-                </li>
-
-                <li className="chip">
-                  {r.category}
-                </li>
-
-                <li className="chip">
-                  {r.verification_level}
-                </li>
-
-                {r.disputed ? (
-                  <li className="chip ask">
-                    open report
-                  </li>
-                ) : null}
-
-                {linkedStewards.length > 0 ? (
-                  <li className="chip verified">
-                    Steward:{' '}
-                    {linkedStewards
-                      .map((s) => s.name)
-                      .join(', ')}
-                  </li>
-                ) : (
-                  <li className="chip">
-                    No steward
-                  </li>
-                )}
-              </ul>
-
-              {/* Revision note */}
-              {r.revision_note && (
-                <div
-                  className="sb-callout"
-                  style={{ margin: '10px 0' }}
-                >
-                  <strong>
-                    Current Revision Note:
-                  </strong>{' '}
-                  {r.revision_note}
-                </div>
-              )}
-
-              {/* Review actions */}
-              <form action={reviewFormAction}>
-                <input
-                  type="hidden"
-                  name="recordId"
-                  value={r.id}
-                />
-
-                <label htmlFor={`n-${r.id}`}>
-                  Required edits or reviewer note
-                  (required when requesting revision)
-                </label>
-
-                <input
-                  id={`n-${r.id}`}
-                  type="text"
-                  name="note"
-                  placeholder="Describe edits for author (e.g. Please verify tradition lineage)..."
-                />
-
-                <div
-                  className="btn-row"
-                  style={{ marginTop: 14 }}
-                >
-                  <button
-                    name="action"
-                    value="approve"
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    name="action"
-                    value="requestRevision"
-                    className="secondary"
-                  >
-                    Request Revision
-                  </button>
-
-                  <button
-                    name="action"
-                    value="remove"
-                    className="danger"
-                  >
-                    Deny
-                  </button>
-                </div>
-              </form>
-
-              {/* Evidence verification */}
-              <details className="evidence">
-                <summary>
-                  Verify with evidence
-                </summary>
-
-                <form action={reviewFormAction}>
-                  <input
-                    type="hidden"
-                    name="recordId"
-                    value={r.id}
-                  />
-
-                  <input
-                    type="hidden"
-                    name="action"
-                    value="verify"
-                  />
-
-                  <label htmlFor={`s-${r.id}`}>
-                    Evidence source
-                  </label>
-
-                  <input
-                    id={`s-${r.id}`}
-                    type="text"
-                    name="source"
-                    required
-                  />
-
-                  <label htmlFor={`u-${r.id}`}>
-                    URL (optional)
-                  </label>
-
-                  <input
-                    id={`u-${r.id}`}
-                    type="url"
-                    name="url"
-                  />
-
-                  <label htmlFor={`e-${r.id}`}>
-                    Evidence note
-                  </label>
-
-                  <textarea
-                    id={`e-${r.id}`}
-                    name="note"
-                    required
-                  />
-
-                  <div className="btn-row">
-                    <button type="submit">
-                      Mark verified
-                    </button>
-                  </div>
-                </form>
-              </details>
-
-              {/* Assign steward */}
-              <details
-                className="evidence"
-                style={{ marginTop: 8 }}
-              >
-                <summary>
-                  Assign steward
-                </summary>
-
-                <form
-                  action={assignStewardAction}
-                  style={{ marginTop: 8 }}
-                >
-                  <input
-                    type="hidden"
-                    name="recordId"
-                    value={r.id}
-                  />
-
-                  <label htmlFor={`u-sel-${r.id}`}>
-                    Select reviewer / steward to link
-                  </label>
-
-                  <select
-                    id={`u-sel-${r.id}`}
-                    name="userId"
-                  >
-                    {users.map((u) => (
-                      <option
-                        key={u.id}
-                        value={u.id}
-                      >
-                        {u.name} ({u.email})
-                      </option>
-                    ))}
-                  </select>
-
-                  <div
-                    className="btn-row"
-                    style={{ marginTop: 8 }}
-                  >
-                    <button
-                      type="submit"
-                      className="secondary"
-                    >
-                      Link as steward
-                    </button>
-                  </div>
-                </form>
-              </details>
-            </section>
-          );
-        })}
-      </PageSheet>
+          </section>
+        </div>
+      </div>
     </div>
   );
 }

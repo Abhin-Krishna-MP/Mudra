@@ -39,7 +39,7 @@ export async function getStewardsForRecord(db: Db, recordId: string) {
 }
 
 export async function assignSteward(db: Db, actor: Actor | null, recordId: string, userId: number) {
-  requireRole(actor, ['reviewer', 'admin']);
+  requireRole(actor, ['reviewer', 'admin', 'steward']);
   await db.execute(
     `INSERT OR IGNORE INTO record_stewards (record_id, user_id) VALUES (?,?)`,
     [recordId, userId],
@@ -47,7 +47,7 @@ export async function assignSteward(db: Db, actor: Actor | null, recordId: strin
 }
 
 export async function removeSteward(db: Db, actor: Actor | null, recordId: string, userId: number) {
-  requireRole(actor, ['reviewer', 'admin']);
+  requireRole(actor, ['reviewer', 'admin', 'steward']);
   await db.execute(`DELETE FROM record_stewards WHERE record_id = ? AND user_id = ?`, [recordId, userId]);
 }
 
@@ -103,7 +103,36 @@ export async function createPermissionRequest(
   const rec = (await db.execute(`SELECT id, status FROM records WHERE id = ? AND status = 'published'`, [input.recordId])).rows[0];
   if (!rec) return { ok: false, error: 'Record not found or not published.' };
 
-  // Rate limit: at most 3 open requests from same contact per record
+  // Single request per email ID per catalogue item constraint
+  const contactClean = input.requesterContact.trim().toLowerCase();
+  const nameClean = input.requesterName.trim().toLowerCase();
+  const existingForEmail = (await db.execute(
+    `SELECT id FROM permission_requests WHERE record_id = ? AND LOWER(requester_contact) = ? LIMIT 1`,
+    [input.recordId, contactClean],
+  )).rows[0];
+  if (existingForEmail) {
+    return {
+      ok: false,
+      error: 'A permission request has already been submitted for this catalogue item using this email address. Please use your request token to check its status in the Request Status tab.',
+    };
+  }
+
+  // Prevent request spam: block duplicate pending submissions from the same user
+  const pendingDuplicate = (await db.execute(
+    `SELECT id FROM permission_requests
+     WHERE record_id = ? AND use_key = ? AND status IN ('open', 'forwarded')
+       AND (LOWER(requester_contact) = ? OR LOWER(requester_name) = ?)
+     LIMIT 1`,
+    [input.recordId, input.useKey, contactClean, nameClean],
+  )).rows[0];
+  if (pendingDuplicate) {
+    return {
+      ok: false,
+      error: 'An identical permission request is already pending review for this catalogue item. Duplicate submissions are blocked while under review.',
+    };
+  }
+
+  // Rate limit: at most 10 open requests per record
   const existing = (await db.execute(
     `SELECT COUNT(*) as n FROM permission_requests WHERE record_id = ? AND status = 'open'`,
     [input.recordId],

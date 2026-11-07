@@ -476,7 +476,7 @@ export async function getTimeline(db: Db, id: string, pubKeys: Record<string, st
 }
 
 export async function listFlags(db: Db, actor: Actor | null, status: 'open' | 'all' = 'open') {
-  requireRole(actor, ['reviewer', 'admin']);
+  requireRole(actor, ['reviewer', 'admin', 'steward']);
   const rows = (await db.execute(
     `SELECT f.*, r.title FROM flags f JOIN records r ON r.id = f.record_id ${status === 'open' ? "WHERE f.status = 'open'" : ''} ORDER BY f.created_at DESC`)).rows;
   return rows;

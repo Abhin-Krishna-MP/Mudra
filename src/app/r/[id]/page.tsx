@@ -3,23 +3,22 @@ import QRCode from 'qrcode';
 import { getDb } from '@/lib/db';
 import { getRecordView, getTimeline } from '@/lib/repo';
 import { publicKeys } from '@/lib/signing';
-import { evaluate, USES, USE_IDS, LICENCES, type Use } from '@/lib/permissions';
+import { USE_IDS, LICENCES, type Use } from '@/lib/permissions';
 import { allFormats } from '@/lib/credit';
 import { recordUrl } from '@/lib/site';
 import { COMPILED_NOTE, LAYER_NOTE } from '@/lib/copy';
 import { typeSingular } from '@/lib/ui';
-import { TwoLayers, ReusePills } from '@/components/Permissions';
+import { TwoLayers } from '@/components/Permissions';
 import { CopyButton } from '@/components/CopyButton';
 import { Gallery, type GalleryItem } from '@/components/Gallery';
 import { ShareButton } from '@/components/ShareButton';
-import { BookmarkButton } from '@/components/BookmarkButton';
 import './passport.css';
 import { Tabs } from '@/components/Tabs';
-import { VerdictCard } from '@/components/VerdictCard';
-import { Icon } from '@/components/Icons';
+import { Icon, type IconName } from '@/components/Icons';
 import { Seal } from '@/components/Seal';
 import { getStewardsForRecord } from '@/lib/repo-grants';
-import RequestPermissionForm from '@/components/RequestPermissionForm';
+import { RequestStatusTab } from '@/components/RequestStatusTab';
+import { InteractiveReuseGlance } from '@/components/InteractiveReuseGlance';
 
 export const dynamic = 'force-dynamic';
 
@@ -37,7 +36,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
   const stewards = await getStewardsForRecord(db, id);
   const hasSteward = stewards.length > 0;
   const use = (USE_IDS.includes(sp.use as Use) ? sp.use : 'print_merch') as Use;
-  const out = evaluate({ use, licence: v.licence, cultural: v.permissions, attributionRequired: v.attributionRequired, sensitivity: v.sensitivity });
   const credit = allFormats({ title: v.title, credits: v.credits, licence: v.licence, attributionRequired: v.attributionRequired, recordUrl: recordUrl(v.id), recordId: v.id });
   const timeline = await getTimeline(db, id, publicKeys());
   const qr = await QRCode.toDataURL(recordUrl(v.id), { margin: 1, width: 240, errorCorrectionLevel: 'M' });
@@ -80,33 +78,84 @@ export default async function Passport({ params, searchParams }: { params: Promi
           {v.submissionBasis === 'compiled_from_public_sources' && <p className="notice">{COMPILED_NOTE}</p>}
         </section>
         <section className="pp-card-in pp-glance-card" aria-labelledby="glance-h">
-          <h2 id="glance-h">At a Glance <Icon name="info" size={16} className="pp-i" /></h2>
-          <dl>
-            {period && <div><dt><Icon name="calendar" size={18} />Period</dt><dd>{period}</dd></div>}
-            <div><dt><Icon name="users" size={18} />Type</dt><dd>{typeSingular(v.workType)}</dd></div>
-            {v.language && <div><dt><Icon name="book" size={18} />Language</dt><dd>{v.language}</dd></div>}
-            <div><dt><Icon name="pin" size={18} />Region</dt><dd>{v.region}</dd></div>
+          <h2 id="glance-h">
+            <span>At a Glance</span>
+            <Icon name="info" size={18} className="pp-i" />
+          </h2>
+          <dl className="pp-glance-list">
+            {period && (
+              <div className="pp-glance-item">
+                <dt><Icon name="calendar" size={18} />Period</dt>
+                <dd>{period}</dd>
+              </div>
+            )}
+            <div className="pp-glance-item">
+              <dt><Icon name="users" size={18} />Type</dt>
+              <dd>{typeSingular(v.workType)}</dd>
+            </div>
+            {v.language && (
+              <div className="pp-glance-item">
+                <dt><Icon name="book" size={18} />Language</dt>
+                <dd>{v.language}</dd>
+              </div>
+            )}
+            <div className="pp-glance-item">
+              <dt><Icon name="pin" size={18} />Region</dt>
+              <dd>{v.region}</dd>
+            </div>
           </dl>
         </section>
       </div>
     ) },
-    { id: 'media', label: `Media (${gallery.length})`, icon: 'image' as const, content: (
-      gallery.length > 0 ? (
-        <ul className="pp-media">{gallery.map((g, n) => <li key={g.url + n}><a href={g.url} target="_blank" rel="noopener noreferrer"><img src={g.url} alt={g.alt} loading="lazy" /></a></li>)}</ul>
-      ) : <p className="muted">No media has been added to this record.</p>
-    ) },
     { id: 'creators', label: 'Creators', icon: 'users' as const, content: (
-      <>
-        <ul>{v.credits.map((c) => <li key={c.name + c.role}><strong>{c.name}</strong> — {c.role}{c.collective ? ' (collective)' : ''}</li>)}</ul>
+      <div className="pp-creators-list">
+        {v.credits.map((c) => {
+          const roleLower = c.role.toLowerCase();
+          const iconName: IconName =
+            c.collective || /tradition|bearer|exponent|community|lineage/i.test(roleLower)
+              ? 'users'
+              : /photo|camera|image/i.test(roleLower)
+              ? 'camera'
+              : /art|design|illustrat/i.test(roleLower)
+              ? 'palette'
+              : 'user';
+
+          return (
+            <div key={c.name + c.role} className="pp-creator-card">
+              <span className="pp-creator-icon-box">
+                <Icon name={iconName} size={18} />
+              </span>
+              <span className="pp-creator-sep" aria-hidden="true">|</span>
+              <div className="pp-creator-text">
+                <strong>{c.name}</strong>
+                <span className="pp-creator-role"> — {c.role}{c.collective ? ' (collective)' : ''}</span>
+              </div>
+            </div>
+          );
+        })}
         {v.credits.length === 0 && <p className="muted">Creators are not yet credited.</p>}
-        {v.custodian && <p><strong>Stated custodian to contact:</strong> {v.custodian}</p>}
-      </>
+        {v.custodian && (
+          <div className="pp-creator-card pp-custodian-card">
+            <span className="pp-creator-icon-box pp-custodian-icon-box">
+              <Icon name="handshake" size={18} />
+            </span>
+            <span className="pp-creator-sep" aria-hidden="true">|</span>
+            <div className="pp-creator-text">
+              <strong>Stated custodian to contact:</strong>
+              <span className="pp-creator-role"> {v.custodian}</span>
+            </div>
+          </div>
+        )}
+      </div>
     ) },
     { id: 'permissions', label: 'Permissions', icon: 'shield' as const, content: (
       <>
         <p className="hint" style={{ marginBottom: 12 }}>{LAYER_NOTE}</p>
         <TwoLayers permissions={v.permissions} licence={v.licence} />
       </>
+    ) },
+    { id: 'request-status', label: 'Request Status', icon: 'clock' as const, content: (
+      <RequestStatusTab recordId={v.id} recordTitle={v.title} hasSteward={hasSteward} />
     ) },
     { id: 'sources', label: 'Sources', icon: 'link' as const, content: (
       (v.contextSources.length > 0 || v.sourceUrl || v.asset?.sourceNote) ? (
@@ -141,7 +190,12 @@ export default async function Passport({ params, searchParams }: { params: Promi
               <div className="layer d-fig dk" />
             </div>
           </div>
-          <a className="pp-back" href="/catalogue"><Icon name="arrow" size={16} className="flip" /> Back to Catalogue</a>
+          <a className="pp-back" href="/catalogue">
+            <span className="pp-back-icon">
+              <Icon name="arrow" size={15} className="flip" />
+            </span>
+            <span>Back to Catalogue</span>
+          </a>
           <div className="pp-top">
             <div className="pp-media-col">
               <p className="pp-id">{v.id}</p>
@@ -181,51 +235,39 @@ export default async function Passport({ params, searchParams }: { params: Promi
             </div>
           </div>
 
-          <div className="pp-glance" role="group" aria-label="Reuse at a glance">
-            <h2>Reuse at a Glance <a href="#studio-h" className="pp-info-ico" aria-label="How reuse is decided"><Icon name="info" size={16} /></a></h2>
-            <ReusePills permissions={v.permissions} />
-          </div>
+          <InteractiveReuseGlance
+            recordId={v.id}
+            recordTitle={v.title}
+            licence={v.licence}
+            permissions={v.permissions}
+            attributionRequired={v.attributionRequired}
+            sensitivity={v.sensitivity}
+            credit={credit}
+            hasSteward={hasSteward}
+            initialUse={use}
+            initialOpen={sp.ask === '1'}
+          />
 
-          <div className="pp-actions">
-            <a className="btn pp-primary" href="#studio-h"><Icon name="refresh" size={18} /> Check Reuse in Reuse Studio</a>
-            <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
-            <ShareButton title={v.title} />
-            <span className="pp-save"><BookmarkButton id={v.id} title={v.title} /></span>
-          </div>
-          <div className="pp-actions pp-actions-2">
-            {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
-            <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
+          <div className="pp-actions-bar">
+            <div className="pp-actions-main">
+              <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
+              <ShareButton title={v.title} />
+              {v.asset?.displayUrl && (
+                <a
+                  className="btn pp-btn-maroon"
+                  href={`/api/records/${v.id}/card.png`}
+                  download={`${v.id}-credit-card.png`}
+                >
+                  <Icon name="download" size={16} /> Download Credit Card
+                </a>
+              )}
+              <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
+            </div>
           </div>
         </header>
 
         <div className="pp-body">
           <Tabs label={`${v.title} passport sections`} tabs={tabs} />
-
-          <section aria-labelledby="studio-h" style={{ marginTop: 34 }}>
-            <h2 id="studio-h" style={{ marginTop: 0 }}>Reuse Studio</h2>
-            <p className="muted">Pick what you want to do. The answer combines both layers and always takes the more careful one.</p>
-            <nav aria-label="Choose a use"><ul className="uses">{USE_IDS.map((u) => <li key={u}><a href={`/r/${v.id}?use=${u}#studio-h`} aria-current={u === use ? 'true' : undefined}>{USES[u].label}</a></li>)}</ul></nav>
-            <div style={{ marginTop: 16 }}><VerdictCard verdict={out.verdict} useLabel={USES[use].label} guidance={out.guidance} /></div>
-            {out.verdict === 'ask_first' && (
-              <details className="panel ui" style={{ marginTop: 16 }} open={sp.ask === '1'}>
-                <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Request permission from {hasSteward ? 'steward' : 'community contact'}</summary>
-                <RequestPermissionForm recordId={v.id} recordTitle={v.title} useKey={use} hasSteward={hasSteward} />
-              </details>
-            )}
-            <div className="two" style={{ marginTop: 14 }}>
-              <div className="panel" style={{ margin: 0 }}><h3>Cultural layer</h3><p>{out.cultural.statement}</p></div>
-              <div className="panel" style={{ margin: 0 }}><h3>File licence layer</h3><p>{out.licence.statement}</p></div>
-            </div>
-            {out.notes.map((n) => <p key={n} className="notice">{n}</p>)}
-            <p style={{ marginTop: 14 }}><strong>Next step:</strong> {out.nextAction}</p>
-            <p className="ui">{out.creditRequired ? 'Credit is required here. ' : 'Credit is not required by the licence, but is recommended. '}Copy a credit line:</p>
-            {([['plain', 'Plain text', credit.plain], ['markdown', 'Markdown', credit.markdown], ['html', 'HTML snippet', credit.html], ['short', 'Short caption', credit.short]] as const).map(([k, label, text]) => (
-              <div key={k} className="credit-block"><h3>{label}</h3><pre className="credit">{text}</pre><CopyButton text={text} label={`Copy ${label.toLowerCase()}`} /></div>
-            ))}
-            <div className="btn-row">
-              <a className="btn secondary" href={`/r/${v.id}/report`}>Report a problem</a>
-            </div>
-          </section>
         </div>
       </article>
     </div>
