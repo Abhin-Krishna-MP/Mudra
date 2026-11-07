@@ -78,6 +78,37 @@ body:has(.review-console-page) .site-header::after {
   display: none !important;
 }
 
+/* ---------- Reviewer Console Sheet Container Styling (Pristine Light & Dark) ---------- */
+:root:not([data-theme='dark']) .review-console-page .sheet {
+  border: 1.5px solid transparent !important;
+  border-radius: 28px !important;
+  background-color: #fbf5e8 !important;
+  background:
+    linear-gradient(180deg, #fbf5e8, #f7eddb) padding-box,
+    linear-gradient(135deg, #f4d783 0%, #c18f2b 24%, #8c2c25 52%, #c18f2b 78%, #f4d783 100%) border-box !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  box-shadow: 0 26px 60px rgba(0, 18, 14, 0.45) !important;
+  overflow: hidden !important;
+}
+
+:root:not([data-theme='dark']) .review-console-page .sheet-body {
+  background: transparent !important;
+}
+
+:root[data-theme='dark'] .review-console-page .sheet {
+  border: 1.5px solid rgba(240, 137, 74, 0.35) !important;
+  border-radius: 28px !important;
+  background-color: #140d0a !important;
+  background: linear-gradient(180deg, rgba(28, 17, 12, 0.96), rgba(16, 9, 7, 0.98)) !important;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 -1px 0 rgba(240, 137, 74, 0.35) inset !important;
+  overflow: hidden !important;
+}
+
+:root[data-theme='dark'] .review-console-page .sheet-body {
+  background: transparent !important;
+}
+
 :root[data-theme='dark'] .review-console-page {
   --rc-bg: #140d0a;
   --rc-card: rgba(28, 17, 12, 0.94);

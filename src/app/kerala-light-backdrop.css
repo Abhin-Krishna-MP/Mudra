@@ -60,10 +60,10 @@ html:root:root:not([data-theme='dark']) body .site-header.padippura-header::afte
 :root:not([data-theme='dark']) body:has(.about-page) main::after { display: none; }
 :root:not([data-theme='dark']) body:has(.about-page) main { padding-bottom: 40px; }
 
-/* ---------- Reuse Studio · Reviewer sign-in · Verify record · Check image · Submit record ----------
+/* ---------- Reuse Studio · Reviewer sign-in · Verify record · Check image · Submit record · Reviewer console ----------
    Light theme now matches the Catalogue: Kathakali banner, cream sheet, cream cards with a gold rim,
-   maroon buttons. The dark theme keeps its own look (reuse.css / check.css / submit.css). */
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) {
+   maroon buttons. The dark theme keeps its own look (reuse.css / check.css / submit.css / review.css). */
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) {
   color-scheme: light;
   --ink: #1b1b1b; --muted: #5c4b3a; --line: #d8c7a6; --line-strong: #8a7355;
   --panel-bg: #fbf5e8; --panel-border: rgba(138, 115, 85, .5);
@@ -279,18 +279,18 @@ html:root:root:not([data-theme='dark']) .sb-guide {
 html:root:root:not([data-theme='dark']) .submit-page .fi > :is(input, select, textarea) { padding-left: 50px; }
 
 @media (max-width: 640px) {
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet { border-radius: 22px; box-shadow: 0 18px 44px rgba(0, 18, 14, .42); }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth { min-height: 196px; padding: 24px 20px 44px; align-items: center; }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth::before {
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet { border-radius: 22px; box-shadow: 0 18px 44px rgba(0, 18, 14, .42); }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head.has-depth { min-height: 196px; padding: 24px 20px 44px; align-items: center; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head.has-depth::before {
     background:
       linear-gradient(90deg, var(--sheet-head-fade) 0%, rgba(247, 238, 221, .86) 44%, transparent 92%),
       linear-gradient(0deg, var(--panel-bg) 0%, color-mix(in srgb, var(--panel-bg) 72%, transparent) 20%, transparent 52%);
   }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head-text { max-width: 68%; }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head h1 { font-size: clamp(2rem, 9.5vw, 2.4rem); }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .eyebrow-sm { font-size: .68rem; letter-spacing: .26em; }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .lede-sm { font-size: 1rem; max-width: 24ch; }
-  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-body { padding: 4px 12px 22px; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head-text { max-width: 68%; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head h1 { font-size: clamp(2rem, 9.5vw, 2.4rem); }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .eyebrow-sm { font-size: .68rem; letter-spacing: .26em; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .lede-sm { font-size: 1rem; max-width: 24ch; }
+  html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-body { padding: 4px 12px 22px; }
   html:root:root:not([data-theme='dark']) :is(.rs-card, .ck-how, .vf-card, .vf-info, .si-card, .rs-how, .submit-page fieldset.panel) { border-radius: 22px; box-shadow: 0 10px 24px rgba(70, 36, 12, .15), 0 1px 0 rgba(255, 255, 255, .8) inset; }
   html:root:root:not([data-theme='dark']) :is(.vf-card, .si-card, .rs-card) { padding: 20px 16px 22px; }
   html:root:root:not([data-theme='dark']) .reuse-page .rs-form select, html:root:root:not([data-theme='dark']) .si-input, html:root:root:not([data-theme='dark']) .verify-page .vf-card .vf-field input { min-height: 52px; }
