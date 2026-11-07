@@ -8,6 +8,7 @@ import './signin.css';
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
 import { PageSheet } from '@/components/PageSheet';
+import { Icon } from '@/components/Icons';
 
 export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Reviewer console' };
@@ -31,7 +32,7 @@ export default async function Review({ searchParams }: { searchParams: Promise<{
   }
   const byId = new Map(records.map((r) => [r.id, r]));
   return (
-    <div className="wrap page"><PageSheet title="Reviewer console" lede={`Signed in as ${actor.name}.`} headExtra={<form action={logoutAction} className="sheet-action"><button className="secondary">Sign out ({actor.name})</button></form>}>
+    <div className="wrap page"><PageSheet title="Reviewer console" lede={`Signed in as ${actor.name}.`} headExtra={<form action={logoutAction} className="sheet-action"><button className="secondary signout-btn" type="submit"><Icon name="user" size={15} /><span>Sign out ({actor.name})</span></button></form>}>
       {sp.msg && <p className="notice" role="status">{sp.msg}</p>}
 
       <h2 style={{ marginTop: 0 }}>Open reports ({flags.length})</h2>

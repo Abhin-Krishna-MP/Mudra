@@ -21,7 +21,10 @@ export default async function Submit({ searchParams }: { searchParams: Promise<{
   const signOut = (
     <form action={logoutAction} className="sheet-action">
       <input type="hidden" name="next" value="/login" />
-      <button className="secondary">Sign out ({submitter.name})</button>
+      <button className="secondary signout-btn" type="submit">
+        <Icon name="user" size={15} />
+        <span>Sign out ({submitter.name})</span>
+      </button>
     </form>
   );
   if (sp.done) return (
