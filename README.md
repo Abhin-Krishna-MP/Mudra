@@ -153,6 +153,7 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 ---
 
 
+
 ## 6. System Architecture
 
 ```mermaid
@@ -173,18 +174,19 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
   },
   "flowchart": {
     "curve": "step",
-    "nodeSpacing": 32,
-    "rankSpacing": 48,
-    "padding": 12,
+    "nodeSpacing": 42,
+    "rankSpacing": 55,
+    "padding": 18,
     "htmlLabels": true,
-    "useMaxWidth": true
+    "useMaxWidth": true,
+    "wrappingWidth": 180
   }
 }}%%
 
 flowchart TB
 
     %% CLIENT LAYER
-    subgraph CLIENT["01  ·  CLIENT APPLICATION"]
+    subgraph CLIENT["01 · CLIENT APPLICATION"]
         direction LR
 
         UI["Next.js 15 · React<br/>Progressive Web App"]
@@ -199,7 +201,7 @@ flowchart TB
     end
 
     %% APPLICATION LAYER
-    subgraph APPLICATION["02  ·  APPLICATION & SECURITY ENGINE"]
+    subgraph APPLICATION["02 · APPLICATION & SECURITY ENGINE"]
         direction LR
 
         API["API & Access Layer<br/>REST · Server Actions<br/>Scrypt · RBAC · HMAC"]
@@ -222,7 +224,7 @@ flowchart TB
     end
 
     %% STORAGE LAYER
-    subgraph STORAGE["03  ·  DATABASE & PERSISTENCE"]
+    subgraph STORAGE["03 · DATABASE & PERSISTENCE"]
         direction LR
 
         TURSO[("Turso Cloud<br/>AWS · ap-south-1<br/>LibSQL")]
@@ -277,7 +279,6 @@ flowchart TB
 
 ---
 
-
 <div align="center">
 
 **Mudra — Preserving Heritage. Protecting Rights. Empowering Creators.**
@@ -285,6 +286,7 @@ flowchart TB
 </div>
 
 ---
+
 
 
 ## 7. Installation & Quickstart
