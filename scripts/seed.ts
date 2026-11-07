@@ -49,13 +49,15 @@ async function main() {
   // Demo accounts (only with --with-demo, or when a password env var is set). Never use these passwords in production.
   const withDemo = process.argv.includes('--with-demo');
   const demoUsers = [
-    { email: 'author@mudra.demo', name: 'Demo author', role: 'author', pw: process.env.DEMO_AUTHOR_PASSWORD || (withDemo ? 'DemoAuthorPass123!' : '') },
-    { email: 'reviewer@mudra.demo', name: 'Demo reviewer', role: 'reviewer', pw: process.env.DEMO_REVIEWER_PASSWORD || (withDemo ? 'DemoReviewerPass123!' : '') },
+    { email: 'author@mudra.demo', name: 'Demo Author', role: 'author', region: 'Kannur', category: 'ritual', pw: process.env.DEMO_AUTHOR_PASSWORD || (withDemo ? 'DemoAuthorPass123!' : '') },
+    { email: 'reviewer@mudra.demo', name: 'Demo Reviewer', role: 'reviewer', region: '', category: '', pw: process.env.DEMO_REVIEWER_PASSWORD || (withDemo ? 'DemoReviewerPass123!' : '') },
+    { email: 'steward@mudra.demo', name: 'Demo Steward', role: 'steward', region: 'Kannur', category: 'ritual', pw: process.env.DEMO_STEWARD_PASSWORD || (withDemo ? 'DemoStewardPass123!' : '') },
+    { email: 'admin@mudra.demo', name: 'Demo Admin', role: 'admin', region: '', category: '', pw: process.env.DEMO_ADMIN_PASSWORD || (withDemo ? 'DemoAdminPass123!' : '') },
   ];
   for (const u of demoUsers) {
     if (!u.pw) continue;
     await db.execute('DELETE FROM users WHERE email = ?', [u.email]);
-    await db.execute('INSERT INTO users (email,name,role,password_hash) VALUES (?,?,?,?)', [u.email, u.name, u.role, hashPassword(u.pw)]);
+    await db.execute('INSERT INTO users (email, name, role, region, category, password_hash) VALUES (?, ?, ?, ?, ?, ?)', [u.email, u.name, u.role, u.region, u.category, hashPassword(u.pw)]);
     console.log(`Demo ${u.role}: ${u.email}`);
   }
   console.log(`Seeded ${n} record(s). Signing: ${key ? 'on' : 'off (events unsigned)'}.`);

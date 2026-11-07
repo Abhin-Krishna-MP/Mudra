@@ -21,25 +21,37 @@ function getLocalSecureDir(): string {
   return join(process.cwd(), 'data', 'secure_kyc');
 }
 
-/** Stores an uploaded image. Blob when BLOB_READ_WRITE_TOKEN is set, otherwise public/uploads (local dev). */
+/** Stores an uploaded image. Blob when BLOB_READ_WRITE_TOKEN is set, otherwise public/uploads (local dev) or data URI (serverless fallback). */
 export async function storeUpload(buf: Buffer, sha256: string, mime: string): Promise<string> {
   const ext = mime === 'image/png' ? 'png' : mime === 'image/webp' ? 'webp' : 'jpg';
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
-    const { put } = await import('@vercel/blob');
-    const r = await put(`mudra/${sha256}.${ext}`, buf, { access: 'public', contentType: mime, addRandomSuffix: true });
-    return r.url;
+  if (process.env.BLOB_READ_WRITE_TOKEN && process.env.NODE_ENV !== 'test') {
+    try {
+      const { put } = await import('@vercel/blob');
+      const r = await put(`mudra/${sha256}.${ext}`, buf, { access: 'public', contentType: mime, addRandomSuffix: true });
+      return r.url;
+    } catch (err) {
+      console.warn('Vercel Blob upload failed, falling back:', err);
+    }
   }
   const rel = `uploads/${sha256}.${ext}`;
   try {
     await mkdir(join(process.cwd(), 'public', 'uploads'), { recursive: true });
     await writeFile(join(process.cwd(), 'public', rel), buf);
+    return rel;
   } catch {
-    throw new Error('Uploads are switched off on this deployment (no storage configured).');
+    // Graceful serverless fallback: on read-only environments where Blob is not configured,
+    // store as base64 data URI so submissions never fail.
+    return `data:${mime};base64,${buf.toString('base64')}`;
   }
-  return rel;
 }
 
 export async function readLocalAsset(location: string): Promise<Buffer | null> {
+  if (location.startsWith('data:')) {
+    const idx = location.indexOf('base64,');
+    if (idx !== -1) {
+      return Buffer.from(location.slice(idx + 7), 'base64');
+    }
+  }
   const clean = normalize(location).replace(/^(\.\.(\/|\\|$))+/, '');
   if (clean.includes('..')) return null;
   try { return await readFile(join(process.cwd(), 'public', clean)); } catch { return null; }
