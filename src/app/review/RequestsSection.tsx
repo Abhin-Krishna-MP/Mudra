@@ -50,17 +50,20 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
   const stalledThreads = groupThreads(stalledReqs);
 
   return (
-    <section aria-labelledby="reqs-heading" style={{ marginTop: 32 }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
-        <h2 id="reqs-heading" style={{ margin: 0 }}>
-          Permission Requests ({openReqs.length} open{stalledReqs.length > 0 ? `, ${stalledReqs.length} stalled` : ''})
-        </h2>
-        {(openReqs.length > openThreads.length || stalledReqs.length > stalledThreads.length) && (
-          <span className="chip" style={{ fontSize: '0.8rem', background: 'rgba(232, 120, 42, 0.15)', borderColor: 'rgba(232, 120, 42, 0.35)' }}>
-            <Icon name="layers" size={13} /> Duplicate requests consolidated into threads
-          </span>
-        )}
-      </div>
+    <section aria-labelledby="reqs-heading" style={{ marginTop: 12 }}>
+      {(openReqs.length > 0 || stalledReqs.length > 0) && (
+        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 12 }}>
+          <h2 id="reqs-heading" className="rc-section-heading" style={{ margin: 0 }}>
+            <Icon name="users" size={22} />
+            <span>Ask First Requests ({openReqs.length} open{stalledReqs.length > 0 ? `, ${stalledReqs.length} stalled` : ''})</span>
+          </h2>
+          {(openReqs.length > openThreads.length || stalledReqs.length > stalledThreads.length) && (
+            <span className="chip" style={{ fontSize: '0.8rem', background: 'rgba(232, 120, 42, 0.15)', borderColor: 'rgba(232, 120, 42, 0.35)' }}>
+              <Icon name="layers" size={13} /> Duplicate requests consolidated into threads
+            </span>
+          )}
+        </div>
+      )}
 
       {/* ---------------- 1. STALLED REQUESTS (Bridge Workflow Gap) ---------------- */}
       {stalledThreads.length > 0 && (
@@ -174,10 +177,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
       )}
 
       {/* ---------------- 2. ACTIVE OPEN REQUESTS (Consolidated Threads) ---------------- */}
-      {openThreads.length === 0 && stalledThreads.length === 0 ? (
-        <p className="muted" style={{ marginTop: 14 }}>No open requests at this time.</p>
-      ) : (
-        openThreads.map((thread) => {
+      {openThreads.map((thread) => {
           const r = thread.primary;
           const threadIds = thread.items.map((i) => i.id).join(',');
 
@@ -291,14 +291,25 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
               </details>
             </div>
           );
-        })
-      )}
+        })}
 
-      {/* ---------------- 3. PAST REQUESTS (Inverted Button Hierarchy) ---------------- */}
+      {/* ---------------- 3. PAST REQUESTS (Matching User Image Accordion Bar) ---------------- */}
       {pastReqs.length > 0 && (
-        <details className="panel" style={{ marginTop: 24 }}>
-          <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Past requests ({pastReqs.length})</summary>
-          <div style={{ marginTop: 14 }}>
+        <details
+          style={{
+            marginTop: 18,
+            marginBottom: 20,
+            background: 'var(--rc-panel, #fffdf9)',
+            border: '1.5px solid var(--rc-panel-border, rgba(180, 140, 90, 0.28))',
+            borderRadius: 14,
+            padding: '14px 20px',
+            boxShadow: '0 2px 8px rgba(80, 45, 20, 0.03)',
+          }}
+        >
+          <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: '0.98rem', color: 'var(--rc-ink)', outline: 'none' }}>
+            ▶ Past Requests ({pastReqs.length})
+          </summary>
+          <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--rc-panel-border, rgba(180, 140, 90, 0.2))' }}>
             {pastReqs.map((r) => (
               <div
                 key={r.id}

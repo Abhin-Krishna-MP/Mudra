@@ -13,6 +13,8 @@ export interface RecordItem {
   region: string;
   category: string;
   revision_note: string;
+  asset_id?: string;
+  asset_alt?: string;
 }
 
 export interface StewardUser {
@@ -34,46 +36,109 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
   const [activeTab, setActiveTab] = useState<'moderation' | 'verification' | 'stewardship'>('moderation');
 
   return (
-    <section className="panel ui" aria-label={r.title} style={{ marginBottom: 22, padding: '22px 24px', borderRadius: 16 }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 10 }}>
-        <div>
-          <h3 style={{ margin: '0 0 6px', fontSize: '1.25rem' }}>
-            <a href={`/r/${r.id}`}>{r.title}</a>{' '}
-            <span className="muted" style={{ fontSize: '0.9rem' }}>({r.id})</span>
+    <section className="rc-record-card" aria-label={r.title}>
+      {/* Top row with Thumbnail and Metadata */}
+      <div className="rc-record-top">
+        {/* Left Artwork Thumbnail */}
+        <div className="rc-record-thumb">
+          {r.asset_id ? (
+            <img src={`/api/assets/${r.asset_id}`} alt={r.asset_alt || r.title} />
+          ) : (
+            <div style={{ color: '#d4af37', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="image" size={32} />
+            </div>
+          )}
+        </div>
+
+        {/* Right Info */}
+        <div className="rc-record-meta">
+          <h3 className="rc-record-title">
+            <a href={`/r/${r.id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
+              {r.title}
+            </a>{' '}
+            <span style={{ fontWeight: 400, fontSize: '0.92rem', color: 'var(--rc-muted)' }}>({r.id})</span>
           </h3>
 
-          {/* Chips */}
-          <ul className="chips" style={{ margin: '6px 0 0' }}>
-            <li className="chip">{String(r.status).replace('_', ' ')}</li>
-            <li className="chip">{r.region}</li>
-            <li className="chip">{r.category}</li>
-            <li className="chip">{r.verification_level}</li>
-            {r.disputed ? <li className="chip ask">open report</li> : null}
-            {linkedStewards.length > 0 ? (
-              <li className="chip verified" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                <Icon name="shield" size={13} />
+          {/* Chips matching user image */}
+          <ul className="rc-record-chips">
+            <li
+              className="chip"
+              style={{
+                background: r.status === 'published' ? '#edf7ed' : '#fff3e0',
+                color: r.status === 'published' ? '#1b5e20' : '#b45309',
+                borderColor: r.status === 'published' ? '#c8e6c9' : '#fed7aa',
+                fontWeight: 600,
+                textTransform: 'capitalize',
+              }}
+            >
+              {String(r.status).replace('_', ' ')}
+            </li>
+
+            <li className="chip" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Icon name="pin" size={13} />
+              <span>{r.region || 'Kerala'}</span>
+            </li>
+
+            <li className="chip" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Icon name="layers" size={13} />
+              <span>{r.category || 'Cultural Work'}</span>
+            </li>
+
+            <li className="chip" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Icon name="shield" size={13} />
+              <span style={{ textTransform: 'capitalize' }}>{r.verification_level}</span>
+            </li>
+
+            {r.disputed ? <li className="chip ask">Open Report</li> : null}
+
+            {linkedStewards.length > 0 && (
+              <li
+                className="chip"
+                style={{
+                  background: '#0d4734',
+                  color: '#ffffff',
+                  borderColor: '#0d4734',
+                  fontWeight: 600,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 5,
+                }}
+              >
+                <Icon name="user" size={13} />
                 <span>Steward: {linkedStewards.map((s) => s.name).join(', ')}</span>
-              </li>
-            ) : (
-              <li className="chip muted" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                <Icon name="shield" size={13} />
-                <span>No steward</span>
               </li>
             )}
           </ul>
+
+          {/* Assigned Stewards with Unlink chip */}
+          {linkedStewards.length > 0 && (
+            <div className="rc-assigned-row">
+              <span style={{ fontSize: '0.84rem', color: 'var(--rc-muted)', fontWeight: 600 }}>Assigned:</span>
+              {linkedStewards.map((s) => (
+                <form key={s.id} action={unassignStewardAction} style={{ display: 'inline', margin: 0 }}>
+                  <input type="hidden" name="recordId" value={r.id} />
+                  <input type="hidden" name="userId" value={s.id} />
+                  <span className="rc-assigned-pill">
+                    <span>{s.name}</span>
+                    <button type="submit" title={`Unlink ${s.name}`}>
+                      ✕
+                    </button>
+                  </span>
+                </form>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Horizontal Tabs to Consolidate Management Tools */}
+      {/* Horizontal Tabs to switch between Moderation, Verification, and Stewardship */}
       <div
         role="tablist"
         style={{
           display: 'flex',
           gap: 6,
           marginTop: 18,
-          marginBottom: 16,
-          borderBottom: '1.5px solid var(--pp-edge, rgba(240, 137, 74, 0.3))',
+          borderBottom: '1.5px solid var(--rc-panel-border, rgba(180, 140, 90, 0.25))',
           paddingBottom: 0,
           overflowX: 'auto',
         }}
@@ -86,21 +151,20 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 7,
+            gap: 6,
             padding: '8px 16px',
             background: 'transparent',
             border: 0,
-            borderBottom: activeTab === 'moderation' ? '3px solid var(--pp-accent, #e8782a)' : '3px solid transparent',
-            color: activeTab === 'moderation' ? 'var(--pp-ink, #ffffff)' : 'var(--pp-muted, #a89682)',
+            borderBottom: activeTab === 'moderation' ? '3px solid var(--rc-maroon, #751b16)' : '3px solid transparent',
+            color: activeTab === 'moderation' ? 'var(--rc-maroon, #751b16)' : 'var(--rc-muted)',
             fontWeight: activeTab === 'moderation' ? 700 : 500,
-            fontSize: '0.92rem',
+            fontSize: '0.9rem',
             cursor: 'pointer',
-            transition: 'all 0.15s ease',
             whiteSpace: 'nowrap',
           }}
         >
-          <Icon name="scale" size={15} />
-          <span>1. Moderation & Review</span>
+          <Icon name="scale" size={14} />
+          <span>Moderation & Review</span>
         </button>
 
         <button
@@ -111,21 +175,20 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 7,
+            gap: 6,
             padding: '8px 16px',
             background: 'transparent',
             border: 0,
-            borderBottom: activeTab === 'verification' ? '3px solid var(--pp-accent, #e8782a)' : '3px solid transparent',
-            color: activeTab === 'verification' ? 'var(--pp-ink, #ffffff)' : 'var(--pp-muted, #a89682)',
+            borderBottom: activeTab === 'verification' ? '3px solid var(--rc-maroon, #751b16)' : '3px solid transparent',
+            color: activeTab === 'verification' ? 'var(--rc-maroon, #751b16)' : 'var(--rc-muted)',
             fontWeight: activeTab === 'verification' ? 700 : 500,
-            fontSize: '0.92rem',
+            fontSize: '0.9rem',
             cursor: 'pointer',
-            transition: 'all 0.15s ease',
             whiteSpace: 'nowrap',
           }}
         >
-          <Icon name="checkCircle" size={15} />
-          <span>2. Evidence Verification</span>
+          <Icon name="checkCircle" size={14} />
+          <span>Evidence Verification</span>
         </button>
 
         <button
@@ -136,29 +199,28 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: 7,
+            gap: 6,
             padding: '8px 16px',
             background: 'transparent',
             border: 0,
-            borderBottom: activeTab === 'stewardship' ? '3px solid var(--pp-accent, #e8782a)' : '3px solid transparent',
-            color: activeTab === 'stewardship' ? 'var(--pp-ink, #ffffff)' : 'var(--pp-muted, #a89682)',
+            borderBottom: activeTab === 'stewardship' ? '3px solid var(--rc-maroon, #751b16)' : '3px solid transparent',
+            color: activeTab === 'stewardship' ? 'var(--rc-maroon, #751b16)' : 'var(--rc-muted)',
             fontWeight: activeTab === 'stewardship' ? 700 : 500,
-            fontSize: '0.92rem',
+            fontSize: '0.9rem',
             cursor: 'pointer',
-            transition: 'all 0.15s ease',
             whiteSpace: 'nowrap',
           }}
         >
-          <Icon name="users" size={15} />
-          <span>3. Stewardship ({linkedStewards.length})</span>
+          <Icon name="users" size={14} />
+          <span>Stewardship ({linkedStewards.length})</span>
         </button>
       </div>
 
       {/* Tab 1: Moderation */}
       {activeTab === 'moderation' && (
-        <div style={{ paddingTop: 4 }}>
+        <div className="rc-edit-note-box">
           {r.revision_note && (
-            <div className="sb-callout" style={{ margin: '0 0 14px', padding: '10px 14px', borderRadius: 10 }}>
+            <div className="sb-callout" style={{ margin: '0 0 12px', padding: '8px 12px', borderRadius: 8 }}>
               <strong>Current Revision Note:</strong> {r.revision_note}
             </div>
           )}
@@ -166,15 +228,16 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           <form action={reviewFormAction}>
             <input type="hidden" name="recordId" value={r.id} />
 
-            <label htmlFor={`n-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.9rem' }}>
-              Required edits or reviewer note (required when requesting revision):
+            <label htmlFor={`n-${r.id}`} className="rc-edit-note-label">
+              <Icon name="quote" size={15} />
+              <span>Required edits or reviewer note (required when requesting revision)</span>
             </label>
             <input
               id={`n-${r.id}`}
               type="text"
               name="note"
+              className="rc-edit-note-input"
               placeholder="Describe edits for author (e.g. Please verify tradition lineage)..."
-              style={{ width: '100%', minHeight: 44, padding: '8px 14px', borderRadius: 8, fontSize: '0.9rem' }}
             />
 
             <div className="btn-row" style={{ marginTop: 14 }}>
@@ -194,7 +257,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
 
       {/* Tab 2: Evidence Verification */}
       {activeTab === 'verification' && (
-        <div style={{ paddingTop: 4 }}>
+        <div style={{ paddingTop: 12 }}>
           <form action={reviewFormAction}>
             <input type="hidden" name="recordId" value={r.id} />
             <input type="hidden" name="action" value="verify" />
@@ -210,7 +273,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                   name="source"
                   required
                   placeholder="e.g. State Folklore Academy Gazette / Gurukulam record"
-                  style={{ width: '100%', minHeight: 40, padding: '6px 12px', borderRadius: 8 }}
+                  style={{ width: '100%', minHeight: 40, padding: '6px 12px', borderRadius: 8, border: '1.5px solid var(--rc-panel-border)' }}
                 />
               </div>
 
@@ -223,7 +286,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                   type="url"
                   name="url"
                   placeholder="https://..."
-                  style={{ width: '100%', minHeight: 40, padding: '6px 12px', borderRadius: 8 }}
+                  style={{ width: '100%', minHeight: 40, padding: '6px 12px', borderRadius: 8, border: '1.5px solid var(--rc-panel-border)' }}
                 />
               </div>
             </div>
@@ -237,8 +300,8 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                 name="note"
                 required
                 rows={3}
-                placeholder="Details of the verification check performed..."
-                style={{ width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: '0.9rem' }}
+                placeholder="Details of the verification check performed against cultural evidence..."
+                style={{ width: '100%', padding: '8px 12px', borderRadius: 8, fontSize: '0.9rem', border: '1.5px solid var(--rc-panel-border)' }}
               />
             </div>
 
@@ -253,67 +316,15 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
 
       {/* Tab 3: Stewardship */}
       {activeTab === 'stewardship' && (
-        <div style={{ paddingTop: 4 }}>
-          {/* Currently Assigned Stewards */}
-          <div style={{ marginBottom: 16 }}>
-            <span style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--pp-muted)' }}>
-              Assigned Stewards for this record:
-            </span>
-            {linkedStewards.length > 0 ? (
-              <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
-                {linkedStewards.map((s) => (
-                  <div
-                    key={s.id}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      background: 'rgba(29, 90, 42, 0.25)',
-                      border: '1px solid rgba(46, 125, 50, 0.45)',
-                      borderRadius: 999,
-                      padding: '4px 12px',
-                    }}
-                  >
-                    <span style={{ fontSize: '0.85rem', color: '#81c784', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                      <Icon name="shield" size={13} /> {s.name}
-                    </span>
-                    <form action={unassignStewardAction} style={{ display: 'inline', margin: 0 }}>
-                      <input type="hidden" name="recordId" value={r.id} />
-                      <input type="hidden" name="userId" value={s.id} />
-                      <button
-                        type="submit"
-                        title={`Unlink ${s.name}`}
-                        style={{
-                          background: 'transparent',
-                          border: 0,
-                          color: '#e57373',
-                          cursor: 'pointer',
-                          padding: '0 4px',
-                          fontSize: '0.85rem',
-                          fontWeight: 700,
-                        }}
-                      >
-                        ✕
-                      </button>
-                    </form>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <p className="muted" style={{ margin: '6px 0 0', fontSize: '0.88rem' }}>
-                No steward is currently linked to this record.
-              </p>
-            )}
-          </div>
-
+        <div style={{ paddingTop: 12 }}>
           {/* Quick Assign Steward to this Record */}
           <form
             action={assignStewardAction}
             style={{
               padding: '12px 16px',
               borderRadius: 12,
-              background: 'rgba(24, 15, 11, 0.5)',
-              border: '1px solid var(--pp-edge, rgba(240, 137, 74, 0.25))',
+              background: 'rgba(180, 140, 90, 0.08)',
+              border: '1px solid var(--rc-panel-border)',
             }}
           >
             <input type="hidden" name="recordId" value={r.id} />
@@ -331,6 +342,9 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                   borderRadius: 8,
                   fontSize: '0.88rem',
                   flex: '1 1 240px',
+                  border: '1.5px solid var(--rc-panel-border)',
+                  background: 'var(--rc-card, #ffffff)',
+                  color: 'var(--rc-ink)',
                 }}
               >
                 <option value="">— Select Steward / Reviewer —</option>
@@ -355,4 +369,3 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
     </section>
   );
 }
-

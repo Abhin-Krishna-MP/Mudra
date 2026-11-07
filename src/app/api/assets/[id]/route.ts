@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const actor = await getActor();
-  const reviewer = !!actor && ['reviewer', 'admin'].includes(actor.role);
+  const reviewer = !!actor && ['reviewer', 'admin', 'steward'].includes(actor.role);
   const a = await getAsset(await getDb(), id, { reviewer });
   if (!a) return new NextResponse('Not found', { status: 404 });
   if (/^https?:\/\//.test(a.location)) return NextResponse.redirect(a.location);
