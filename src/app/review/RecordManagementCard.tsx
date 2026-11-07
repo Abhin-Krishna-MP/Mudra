@@ -213,11 +213,11 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
 
                 <div className="btn-row" style={{ marginTop: 16 }}>
                   {r.status !== 'published' ? (
-                    <button type="submit" name="action" value="approve" className="btn pp-btn-maroon" title="Approve and move to Catalogue">
+                    <button type="submit" name="action" value="approve" className="btn rc-btn-approve" title="Approve and move to Catalogue">
                       <Icon name="check" size={15} /> Approve (Move to Catalogue)
                     </button>
                   ) : (
-                    <span className="chip" style={{ background: '#edf7ed', color: '#1b5e20', borderColor: '#c8e6c9', fontWeight: 600 }}>
+                    <span className="rc-status-flat-badge" title="Record is published and active in the public catalogue">
                       <Icon name="checkCircle" size={14} /> Active in Catalogue
                     </span>
                   )}

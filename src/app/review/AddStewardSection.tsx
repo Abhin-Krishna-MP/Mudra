@@ -197,7 +197,8 @@ export default function AddStewardSection({ users, records }: Props) {
           {/* Mode 2: Register New Steward */}
           {mode === 'create' && (
             <form action={createOrPromoteStewardAction} style={{ marginTop: 16 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
+              {/* 2x2 Grid for Onboarding Form (Two inputs per row, stacked) */}
+              <div className="rc-steward-grid-2x2">
                 <div>
                   <label htmlFor="steward-name" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     Full Name *
