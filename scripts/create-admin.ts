@@ -1,10 +1,10 @@
-/** npm run create-admin -- email@example.org "Display Name" reviewer|admin   (password read from env ADMIN_PASSWORD or prompted-less arg 4) */
+/** npm run create-admin -- email@example.org "Display Name" author|reviewer|admin   (password read from env ADMIN_PASSWORD or prompted-less arg 4) */
 import { scriptDb } from './db';
 import { hashPassword } from '../src/lib/auth';
 const [email, name, role = 'reviewer', pwArg] = process.argv.slice(2);
 const pw = pwArg || process.env.ADMIN_PASSWORD;
-if (!email || !name || !pw || !['reviewer', 'admin'].includes(role)) {
-  console.error('Usage: ADMIN_PASSWORD=... npm run create-admin -- <email> "<name>" [reviewer|admin]'); process.exit(1);
+if (!email || !name || !pw || !['author', 'reviewer', 'admin'].includes(role)) {
+  console.error('Usage: ADMIN_PASSWORD=... npm run create-admin -- <email> "<name>" [author|reviewer|admin]'); process.exit(1);
 }
 if (pw.length < 10) { console.error('Password must be at least 10 characters.'); process.exit(1); }
 async function main() {

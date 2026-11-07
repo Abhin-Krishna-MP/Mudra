@@ -46,10 +46,17 @@ async function main() {
   const max = Math.max(0, ...records.map((r) => /^MDR-2026-(\d+)$/.exec(r.id ?? '')?.[1]).filter(Boolean).map(Number));
   if (max) await db.execute("INSERT INTO counters (name, value) VALUES ('record', ?)", [max]);
 
-  if (process.env.DEMO_REVIEWER_PASSWORD) {
-    await db.execute('DELETE FROM users WHERE email = ?', ['reviewer@mudra.demo']);
-    await db.execute('INSERT INTO users (email,name,role,password_hash) VALUES (?,?,?,?)', ['reviewer@mudra.demo', 'Demo reviewer', 'reviewer', hashPassword(process.env.DEMO_REVIEWER_PASSWORD)]);
-    console.log('Demo reviewer: reviewer@mudra.demo (throwaway password from DEMO_REVIEWER_PASSWORD)');
+  // Demo accounts (only with --with-demo, or when a password env var is set). Never use these passwords in production.
+  const withDemo = process.argv.includes('--with-demo');
+  const demoUsers = [
+    { email: 'author@mudra.demo', name: 'Demo author', role: 'author', pw: process.env.DEMO_AUTHOR_PASSWORD || (withDemo ? 'DemoAuthorPass123!' : '') },
+    { email: 'reviewer@mudra.demo', name: 'Demo reviewer', role: 'reviewer', pw: process.env.DEMO_REVIEWER_PASSWORD || (withDemo ? 'DemoReviewerPass123!' : '') },
+  ];
+  for (const u of demoUsers) {
+    if (!u.pw) continue;
+    await db.execute('DELETE FROM users WHERE email = ?', [u.email]);
+    await db.execute('INSERT INTO users (email,name,role,password_hash) VALUES (?,?,?,?)', [u.email, u.name, u.role, hashPassword(u.pw)]);
+    console.log(`Demo ${u.role}: ${u.email}`);
   }
   console.log(`Seeded ${n} record(s). Signing: ${key ? 'on' : 'off (events unsigned)'}.`);
 }

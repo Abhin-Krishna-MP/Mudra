@@ -13,7 +13,8 @@ export function MudraLoader({ once = true }: { once?: boolean }) {
     if (once) {
       try {
         if (sessionStorage.getItem('mudraLoaderSeen')) {
-          element.remove();
+          element.classList.add('is-done');
+          element.style.display = 'none';
           root.classList.remove('mudra-loading');
           document.dispatchEvent(new Event('mudra:loaded'));
           return;
@@ -57,7 +58,9 @@ export function MudraLoader({ once = true }: { once?: boolean }) {
         root.classList.remove('mudra-loading');
         try { sessionStorage.setItem('mudraLoaderSeen', '1'); } catch (e) {}
         document.dispatchEvent(new Event('mudra:loaded'));
-        setTimeout(() => { element.remove(); }, 1200);
+        setTimeout(() => {
+          element.style.display = 'none';
+        }, 1200);
       }, 300);
     }
 
