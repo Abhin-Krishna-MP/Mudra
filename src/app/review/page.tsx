@@ -1,15 +1,17 @@
 
 import { getDb } from '@/lib/db';
 import { getActor } from '@/lib/session';
-import { listRecords, listFlags } from '@/lib/repo';
+import { listFlags } from '@/lib/repo';
 import { listRequestsForSteward } from '@/lib/repo-grants';
 import {
   reviewFormAction,
   logoutAction,
   assignStewardAction,
 } from '@/app/actions';
+
 import '../reuse/reuse.css';
 import './signin.css';
+
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
 import { PageSheet } from '@/components/PageSheet';
@@ -41,9 +43,8 @@ export default async function Review({
   }
 
   const db = await getDb();
-  const records = await listRecords(db, { reviewer: true });
 
-  // Look up current steward's expertise region & category
+  // Look up current steward's expertise region and category.
   const stewardUser = actor.id
     ? (
         await db.execute(
@@ -61,7 +62,7 @@ export default async function Review({
   const stewardRegion = String(stewardUser?.region || '').trim();
   const stewardCategory = String(stewardUser?.category || '').trim();
 
-  // Specific Steward Routing (Tag Matching)
+  // Specific Steward Routing (Tag Matching).
   // Stewards only see pending drafts matching their region and category.
   const isSteward = actor.role === 'steward';
 
@@ -106,9 +107,11 @@ export default async function Review({
     ).rows;
   }
 
+  // Load dashboard data.
   const flags = await listFlags(db, actor);
   const requests = await listRequestsForSteward(db, actor);
 
+  // Load users for steward assignment.
   const users = (
     await db.execute(
       'SELECT id, name, email FROM users ORDER BY name',
@@ -119,6 +122,7 @@ export default async function Review({
     email: String(u.email),
   }));
 
+  // Load currently assigned stewards.
   const stewardRows = (
     await db.execute(
       `SELECT
@@ -146,8 +150,6 @@ export default async function Review({
     stewardsByRecord.set(String(s.record_id), list);
   }
 
-  const byId = new Map(records.map((r) => [r.id, r]));
-
   return (
     <div className="wrap page">
       <PageSheet
@@ -171,6 +173,7 @@ export default async function Review({
           </form>
         }
       >
+        {/* Status message */}
         {sp.msg && (
           <p className="notice" role="status">
             {sp.msg}
@@ -203,6 +206,7 @@ export default async function Review({
         {/* Reviewer and Admin sections */}
         {!isSteward && (
           <>
+            {/* Open reports */}
             <h2 style={{ marginTop: 0 }}>
               Open reports ({flags.length})
             </h2>
@@ -276,6 +280,7 @@ export default async function Review({
               ))
             )}
 
+            {/* Steward requests */}
             <RequestsSection requests={requests} />
           </>
         )}
@@ -297,7 +302,7 @@ export default async function Review({
 
         {rows.map((r) => {
           const linkedStewards =
-            stewardsByRecord.get(r.id) ?? [];
+            stewardsByRecord.get(String(r.id)) ?? [];
 
           return (
             <section
@@ -314,6 +319,7 @@ export default async function Review({
                 </span>
               </h3>
 
+              {/* Record information */}
               <ul className="chips">
                 <li className="chip">
                   {String(r.status).replace('_', ' ')}

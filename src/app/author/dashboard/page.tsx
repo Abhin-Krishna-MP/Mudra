@@ -33,11 +33,18 @@ export default async function AuthorDashboard({
         title="Author Dashboard"
         lede={`Signed in as ${actor.name} (${actor.role}). Manage your cultural submissions and revisions.`}
         headExtra={
-          <div style={{ display: 'flex', gap: 8 }}>
-            <a href="/submit" className="btn">Submit New Work</a>
-            <a href="/apply-steward" className="btn secondary">Apply as Steward</a>
-            <form action={logoutAction}>
-              <button type="submit" className="secondary">Sign out</button>
+          <div className="sheet-action">
+            <a href="/submit" className="btn">
+              <Icon name="tools" size={16} /> Submit New Work
+            </a>
+            <a href="/apply-steward" className="btn secondary">
+              <Icon name="shield" size={16} /> Apply as Steward
+            </a>
+            <form action={logoutAction} style={{ margin: 0 }}>
+              <input type="hidden" name="next" value="/login" />
+              <button type="submit" className="btn secondary">
+                Sign out ({actor.name})
+              </button>
             </form>
           </div>
         }

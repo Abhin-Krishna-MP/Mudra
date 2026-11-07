@@ -36,7 +36,13 @@ export default async function ApplyStewardPage({
         eyebrow="Steward KYC Verification"
         title="Apply as Cultural Steward"
         lede="Authors can upload identity documents to become verified stewards for their region and cultural domain."
-        headExtra={<a href="/author/dashboard" className="btn secondary">Back to Dashboard</a>}
+        headExtra={
+          <div className="sheet-action">
+            <a href="/author/dashboard" className="btn secondary">
+              <Icon name="chevL" size={16} /> Back to Dashboard
+            </a>
+          </div>
+        }
       >
         {sp.done && (
           <div className="sb-callout" role="alert" style={{ marginBottom: 24, borderLeft: '4px solid var(--accent, #047857)' }}>

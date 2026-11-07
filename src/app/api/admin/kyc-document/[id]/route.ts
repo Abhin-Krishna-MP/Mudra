@@ -30,13 +30,17 @@ export async function GET(
   }
 
   const loc = String(app.id_document_url);
-  const contentType = loc.endsWith('.pdf')
-    ? 'application/pdf'
-    : loc.endsWith('.png')
-    ? 'image/png'
-    : loc.endsWith('.webp')
-    ? 'image/webp'
-    : 'image/jpeg';
+  let contentType = 'image/jpeg';
+  if (loc.startsWith('data:')) {
+    const match = loc.match(/^data:([^;]+);/);
+    if (match) contentType = match[1];
+  } else {
+    const cleanPath = loc.split('?')[0].toLowerCase();
+    if (cleanPath.endsWith('.pdf')) contentType = 'application/pdf';
+    else if (cleanPath.endsWith('.png')) contentType = 'image/png';
+    else if (cleanPath.endsWith('.webp')) contentType = 'image/webp';
+    else if (cleanPath.endsWith('.gif')) contentType = 'image/gif';
+  }
 
   return new NextResponse(new Uint8Array(buf), {
     headers: {
