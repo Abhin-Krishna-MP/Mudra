@@ -109,60 +109,172 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ## 6. System Architecture Diagram
 
+## Architecture
+
+```mermaid
+%%{init: {
+  "theme": "base",
+  "themeVariables": {
+    "background": "#0B090B",
+    "primaryColor": "#241820",
+    "primaryTextColor": "#F5E8CC",
+    "primaryBorderColor": "#C9A45C",
+    "lineColor": "#D6B66E",
+    "secondaryColor": "#19382F",
+    "tertiaryColor": "#30202A",
+    "fontFamily": "Inter, sans-serif",
+    "fontSize": "13px"
+  },
+  "flowchart": {
+    "curve": "step",
+    "nodeSpacing": 35,
+    "rankSpacing": 55,
+    "htmlLabels": true
+  }
+}}%%
+
+flowchart TB
+
+    subgraph CLIENT["01 · CLIENT BROWSER"]
+        direction LR
+
+        UI["Next.js Server Components<br/>Progressive Web App · Service Worker"]
+
+        CULTURE["Kerala Padippura Navbar<br/>Light & Dark · 2087 × 436<br/>Kathakali Sunset · Panchuruli Theyyam"]
+
+        INTERACTION["Cultural Splash Loader<br/>Malayalam Calligraphy<br/>Museum Layout · Theme Toggle"]
+
+        STUDIO["Interactive Reuse Studio<br/>Live Notifications · Filtered Popover<br/>Real-time DB Events"]
+
+        IDENTITY["SVG Identity Seal<br/>Client-side File Hash<br/>Tamper Simulation · Fuzzy Search"]
+
+        REQUEST["4-Field Request Form<br/>Private Status Page<br/>Public Grant Verifier"]
+
+        UI --> CULTURE --> INTERACTION
+        INTERACTION --> STUDIO --> IDENTITY --> REQUEST
+    end
+
+    subgraph BACKEND["02 · NEXT.JS 15 RUNTIME / EDGE ENGINE"]
+        direction LR
+
+        PERMISSION["Permission Engine<br/>17,496 Tests"]
+
+        AUDIT["SHA-256 Audit Chain<br/>Ed25519 Signatures"]
+
+        DHASH["Perceptual dHash Matcher<br/>64-bit Gradient Hash"]
+
+        GRANT["Ed25519 Grant Engine<br/>RFC 8785 Canonical JSON"]
+
+        OG["Next/OG Card Generator<br/>1200 × 630 PNG + QR"]
+
+        AUTH["Scrypt RBAC<br/>HMAC-signed Cookies<br/>Authentication Guard"]
+
+        TDM["W3C TDMRep AI Signals<br/>tdm-reservation: 1"]
+
+        LOOKUP["Hash-only Lookup API<br/>POST /api/v1/lookup"]
+
+        MANIFEST["Signed Manifest API<br/>GET /api/v1/manifest"]
+
+        NOTIFY["Live Notification API<br/>/api/notifications"]
+
+        WEBMANIFEST["Web App Manifest Route<br/>/manifest.webmanifest"]
+
+        SPRITE["Zero-Heat Sprite Engine<br/>Hardware Blit & Sleep"]
+    end
+
+    subgraph DATABASE["03 · DATABASE & STORAGE LAYER · LIBSQL"]
+        direction LR
+
+        TURSO[("Turso Cloud<br/>AWS ap-south-1<br/>Mumbai")]
+
+        SQLITE[("Local SQLite<br/>data/mudra.db")]
+
+        RECORDS[("records<br/>Cultural Metadata<br/>Status · Permissions<br/>Sensitivity · Work Type")]
+
+        CREDITS[("credits<br/>Artists · Tradition Bearers<br/>Photographers · Roles")]
+
+        ASSETS[("assets<br/>SHA-256 · dHash<br/>Dimensions · MIME<br/>Storage Keys")]
+
+        EVENTS[("audit_events<br/>Cryptographic Event Chain<br/>Sequential State Transitions")]
+
+        FLAGS[("flags<br/>Community Reports<br/>Disputes · Resolution Notes")]
+
+        VERIFICATIONS[("verifications<br/>Academic & Governmental<br/>Reviewer Citations")]
+
+        USERS[("users<br/>Reviewer & Steward<br/>Scrypt + Salt Credentials")]
+
+        COUNTERS[("counters<br/>Sequential Record IDs<br/>MDR-2026-NNNN")]
+
+        STEWARDS[("record_stewards<br/>Authorized Stewards<br/>Record Mapping")]
+
+        REQUESTS[("permission_requests<br/>Scoped Reuse Requests<br/>Tokens · Notes · Conditions")]
+
+        GRANTS[("grants<br/>Ed25519 Signatures<br/>Canonical JSON Payloads")]
+    end
+
+    REQUEST -->|"HTTP / Server Actions / REST API"| PERMISSION
+
+    PERMISSION --> AUDIT
+    PERMISSION --> AUTH
+    AUDIT --> DHASH
+    AUTH --> GRANT
+    GRANT --> OG
+    DHASH --> LOOKUP
+    GRANT --> MANIFEST
+    AUTH --> NOTIFY
+    MANIFEST --> TDM
+    NOTIFY --> WEBMANIFEST
+    TDM --> SPRITE
+
+    AUDIT -->|"Atomic Transactions"| TURSO
+    GRANT --> TURSO
+    LOOKUP --> TURSO
+    NOTIFY --> TURSO
+
+    TURSO <-->|"Local / Cloud Persistence"| SQLITE
+
+    TURSO --> RECORDS
+    TURSO --> CREDITS
+    TURSO --> ASSETS
+    TURSO --> EVENTS
+    TURSO --> FLAGS
+    TURSO --> VERIFICATIONS
+    TURSO --> USERS
+    TURSO --> COUNTERS
+    TURSO --> STEWARDS
+    TURSO --> REQUESTS
+    TURSO --> GRANTS
+
+    classDef frontend fill:#291D26,stroke:#C9A45C,color:#F8E9CB,stroke-width:1.5px
+    classDef backend fill:#30202A,stroke:#D0A85D,color:#F8E9CB,stroke-width:1.5px
+    classDef database fill:#153B32,stroke:#B99A58,color:#E8EEDC,stroke-width:1.5px
+    classDef infrastructure fill:#203A31,stroke:#D6B66E,color:#F5E8CC,stroke-width:2px
+
+    class UI,CULTURE,INTERACTION,STUDIO,IDENTITY,REQUEST frontend
+    class PERMISSION,AUDIT,DHASH,GRANT,OG,AUTH,TDM,LOOKUP,MANIFEST,NOTIFY,WEBMANIFEST,SPRITE backend
+    class RECORDS,CREDITS,ASSETS,EVENTS,FLAGS,VERIFICATIONS,USERS,COUNTERS,STEWARDS,REQUESTS,GRANTS database
+    class TURSO,SQLITE infrastructure
+
+    style CLIENT fill:#100D10,stroke:#C9A45C,stroke-width:2px,color:#E9D3A2
+    style BACKEND fill:#100D10,stroke:#B88A65,stroke-width:2px,color:#E9D3A2
+    style DATABASE fill:#0D1714,stroke:#A58F56,stroke-width:2px,color:#D8C99D
 ```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                                   CLIENT BROWSER                                       │
-│                                                                                        │
-│  Next.js Server Components + Progressive Web App (PWA) + Service Worker (Offline Cache)│
-│  - Traditional Kerala Padippura Master Artwork Navbar (Light & Dark 2087x436 Artworks) │
-│  - Live Registry Notification Bell & Filtered Popover (Real-time DB Events)            │
-│  - Cultural Splash Loader with Malayalam Calligraphy (Session-aware boot sequence)     │
-│  - Dual-Theme 3D Stage (Kathakali Sunset vs Panchuruli Theyyam Night)                  │
-│  - Museum Layout & Theme Toggle    - Interactive Reuse Studio  - Client-side File Hash │
-│  - Deterministic SVG Identity Seal - In-Memory Tamper Sim      - Phonetic Fuzzy Search │
-│  - 4-Field Request Form            - Private Status Page       - Public Grant Verifier │
-└───────────────────────────────────────────┬────────────────────────────────────────────┘
-                                            │ HTTP / Server Actions / REST API
-                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                              NEXT.JS 15 RUNTIME / EDGE ENGINE                          │
-│                                                                                        │
-│  ┌───────────────────────┐  ┌─────────────────────────┐  ┌──────────────────────────┐  │
-│  │ Permission Engine     │  │ SHA-256 Audit Chain     │  │ Perceptual dHash Matcher │  │
-│  │ (pure, 17,496 tests)  │  │ (+ Ed25519 Signatures)  │  │ (64-bit gradient hash)   │  │
-│  └───────────────────────┘  └─────────────────────────┘  └──────────────────────────┘  │
-│  ┌───────────────────────┐  ┌─────────────────────────┐  ┌──────────────────────────┐  │
-│  │ Ed25519 Grant Engine  │  │ Next/OG Card Generator  │  │ Scrypt RBAC & Auth Guard │  │
-│  │ (RFC 8785 Canonical)  │  │ (1200x630 PNG + QR)     │  │ (HMAC-signed cookies)    │  │
-│  └───────────────────────┘  └─────────────────────────┘  └──────────────────────────┘  │
-│  ┌───────────────────────┐  ┌─────────────────────────┐  ┌──────────────────────────┐  │
-│  │ W3C TDMRep AI Signals │  │ Hash-Only Lookup API    │  │ Signed Manifest API      │  │
-│  │ (tdm-reservation: 1)  │  │ (POST /api/v1/lookup)   │  │ (GET /api/v1/manifest)   │  │
-│  └───────────────────────┘  └─────────────────────────┘  └──────────────────────────┘  │
-│  ┌───────────────────────┐  ┌─────────────────────────┐  ┌──────────────────────────┐  │
-│  │ Live Notification API │  │ Web App Manifest Route  │  │ Zero-Heat Sprite Engine  │  │
-│  │ (/api/notifications)  │  │ (/manifest.webmanifest) │  │ (Hardware Blit & Sleep)  │  │
-│  └───────────────────────┘  └─────────────────────────┘  └──────────────────────────┘  │
-└───────────────────────────────────────────┬────────────────────────────────────────────┘
-                                            │ Atomic Transactions
-                                            ▼
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                           DATABASE & STORAGE LAYER (LIBSQL)                            │
-│                                                                                        │
-│  Turso Cloud (AWS ap-south-1 Mumbai) / SQLite Local (`data/mudra.db`)                   │
-│  - `records`: Cultural metadata, status, permissions, sensitivity, work type           │
-│  - `credits`: Attributed artists, tradition bearers, photographers, roles              │
-│  - `assets`: Image hashes (SHA-256 + dHash), dimensions, MIME, storage keys            │
-│  - `audit_events`: Cryptographically linked chain of sequential state transitions      │
-│  - `flags`: Community reports, dispute tracking, resolution notes                      │
-│  - `verifications`: Academic & governmental citations recorded by reviewers            │
-│  - `users`: Reviewer & steward credentials hashed with scrypt and salt                 │
-│  - `counters`: Monotonically increasing record ID generator (`MDR-2026-NNNN`)          │
-│  - `record_stewards`: Mapping linking authorized cultural stewards to specific records │
-│  - `permission_requests`: Scoped reuse requests, private tokens, notes, conditions     │
-│  - `grants`: Ed25519 digital signatures and signed canonical JSON payloads             │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
+
+### Architecture Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | Next.js 15 · React · PWA |
+| Backend | Next.js Runtime · REST API |
+| Security | Scrypt · RBAC · HMAC |
+| Cryptography | SHA-256 · Ed25519 · RFC 8785 |
+| Image Matching | Perceptual dHash |
+| Database | LibSQL · Turso · SQLite |
+| Standards | W3C TDMRep |
+
+---
+
+**Mudra — Preserving Heritage. Protecting Rights. Empowering Creators.**
 
 ---
 
