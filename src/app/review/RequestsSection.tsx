@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useTransition } from 'react';
 import type { RequestView } from '@/lib/repo-grants';
 import { grantDecisionAction, revokeGrantAction, assignStewardAction } from '@/app/actions';
 import { Icon } from '@/components/Icons';
@@ -31,6 +31,8 @@ function formatTimestamp(isoString: string | null | undefined): string {
 
 export default function RequestsSection({ requests, stewards = [] }: Props) {
   const today = new Date().toISOString().split('T')[0];
+  const [isPending, startTransition] = useTransition();
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
 
   // Group requests into Stalled (forwarded / no steward), Active Open, and Past
   const stalledReqs = requests.filter((r) => r.status === 'forwarded');
@@ -54,6 +56,48 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
 
   const openThreads = groupThreads(openReqs);
   const stalledThreads = groupThreads(stalledReqs);
+
+  const handleDecisionSubmit = (e: React.FormEvent<HTMLFormElement>, reqId: string) => {
+    e.preventDefault();
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+    const decisionVal = submitter?.value || 'granted';
+    setPendingAction(`${decisionVal}-${reqId}`);
+    const fd = new FormData(e.currentTarget);
+    if (decisionVal) fd.set('decision', decisionVal);
+    startTransition(async () => {
+      try {
+        await grantDecisionAction(fd);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
+
+  const handleAssignSubmit = (e: React.FormEvent<HTMLFormElement>, recId: string) => {
+    e.preventDefault();
+    setPendingAction(`assign-${recId}`);
+    const fd = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await assignStewardAction(fd);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
+
+  const handleRevokeSubmit = (e: React.FormEvent<HTMLFormElement>, reqId: string) => {
+    e.preventDefault();
+    setPendingAction(`revoke-${reqId}`);
+    const fd = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await revokeGrantAction(fd);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
 
   return (
     <section className="rc-section-block" aria-labelledby="reqs-heading">
@@ -162,7 +206,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                     Assigning a steward to <strong>{r.record_id}</strong> will automatically resume this request to active review status.
                   </p>
 
-                  <form action={assignStewardAction} style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+                  <form onSubmit={(e) => handleAssignSubmit(e, r.record_id)} style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
                     <input type="hidden" name="recordId" value={r.record_id} />
                     <select
                       name="userId"
@@ -188,6 +232,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
 
                     <button
                       type="submit"
+                      disabled={isPending}
                       className="btn pp-btn-maroon"
                       style={{
                         minHeight: 40,
@@ -197,7 +242,8 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                         borderRadius: 8,
                       }}
                     >
-                      <Icon name="check" size={14} /> Assign & Unblock
+                      <Icon name="check" size={14} />
+                      <span>{pendingAction === `assign-${r.record_id}` ? 'Assigning…' : 'Assign & Unblock'}</span>
                     </button>
                   </form>
                 </div>
@@ -281,7 +327,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
               {/* Decision form */}
               <details className="evidence" open style={{ marginTop: 12 }}>
                 <summary style={{ cursor: 'pointer', fontWeight: 600, color: 'var(--rc-ink)' }}>Decide request</summary>
-                <form action={grantDecisionAction} style={{ marginTop: 12 }}>
+                <form onSubmit={(e) => handleDecisionSubmit(e, r.id)} style={{ marginTop: 12 }}>
                   <input type="hidden" name="requestId" value={r.id} />
                   <input type="hidden" name="threadRequestIds" value={threadIds} />
 
@@ -340,11 +386,24 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                   />
 
                   <div className="btn-row" style={{ marginTop: 16 }}>
-                    <button type="submit" name="decision" value="granted" className="btn pp-btn-maroon">
-                      Grant permission & issue signed grant
+                    <button
+                      type="submit"
+                      name="decision"
+                      value="granted"
+                      disabled={isPending}
+                      className="btn pp-btn-maroon"
+                    >
+                      <Icon name="check" size={15} />
+                      <span>{pendingAction === `granted-${r.id}` ? 'Granting…' : 'Grant permission & issue signed grant'}</span>
                     </button>
-                    <button type="submit" name="decision" value="declined" className="secondary">
-                      Decline request
+                    <button
+                      type="submit"
+                      name="decision"
+                      value="declined"
+                      disabled={isPending}
+                      className="btn secondary"
+                    >
+                      <span>{pendingAction === `declined-${r.id}` ? 'Declining…' : 'Decline request'}</span>
                     </button>
                   </div>
                 </form>
@@ -412,7 +471,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                         Revoke grant...
                       </summary>
                       <form
-                        action={revokeGrantAction}
+                        onSubmit={(e) => handleRevokeSubmit(e, r.id)}
                         className="rc-revoke-form"
                       >
                         <input type="hidden" name="requestId" value={r.id} />
@@ -436,16 +495,17 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                         />
                         <button
                           type="submit"
+                          disabled={isPending}
                           className="danger"
                           style={{
                             fontSize: '0.8rem',
-                            padding: '5px 14px',
+                            padding: '6px 14px',
                             borderRadius: 6,
-                            cursor: 'pointer',
+                            cursor: isPending ? 'wait' : 'pointer',
                             width: '100%',
                           }}
                         >
-                          Confirm Revocation
+                          {pendingAction === `revoke-${r.id}` ? 'Revoking…' : 'Confirm Revocation'}
                         </button>
                       </form>
                     </details>

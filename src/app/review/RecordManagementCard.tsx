@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Icon } from '@/components/Icons';
 import { reviewFormAction, assignStewardAction, unassignStewardAction } from '@/app/actions';
 
@@ -37,6 +37,53 @@ interface Props {
 export default function RecordManagementCard({ record: r, linkedStewards, allStewards }: Props) {
   const [activeTab, setActiveTab] = useState<'moderation' | 'verification' | 'stewardship'>('moderation');
   const [showReassignForm, setShowReassignForm] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
+
+  const handleReviewSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
+    const actionVal = submitter?.value || 'approve';
+    setPendingAction(actionVal);
+    const fd = new FormData(e.currentTarget);
+    if (actionVal) fd.set('action', actionVal);
+
+    startTransition(async () => {
+      try {
+        await reviewFormAction(fd);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
+
+  const handleUnassign = (userId: number) => {
+    setPendingAction(`unassign-${userId}`);
+    const fd = new FormData();
+    fd.set('recordId', r.id);
+    fd.set('userId', String(userId));
+    startTransition(async () => {
+      try {
+        await unassignStewardAction(fd);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
+
+  const handleAssignSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPendingAction('assign');
+    const fd = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await assignStewardAction(fd);
+        setShowReassignForm(false);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
 
   return (
     <section className="rc-record-card" aria-label={r.title}>
@@ -112,32 +159,30 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
               >
                 <Icon name="user" size={13} />
                 <span>Steward: {s.name}</span>
-                <form action={unassignStewardAction} style={{ display: 'inline', margin: 0, lineHeight: 1 }}>
-                  <input type="hidden" name="recordId" value={r.id} />
-                  <input type="hidden" name="userId" value={s.id} />
-                  <button
-                    type="submit"
-                    title={`Unassign ${s.name}`}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.28)',
-                      border: 0,
-                      borderRadius: '50%',
-                      width: 17,
-                      height: 17,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: '#ffffff',
-                      cursor: 'pointer',
-                      fontSize: '0.72rem',
-                      fontWeight: 700,
-                      padding: 0,
-                      marginLeft: 2,
-                    }}
-                  >
-                    ✕
-                  </button>
-                </form>
+                <button
+                  type="button"
+                  onClick={() => handleUnassign(s.id)}
+                  disabled={isPending}
+                  title={`Unassign ${s.name}`}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.28)',
+                    border: 0,
+                    borderRadius: '50%',
+                    width: 18,
+                    height: 18,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#ffffff',
+                    cursor: isPending ? 'wait' : 'pointer',
+                    fontSize: '0.72rem',
+                    fontWeight: 700,
+                    padding: 0,
+                    marginLeft: 3,
+                  }}
+                >
+                  {pendingAction === `unassign-${s.id}` ? '…' : '✕'}
+                </button>
               </li>
             ))}
           </ul>
@@ -196,7 +241,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                 </div>
               )}
 
-              <form action={reviewFormAction}>
+              <form onSubmit={handleReviewSubmit}>
                 <input type="hidden" name="recordId" value={r.id} />
 
                 <label htmlFor={`n-${r.id}`} className="rc-edit-note-label">
@@ -213,8 +258,16 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
 
                 <div className="btn-row" style={{ marginTop: 16 }}>
                   {r.status !== 'published' ? (
-                    <button type="submit" name="action" value="approve" className="btn rc-btn-approve" title="Approve and move to Catalogue">
-                      <Icon name="check" size={15} /> Approve (Move to Catalogue)
+                    <button
+                      type="submit"
+                      name="action"
+                      value="approve"
+                      disabled={isPending}
+                      className="btn rc-btn-approve"
+                      title="Approve and move to Catalogue"
+                    >
+                      <Icon name="check" size={15} />
+                      <span>{pendingAction === 'approve' ? 'Approving…' : 'Approve (Move to Catalogue)'}</span>
                     </button>
                   ) : (
                     <span className="rc-status-flat-badge" title="Record is published and active in the public catalogue">
@@ -222,17 +275,39 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                     </span>
                   )}
 
-                  <button type="submit" name="action" value="requestRevision" className="btn secondary" title="Request author revisions with notes">
-                    Request Revision
+                  <button
+                    type="submit"
+                    name="action"
+                    value="requestRevision"
+                    disabled={isPending}
+                    className="btn secondary"
+                    title="Request author revisions with notes"
+                  >
+                    <span>{pendingAction === 'requestRevision' ? 'Requesting…' : 'Request Revision'}</span>
                   </button>
 
                   {r.status === 'removed' ? (
-                    <button type="submit" name="action" value="restore" className="btn secondary" title="Restore from recycle bin to active review">
-                      <Icon name="refresh" size={14} /> Restore to Review
+                    <button
+                      type="submit"
+                      name="action"
+                      value="restore"
+                      disabled={isPending}
+                      className="btn secondary"
+                      title="Restore from recycle bin to active review"
+                    >
+                      <Icon name="refresh" size={14} />
+                      <span>{pendingAction === 'restore' ? 'Restoring…' : 'Restore to Review'}</span>
                     </button>
                   ) : (
-                    <button type="submit" name="action" value="deny" className="btn danger" title="Deny record and send to 30-day recycle bin">
-                      Deny (Recycle Bin - 30d)
+                    <button
+                      type="submit"
+                      name="action"
+                      value="deny"
+                      disabled={isPending}
+                      className="btn danger"
+                      title="Deny record and send to 30-day recycle bin"
+                    >
+                      <span>{pendingAction === 'deny' ? 'Denying…' : 'Deny (Recycle Bin - 30d)'}</span>
                     </button>
                   )}
                 </div>
@@ -243,7 +318,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           {/* Tab 2: Evidence Verification */}
           {activeTab === 'verification' && (
             <div>
-              <form action={reviewFormAction}>
+              <form onSubmit={handleReviewSubmit}>
                 <input type="hidden" name="recordId" value={r.id} />
                 <input type="hidden" name="action" value="verify" />
 
@@ -294,15 +369,16 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                 </div>
 
                 <div className="btn-row" style={{ marginTop: 14 }}>
-                  <button type="submit" className="btn pp-btn-maroon">
-                    <Icon name="shield" size={15} /> Mark Verified with Evidence
+                  <button type="submit" name="action" value="verify" disabled={isPending} className="btn pp-btn-maroon">
+                    <Icon name="shield" size={15} />
+                    <span>{pendingAction === 'verify' ? 'Verifying…' : 'Mark Verified with Evidence'}</span>
                   </button>
                 </div>
               </form>
             </div>
           )}
 
-          {/* Tab 3: Stewardship (Resolves Conflicting Logic: Shows Profile Card when assigned, dropdown when 0) */}
+          {/* Tab 3: Community Stewardship */}
           {activeTab === 'stewardship' && (
             <div>
               {linkedStewards.length > 0 && !showReassignForm ? (
@@ -369,18 +445,16 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                             </div>
                           </div>
 
-                          <form action={unassignStewardAction} style={{ margin: 0 }}>
-                            <input type="hidden" name="recordId" value={r.id} />
-                            <input type="hidden" name="userId" value={steward.id} />
-                            <button
-                              type="submit"
-                              className="btn danger"
-                              style={{ minHeight: 34, padding: '4px 14px', fontSize: '0.82rem', borderRadius: 8 }}
-                              title={`Unassign ${steward.name}`}
-                            >
-                              Remove
-                            </button>
-                          </form>
+                          <button
+                            type="button"
+                            onClick={() => handleUnassign(steward.id)}
+                            disabled={isPending}
+                            className="btn danger"
+                            style={{ minHeight: 34, padding: '4px 14px', fontSize: '0.82rem', borderRadius: 8 }}
+                            title={`Unassign ${steward.name}`}
+                          >
+                            {pendingAction === `unassign-${steward.id}` ? 'Removing…' : 'Remove'}
+                          </button>
                         </div>
                       );
                     })}
@@ -402,7 +476,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                   )}
 
                   <form
-                    action={assignStewardAction}
+                    onSubmit={handleAssignSubmit}
                     style={{
                       padding: '16px 20px',
                       borderRadius: 12,
@@ -424,29 +498,31 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
                         required
                         style={{
                           minHeight: 42,
-                          padding: '6px 12px',
+                          padding: '8px 12px',
                           borderRadius: 8,
-                          fontSize: '0.9rem',
-                          flex: '1 1 260px',
-                          border: '1.5px solid var(--rc-panel-border)',
+                          fontSize: '0.88rem',
                           background: 'var(--rc-card, #ffffff)',
                           color: 'var(--rc-ink, #2b1810)',
+                          border: '1.5px solid var(--rc-panel-border)',
+                          flex: '1 1 240px',
                         }}
                       >
                         <option value="">— Select Steward / Reviewer —</option>
                         {allStewards.map((u) => (
                           <option key={u.id} value={u.id}>
-                            {u.name} ({u.email}) [{u.role.toUpperCase()}{u.region ? ` · ${u.region}` : ''}]
+                            {u.name} ({u.role.toUpperCase()}{u.region ? ` · ${u.region}` : ''})
                           </option>
                         ))}
                       </select>
 
                       <button
                         type="submit"
+                        disabled={isPending}
                         className="btn pp-btn-maroon"
-                        style={{ minHeight: 42, padding: '0 20px', fontSize: '0.88rem', fontWeight: 700, borderRadius: 8 }}
+                        style={{ minHeight: 42, padding: '0 20px', fontSize: '0.88rem', fontWeight: 700 }}
                       >
-                        <Icon name="check" size={15} /> Link Steward
+                        <Icon name="check" size={15} />
+                        <span>{pendingAction === 'assign' ? 'Linking…' : 'Link Steward'}</span>
                       </button>
                     </div>
                   </form>
