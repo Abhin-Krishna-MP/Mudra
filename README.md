@@ -95,18 +95,60 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ## 5. Technology Stack
 
-| Layer | Technologies |
-| --- | --- |
-| **Framework** | ![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript_Strict-3178C6?style=flat-square&logo=typescript&logoColor=white) |
-| **Runtime** | ![Node.js](https://img.shields.io/badge/Node.js_22.5+-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white) |
-| **Database & Storage** | ![Turso](https://img.shields.io/badge/Turso_LibSQL-4FF8D2?style=flat-square&logo=turso&logoColor=black) ![SQLite](https://img.shields.io/badge/SQLite_local-003B57?style=flat-square&logo=sqlite&logoColor=white) ![Vercel Blob](https://img.shields.io/badge/Vercel_Blob-000000?style=flat-square&logo=vercel&logoColor=white) |
-| **Cryptography** | ![Ed25519](https://img.shields.io/badge/Ed25519-2563eb?style=flat-square&logo=gnuprivacyguard&logoColor=white) ![SHA-256](https://img.shields.io/badge/SHA--256-7c3aed?style=flat-square) ![scrypt](https://img.shields.io/badge/scrypt-db2777?style=flat-square) ![HMAC](https://img.shields.io/badge/HMAC--SHA256-ea580c?style=flat-square) ![RFC 8785](https://img.shields.io/badge/RFC_8785-475569?style=flat-square) |
-| **Imaging & Assets** | ![sharp](https://img.shields.io/badge/sharp_dHash_·_WebP-99CC00?style=flat-square) ![OG](https://img.shields.io/badge/@vercel/og_1200×630-000000?style=flat-square&logo=vercel&logoColor=white) ![QR](https://img.shields.io/badge/qrcode-1f2937?style=flat-square) |
-| **Web Standards** | ![PWA](https://img.shields.io/badge/PWA_Offline-5A0FC8?style=flat-square&logo=pwa&logoColor=white) ![W3C](https://img.shields.io/badge/W3C_TDMRep-005A9C?style=flat-square&logo=w3c&logoColor=white) ![schema.org](https://img.shields.io/badge/schema.org_JSON--LD-0D6EFD?style=flat-square) |
-| **Styling & Fonts** | ![CSS](https://img.shields.io/badge/Vanilla_CSS-1572B6?style=flat-square&logo=w3c&logoColor=white) ![Google Fonts](https://img.shields.io/badge/Playfair_·_Inter_·_Noto_Serif_Malayalam-4285F4?style=flat-square&logo=googlefonts&logoColor=white) |
-| **Testing & Quality** | ![node:test](https://img.shields.io/badge/node:test_34-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white) ![Playwright](https://img.shields.io/badge/Playwright_E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white) ![WCAG](https://img.shields.io/badge/WCAG_AA_Contrast-10b981?style=flat-square) |
-| **Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) ![AWS](https://img.shields.io/badge/Turso_on_AWS_ap--south--1-FF9900?style=flat-square&logo=amazonwebservices&logoColor=white) |
+<div align="center">
 
+### Framework & Runtime
+
+<img src="https://img.shields.io/badge/Next.js_15-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+<img src="https://img.shields.io/badge/React_19-20232A?style=for-the-badge&logo=react&logoColor=61DAFB" />
+<img src="https://img.shields.io/badge/TypeScript_Strict-3178C6?style=for-the-badge&logo=typescript&logoColor=white" />
+<img src="https://img.shields.io/badge/Node.js_22.5+-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+
+### Database & Storage
+
+<img src="https://img.shields.io/badge/Turso_LibSQL-4FF8D2?style=for-the-badge&logo=turso&logoColor=black" />
+<img src="https://img.shields.io/badge/SQLite_Local-003B57?style=for-the-badge&logo=sqlite&logoColor=white" />
+<img src="https://img.shields.io/badge/Vercel_Blob-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+
+### Cryptography & Security
+
+<img src="https://img.shields.io/badge/Ed25519-2563EB?style=for-the-badge&logo=gnuprivacyguard&logoColor=white" />
+<img src="https://img.shields.io/badge/SHA--256-7C3AED?style=for-the-badge" />
+<img src="https://img.shields.io/badge/scrypt-DB2777?style=for-the-badge" />
+<img src="https://img.shields.io/badge/HMAC--SHA256-EA580C?style=for-the-badge" />
+<img src="https://img.shields.io/badge/RFC_8785-475569?style=for-the-badge" />
+
+### Imaging & Digital Assets
+
+<img src="https://img.shields.io/badge/sharp_dHash_·_WebP-99CC00?style=for-the-badge" />
+<img src="https://img.shields.io/badge/@vercel/og_1200×630-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+<img src="https://img.shields.io/badge/QR_Code-1F2937?style=for-the-badge" />
+
+### Web Standards
+
+<img src="https://img.shields.io/badge/PWA_Offline-5A0FC8?style=for-the-badge&logo=pwa&logoColor=white" />
+<img src="https://img.shields.io/badge/W3C_TDMRep-005A9C?style=for-the-badge&logo=w3c&logoColor=white" />
+<img src="https://img.shields.io/badge/schema.org_JSON--LD-0D6EFD?style=for-the-badge" />
+
+### Styling & Typography
+
+<img src="https://img.shields.io/badge/Vanilla_CSS-1572B6?style=for-the-badge&logo=css3&logoColor=white" />
+<img src="https://img.shields.io/badge/Playfair-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white" />
+<img src="https://img.shields.io/badge/Inter-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white" />
+<img src="https://img.shields.io/badge/Noto_Serif_Malayalam-4285F4?style=for-the-badge&logo=googlefonts&logoColor=white" />
+
+### Testing & Quality Assurance
+
+<img src="https://img.shields.io/badge/node:test_34-5FA04E?style=for-the-badge&logo=nodedotjs&logoColor=white" />
+<img src="https://img.shields.io/badge/Playwright_E2E-2EAD33?style=for-the-badge&logo=playwright&logoColor=white" />
+<img src="https://img.shields.io/badge/WCAG_AA_Contrast-10B981?style=for-the-badge" />
+
+### Deployment & Infrastructure
+
+<img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" />
+<img src="https://img.shields.io/badge/Turso_on_AWS_ap--south--1-FF9900?style=for-the-badge&logo=amazonwebservices&logoColor=white" />
+
+</div>
 
 ---
 
