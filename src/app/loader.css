@@ -1,0 +1,122 @@
+/* Mudra loading screen — drop-in. Include in <head>, markup right after <body>, loader.js before </body>. */
+.mudra-loader {
+  --gold: #f0b33f;
+  --gold-soft: #ffe29a;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(60% 50% at 50% 42%, #0e3a40 0, #08232a 45%, #03100f 100%);
+  color: #fff;
+  overflow: hidden;
+  transition: opacity .9s ease .1s, visibility 0s linear 1s, transform .9s cubic-bezier(.7, 0, .3, 1);
+}
+.mudra-loader * { box-sizing: border-box; }
+.mudra-loader.is-done {
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.06);
+  pointer-events: none;
+}
+html.mudra-loading, html.mudra-loading body { overflow: hidden; }
+
+.mudra-loader__stage {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: clamp(14px, 2.4vh, 26px);
+  padding: 24px;
+  text-align: center;
+}
+.mudra-loader__halo {
+  position: absolute;
+  top: -8%;
+  left: 50%;
+  width: min(70vw, 560px);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(240, 179, 63, .28), rgba(240, 179, 63, .08) 40%, transparent 68%);
+  animation: mlHalo 3.2s ease-in-out infinite;
+}
+.mudra-loader__logo {
+  position: relative;
+  width: min(62vw, 360px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 0 22px rgba(240, 179, 63, .45));
+  opacity: 0;
+  transform: translateY(10px) scale(.96);
+  animation: mlIn 1s cubic-bezier(.2, .8, .2, 1) .15s forwards;
+}
+.mudra-loader__name {
+  margin: 0;
+  font: 600 clamp(2rem, 5vw, 3rem)/1 var(--font-display), 'Playfair Display', Georgia, serif;
+  letter-spacing: .04em;
+  background: linear-gradient(180deg, #fff2c9, #f0b33f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  opacity: 0;
+  animation: mlIn .9s ease .5s forwards;
+}
+.mudra-loader__tag {
+  margin: -6px 0 0;
+  font: 500 .78rem/1 var(--font-ui), 'Inter', system-ui, sans-serif;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: #e9b55a;
+  opacity: 0;
+  animation: mlIn .9s ease .7s forwards;
+}
+.mudra-loader__bar {
+  position: relative;
+  width: min(56vw, 260px);
+  height: 3px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, .12);
+  overflow: hidden;
+  margin-top: 6px;
+  opacity: 0;
+  animation: mlIn .8s ease .9s forwards;
+}
+.mudra-loader__fill {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  transform-origin: 0 50%;
+  transform: scaleX(var(--p, 0));
+  transition: transform .35s ease-out;
+  background: linear-gradient(90deg, #b8741a, #ffd57e, #f0a830);
+  box-shadow: 0 0 12px rgba(240, 179, 63, .8);
+}
+.mudra-loader__pct {
+  font: 500 .72rem/1 var(--font-ui), 'Inter', system-ui, sans-serif;
+  letter-spacing: .2em;
+  color: rgba(255, 236, 200, .75);
+  font-variant-numeric: tabular-nums;
+  opacity: 0;
+  animation: mlIn .8s ease 1s forwards;
+}
+.mudra-loader__motes i {
+  position: absolute;
+  bottom: -10px;
+  width: var(--s);
+  height: var(--s);
+  border-radius: 50%;
+  background: #ffd98a;
+  box-shadow: 0 0 8px 2px rgba(255, 200, 100, .8);
+  opacity: 0;
+  animation: mlMote var(--d) linear var(--dl) infinite;
+}
+@keyframes mlIn { to { opacity: 1; transform: none; } }
+@keyframes mlHalo { 50% { opacity: .65; transform: scale(1.08); } }
+@keyframes mlMote {
+  0% { opacity: 0; transform: translate(0, 0); }
+  15% { opacity: .9; }
+  100% { opacity: 0; transform: translate(var(--x), -80vh); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .mudra-loader * { animation-duration: .01s !important; animation-delay: 0s !important; }
+}

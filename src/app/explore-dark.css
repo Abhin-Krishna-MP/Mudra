@@ -420,7 +420,7 @@
 :root[data-theme='dark'] .quick a:focus-visible { outline: 2px solid #ffe2a8; outline-offset: 2px; }
 
 @media (max-width: 899px) {
-  :root[data-theme='dark'] .quick { margin-top: -56px; padding: 12px 6px; border-radius: 22px; }
+  :root[data-theme='dark'] .quick { margin-top: 18px; padding: 12px 6px; border-radius: 22px; }
   :root[data-theme='dark'] .quick a { margin: 0 2px; padding: 10px 2px 8px; gap: 6px; border-radius: 14px; font-size: .74rem; }
   :root[data-theme='dark'] .quick .q-ico { width: 44px; height: 44px; border-radius: 13px; }
   :root[data-theme='dark'] .quick .q-ico .icon { width: 22px; height: 22px; }

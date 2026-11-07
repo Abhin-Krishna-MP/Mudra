@@ -1,6 +1,7 @@
 'use client';
 import { useActionState, useState } from 'react';
 import { requestPermissionAction } from '@/app/actions';
+import { LotusLoader } from '@/components/LotusLoader';
 import type { ActionResult } from '@/lib/contracts';
 
 interface Props {
@@ -51,7 +52,10 @@ export default function RequestPermissionForm({ recordId, recordTitle, useKey, h
           placeholder="e.g. sold in Kerala only, one season; or online store, indefinite…" />
 
         <div className="btn-row" style={{ marginTop: 20 }}>
-          <button type="submit" disabled={pending}>{pending ? 'Sending…' : 'Send request'}</button>
+          <button type="submit" disabled={pending}>
+            {pending ? <LotusLoader size="xs" inline /> : null}
+            {pending ? 'Sending…' : 'Send request'}
+          </button>
           {onCancel && <button type="button" className="secondary" onClick={onCancel}>Cancel</button>}
         </div>
       </form>

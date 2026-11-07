@@ -12,6 +12,7 @@ import './kerala-backdrop.css';
 import './kerala-light-backdrop.css';
 import './kerala-light-footer.css';
 import './home-light-teal.css';
+import './loader.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
@@ -21,6 +22,7 @@ import { PadippuraNavbar } from '@/components/PadippuraNavbar';
 import type { Metadata, Viewport } from 'next';
 import { SITE_NAME } from '@/lib/copy';
 import { SiteFooter } from '@/components/SiteFooter';
+import { MudraLoader } from '@/components/MudraLoader';
 import { Motion } from '@/components/Motion';
 
 export const metadata: Metadata = {
@@ -41,7 +43,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_BOOT }} />
         {/* Preload hero images and navbar master artwork to eliminate first-paint lag */}
+        <link rel="preload" as="image" href="/mudra/lotus-loader.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/navbar-full.webp" fetchPriority="high" />
+        <link rel="preload" as="image" href="/mudra/navbar-dark.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/kathakali.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/plants-cloth.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/bg-temple.webp" fetchPriority="high" />
@@ -49,6 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preload" as="image" href="/mudra/ribbon.webp" />
       </head>
       <body>
+        <MudraLoader />
         <a className="skip" href="#main">Skip to content</a>
         <div className="scroll-bar" aria-hidden="true" />
         <PadippuraNavbar />

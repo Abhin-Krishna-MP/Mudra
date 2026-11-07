@@ -3,15 +3,17 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Icon, type IconName } from './Icons';
 
-const TABS: { href: string; label: string; icon: IconName; match: (p: string) => boolean }[] = [
+export const TABS: { href: string; label: string; icon: IconName; match: (p: string) => boolean }[] = [
   { href: '/', label: 'Home', icon: 'home', match: (p) => p === '/' },
   { href: '/catalogue', label: 'Catalogue', icon: 'book', match: (p) => p.startsWith('/catalogue') || p.startsWith('/r/') },
   { href: '/reuse', label: 'Reuse', icon: 'layers', match: (p) => p.startsWith('/reuse') },
   { href: '/verify', label: 'Verify', icon: 'shield', match: (p) => p.startsWith('/verify') },
 ];
-const MORE: { href: string; label: string; icon: IconName }[] = [
+
+export const MORE: { href: string; label: string; icon: IconName }[] = [
   { href: '/check', label: 'Check an image', icon: 'scan' },
   { href: '/submit', label: 'Submit a work', icon: 'upload' },
+  { href: '/developers', label: 'For platforms', icon: 'tools' },
   { href: '/about', label: 'About & limits', icon: 'info' },
   { href: '/review', label: 'Reviewers', icon: 'user' },
 ];

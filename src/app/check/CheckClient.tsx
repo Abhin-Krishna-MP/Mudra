@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { Icon } from '@/components/Icons';
+import { LotusLoader } from '@/components/LotusLoader';
 import { similarityPercent } from '@/lib/ui';
 
 type Match = { id: string; title: string; distance: number; band: string; primaryCredit: string; thumbUrl?: string | null };
@@ -54,7 +55,8 @@ export default function CheckClient() {
           </div>
 
           <button type="button" className="ck-go" onClick={check} disabled={busy}>
-            <Icon name="search" size={22} />{busy ? 'Checking…' : 'Check Image'}
+            {busy ? <LotusLoader size="xs" inline /> : <Icon name="search" size={22} />}
+            {busy ? 'Checking…' : 'Check Image'}
           </button>
         </div>
 
@@ -73,7 +75,11 @@ export default function CheckClient() {
       </div>
 
       <div className="ck-results" role="status" aria-live="polite">
-        {busy && <div className="panel"><p>Checking…</p></div>}
+        {busy && (
+          <div className="panel ck-loading-panel" style={{ padding: '36px 16px' }}>
+            <LotusLoader size="md" label="Checking image against Kerala cultural registry…" />
+          </div>
+        )}
         {err && <p className="err"><span aria-hidden="true">✕ </span>{err}</p>}
         {nothing && <div className="panel"><h3>No match found</h3><p>That does not mean the image is free to reuse: heavy crops, mirroring and edits are not matched, and not every work has a record.</p></div>}
         {res?.exact && (

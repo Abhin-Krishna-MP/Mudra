@@ -3,6 +3,7 @@ import { useActionState, useEffect, useRef, useState, useTransition, type FormEv
 import { createRecordAction } from '@/app/actions';
 import { Field } from '@/components/Field';
 import { Icon } from '@/components/Icons';
+import { LotusLoader } from '@/components/LotusLoader';
 import { LICENCES, LICENCE_IDS } from '@/lib/permissions';
 import type { ActionResult } from '@/lib/contracts';
 
@@ -200,7 +201,12 @@ export default function SubmitForm() {
             <span className="sb-progress" aria-hidden="true">Step {step + 1} of {STEPS.length}</span>
             {step > 0 && <button type="button" className="secondary" onClick={() => setStep(step - 1)}>Back</button>}
             {step < STEPS.length - 1 && <button type="button" onClick={() => setStep(step + 1)}>Next: {STEPS[step + 1]} <Icon name="arrow" size={18} /></button>}
-            {step === STEPS.length - 1 && <button type="submit" disabled={pending}>{pending ? 'Submitting…' : 'Submit for review'}</button>}
+            {step === STEPS.length - 1 && (
+              <button type="submit" disabled={pending}>
+                {pending ? <LotusLoader size="xs" inline /> : null}
+                {pending ? 'Submitting…' : 'Submit for review'}
+              </button>
+            )}
           </div>
           <noscript><style>{'.step-panel[hidden]{display:block!important}'}</style></noscript>
         </form>

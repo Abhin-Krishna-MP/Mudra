@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { simulateTamperAction } from '@/app/actions';
+import { LotusLoader } from '@/components/LotusLoader';
 
 interface EventStatus { seq: number; hashOk: boolean; sigOk: boolean | null }
 interface VerifyData {
@@ -60,6 +61,7 @@ export default function TamperSimulation({ recordId }: { recordId: string }) {
             disabled={busy}
             onClick={() => toggle(true)}
           >
+            {busy ? <LotusLoader size="xs" inline /> : null}
             {busy ? 'Simulating…' : 'Simulate direct database edit on event #2'}
           </button>
         ) : (
@@ -68,6 +70,7 @@ export default function TamperSimulation({ recordId }: { recordId: string }) {
             disabled={busy}
             onClick={() => toggle(false)}
           >
+            {busy ? <LotusLoader size="xs" inline /> : null}
             {busy ? 'Restoring…' : 'Restore original history'}
           </button>
         )}

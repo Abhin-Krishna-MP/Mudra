@@ -453,6 +453,16 @@
     margin-top: 56vw !important;
     padding: 24px 20px 48px !important;
   }
+  .hero.mx-hero.dk-hero .cta {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 12px !important;
+  }
+  .hero.mx-hero.dk-hero .cta .btn {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+  }
 }
 
 @media (max-height: 760px) and (min-width: 961px) {

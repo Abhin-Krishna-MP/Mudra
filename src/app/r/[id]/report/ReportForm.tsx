@@ -2,6 +2,7 @@
 import { useActionState } from 'react';
 import { submitFlagAction } from '@/app/actions';
 import { Field } from '@/components/Field';
+import { LotusLoader } from '@/components/LotusLoader';
 import type { ActionResult } from '@/lib/contracts';
 
 export default function ReportForm({ recordId }: { recordId: string }) {
@@ -16,7 +17,12 @@ export default function ReportForm({ recordId }: { recordId: string }) {
         <select name="type" {...p} defaultValue=""><option value="" disabled>Choose…</option><option value="missing_attribution">Credit is missing or wrong</option><option value="suspected_reuse">Suspected reuse without credit or permission</option><option value="correction_request">Correction request</option></select>)}</Field>
       <Field name="text" label="What did you notice?" error={fe.text} required hint="Describe it, and say where you saw it if relevant.">{(p) => <textarea name="text" {...p} />}</Field>
       <Field name="contact" label="Your email (optional, kept private)" hint="Only reviewers can see this.">{(p) => <input type="email" name="contact" {...p} autoComplete="email" />}</Field>
-      <div className="btn-row"><button type="submit" disabled={pending}>{pending ? 'Sending…' : 'Send report'}</button></div>
+      <div className="btn-row">
+        <button type="submit" disabled={pending}>
+          {pending ? <LotusLoader size="xs" inline /> : null}
+          {pending ? 'Sending…' : 'Send report'}
+        </button>
+      </div>
     </form>
   );
 }
