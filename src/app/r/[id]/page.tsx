@@ -190,7 +190,12 @@ export default async function Passport({ params, searchParams }: { params: Promi
               <div className="layer d-fig dk" />
             </div>
           </div>
-          <a className="pp-back" href="/catalogue"><Icon name="arrow" size={16} className="flip" /> Back to Catalogue</a>
+          <a className="pp-back" href="/catalogue">
+            <span className="pp-back-icon">
+              <Icon name="arrow" size={15} className="flip" />
+            </span>
+            <span>Back to Catalogue</span>
+          </a>
           <div className="pp-top">
             <div className="pp-media-col">
               <p className="pp-id">{v.id}</p>
@@ -247,7 +252,15 @@ export default async function Passport({ params, searchParams }: { params: Promi
             <div className="pp-actions-main">
               <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
               <ShareButton title={v.title} />
-              {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
+              {v.asset?.displayUrl && (
+                <a
+                  className="btn pp-btn-maroon"
+                  href={`/api/records/${v.id}/card.png`}
+                  download={`${v.id}-credit-card.png`}
+                >
+                  <Icon name="download" size={16} /> Download Credit Card
+                </a>
+              )}
               <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
             </div>
           </div>
