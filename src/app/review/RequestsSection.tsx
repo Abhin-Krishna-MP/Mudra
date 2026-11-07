@@ -426,7 +426,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
           }}
         >
           <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: '0.98rem', color: 'var(--rc-ink)', outline: 'none' }}>
-            ▶ Past Requests ({pastReqs.length})
+            Past Requests ({pastReqs.length})
           </summary>
           <div style={{ marginTop: 14, paddingTop: 6 }}>
             {pastReqs.map((r) => (
