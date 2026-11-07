@@ -38,19 +38,19 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ---
 
-## 3. Fresh Demonstration Gallery (v2.0 UI)
+## 3. Fresh Demonstration Gallery (Alternating Light & Dark Themes)
 
-| Screen | Description |
-| --- | --- |
-| ![Home & Kathakali Backwaters Stage](docs/screenshots/02-home-light.png) | **Light Theme Hero:** Daylit Kerala backwaters, Kathakali stage with animated eye tracking, floating Kasavu silk cloth, and warm nilavilakku lamp glow. |
-| ![Home & Redesigned 3D Theyyam Stage](docs/screenshots/01-home-dark.png) | **Dark Theme Hero & Master Padippura Navbar:** Traditional Kerala entrance roof, razor-sharp typography, 3D Panchuruli Theyyam stage, and rising ember particles. |
-| ![Live Registry Notifications](docs/screenshots/05-live-notifications.png) | **Live Registry Notifications Popover:** Interactive notification bell displaying real-time database updates for new publications, reviewer verifications, and steward grants. |
-| ![Cultural Passport](docs/screenshots/03-cultural-passport.png) | **Cultural Passport (`/r/[id]`):** Uncropped museum artwork mat, deterministic SVG identity seal, verifiable metadata tabs, and edge-rendered QR card. |
-| ![Interactive Reuse Studio](docs/screenshots/04-reuse-studio.png) | **Reuse Studio (`/reuse`):** Dual-layer mathematical permission engine with live verdict cards, one-click copyable credit formats, and request trigger. |
-| ![Verify Page & Tamper Simulation](docs/screenshots/06-verify-tamper.png) | **Verify & Tamper Simulation (`/verify/[id]`):** Cryptographic SHA-256 audit chain, client-side browser file hashing, and interactive in-memory tamper simulator. |
-| ![Reviewer & Steward Console](docs/screenshots/07-reviewer-console.png) | **Reviewer & Steward Console (`/review`):** Role-guarded dashboard for reviewing inbound permission requests, setting custom conditions, and issuing Ed25519 signed grants. |
-| ![Perceptual Image Matcher](docs/screenshots/08-check-image.png) | **Check An Image (`/check`):** Calibrated 64-bit gradient difference hashing (dHash) to match resized, recompressed, and cropped imagery for human review. |
-| ![PWA on Mobile Viewport](docs/screenshots/09-mobile-pwa.png) | **Mobile Viewport & PWA:** Installable standalone Progressive Web App with ergonomic touch layout, mobile Padippura bar, and zero CTA overlap. |
+| Screen | Theme | Description |
+| :--- | :---: | :--- |
+| ![Home & Kathakali Backwaters Stage](docs/screenshots/01-home-light.png) | **Light** | **Home & Kathakali Backwaters Stage:** Daylit Kerala backwaters sunset, animated Kathakali eye tracking, floating Kasavu silk cloth, and warm nilavilakku lamp glow. |
+| ![Home & 3D Theyyam Stage](docs/screenshots/02-home-dark.png) | **Dark** | **Home & 3D Theyyam Stage:** Night temple courtyard, 3D Panchuruli Theyyam figure, hardware-accelerated cursor torchlight, rising embers, and Padippura master navbar with subpixel razor-sharp typography. |
+| ![Cultural Passport](docs/screenshots/03-cultural-passport-light.png) | **Light** | **Cultural Passport (`/r/[id]`):** Warm archival museum parchment aesthetic, uncropped artwork mat, deterministic SVG mandala seal, and dynamic QR credit card. |
+| ![Live Registry Notifications](docs/screenshots/04-live-notifications-dark.png) | **Dark** | **Live Registry Notifications Popover:** Interactive notification bell displaying real-time database updates for new publications, reviewer verifications, and steward grants with unread count badges. |
+| ![Interactive Reuse Studio](docs/screenshots/05-reuse-studio-light.png) | **Light** | **Interactive Reuse Studio (`/reuse`):** Dual-layer mathematical permission engine, live plain-language verdict cards, and 4 one-click copyable attribution formats. |
+| ![Verify Page & Tamper Simulation](docs/screenshots/06-verify-tamper-dark.png) | **Dark** | **Verify Page & Tamper Simulation (`/verify/[id]`):** Cryptographic SHA-256 audit chain timeline, client-side browser file hashing, and interactive in-memory tamper simulator. |
+| ![Reviewer & Steward Console](docs/screenshots/07-reviewer-console-light.png) | **Light** | **Reviewer & Steward Governance Console (`/review`):** Role-guarded dashboard for reviewing inbound permission requests, setting custom conditions, and issuing Ed25519 digitally signed grants. |
+| ![Perceptual Image Matcher](docs/screenshots/08-check-image-dark.png) | **Dark** | **Check An Image (`/check`):** Calibrated 64-bit gradient difference hashing (dHash) to match resized, recompressed, and cropped imagery for human review. |
+| ![PWA on Mobile Viewport](docs/screenshots/09-mobile-pwa-light.png) | **Light** | **Mobile Viewport & PWA:** Installable standalone Progressive Web App with warm sunlight palette, mobile Padippura bar, touch navigation, and zero CTA overlap. |
 
 ---
 
