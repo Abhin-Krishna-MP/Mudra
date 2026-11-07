@@ -1,9 +1,10 @@
 'use client';
-import { useActionState, useState, useEffect, useRef } from 'react';
+import { useActionState, useEffect, useRef } from 'react';
 import { requestPermissionAction } from '@/app/actions';
 import { LotusLoader } from '@/components/LotusLoader';
 import { Icon } from '@/components/Icons';
-import { saveStoredRequest } from '@/lib/userRequests';
+import { CopyButton } from '@/components/CopyButton';
+import { clearLegacyStoredRequests } from '@/lib/userRequests';
 import type { ActionResult } from '@/lib/contracts';
 
 interface Props {
@@ -20,79 +21,125 @@ export default function RequestPermissionForm({ recordId, recordTitle, useKey, h
     (ActionResult & { token?: string; requestId?: string }) | null,
     FormData
   >(requestPermissionAction, null);
-  const [showAnother, setShowAnother] = useState(false);
   const formContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (state?.ok && state.token) {
-      // 1. Save to local storage and cookies so the Request Status tab has it immediately
-      saveStoredRequest({
-        token: state.token,
-        requestId: state.requestId || '',
-        recordId,
-        recordTitle,
-        useKey,
-        createdAt: new Date().toISOString(),
-      });
+      // Ephemeral policy: clear any legacy persistent browser storage
+      clearLegacyStoredRequests();
 
-      // 2. Dispatch event to wake up RequestStatusTab
+      // Dispatch event to inform any active listener in the current page session
       window.dispatchEvent(
         new CustomEvent('mudra:request-submitted', {
           detail: { token: state.token, requestId: state.requestId, recordId, useKey },
         }),
       );
 
-      // 3. Close parent <details> if inside one
+      // Close parent <details> if inside one
       const detailsParent = formContainerRef.current?.closest('details');
       if (detailsParent) {
         detailsParent.open = false;
       }
 
-      // 4. Call onSuccess callback if provided
+      // Call onSuccess callback if provided
       if (onSuccess && state.requestId) {
         onSuccess({ token: state.token, requestId: state.requestId });
       }
     }
   }, [state, recordId, recordTitle, useKey, onSuccess]);
 
-  if (state?.ok && !showAnother) {
+  if (state?.ok && state.token) {
     return (
-      <div ref={formContainerRef} className="panel ui req-success-card" style={{ marginTop: 18, border: '1.5px solid rgba(22, 101, 52, .35)', background: 'var(--pp-ok-bg, #eef9ee)', padding: '20px 24px' }}>
+      <div
+        ref={formContainerRef}
+        className="panel ui req-success-card"
+        style={{
+          marginTop: 18,
+          border: '1.5px solid rgba(22, 101, 52, .35)',
+          background: 'var(--pp-ok-bg, #eef9ee)',
+          padding: '24px 26px',
+          borderRadius: 16,
+        }}
+      >
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--pp-ok-ink, #14532d)' }}>
           <Icon name="checkCircle" size={24} />
-          <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--pp-ok-ink, #14532d)' }}>Request Submitted — Form Closed</h3>
+          <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--pp-ok-ink, #14532d)' }}>
+            Request Submitted — Form Closed
+          </h3>
         </div>
-        <p style={{ margin: '8px 0 16px', color: 'var(--pp-ok-ink, #14532d)', fontSize: '.95rem', lineHeight: 1.5 }}>
-          Your permission request for <strong>{recordTitle}</strong> ({useKey.replace(/_/g, ' ')}) has been submitted. The form is now closed, and you can monitor the status anytime.
+        <p style={{ margin: '10px 0 16px', color: 'var(--pp-ok-ink, #14532d)', fontSize: '.95rem', lineHeight: 1.5 }}>
+          Your permission request for <strong>{recordTitle}</strong> ({useKey.replace(/_/g, ' ')}) has been submitted. The submission form is now closed.
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+
+        {/* Request Token Display Card */}
+        <div
+          style={{
+            background: 'rgba(255, 255, 255, 0.95)',
+            border: '1.5px solid rgba(22, 101, 52, .35)',
+            borderRadius: 12,
+            padding: '16px 20px',
+            margin: '16px 0',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 10, flexWrap: 'wrap', marginBottom: 8 }}>
+            <span style={{ fontSize: '.84rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', color: '#14532d' }}>
+              Your Private Request Token
+            </span>
+            <CopyButton text={state.token} label="Copy Token Code" />
+          </div>
+          <div
+            style={{
+              fontFamily: 'var(--font-mono, monospace)',
+              fontSize: '.95rem',
+              wordBreak: 'break-all',
+              padding: '10px 14px',
+              background: 'rgba(20, 83, 45, 0.08)',
+              borderRadius: 8,
+              color: '#0f3a20',
+              border: '1px solid rgba(20, 83, 45, 0.2)',
+              fontWeight: 600,
+              userSelect: 'all',
+            }}
+          >
+            {state.token}
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 8,
+              marginTop: 12,
+              padding: '10px 12px',
+              borderRadius: 8,
+              background: 'rgba(185, 28, 28, 0.08)',
+              border: '1px solid rgba(185, 28, 28, 0.25)',
+              color: '#991b1b',
+              fontSize: '.88rem',
+              lineHeight: 1.45,
+            }}
+          >
+            <span style={{ flex: 'none', marginTop: 1, display: 'inline-flex' }}>
+              <Icon name="help" size={16} />
+            </span>
+            <span>
+              <strong>Important:</strong> Copy and save your token now. It will disappear when this page is refreshed. You can view the status of your request at any time by entering this token code in the <strong>Request Status</strong> tab.
+            </span>
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap', marginTop: 16 }}>
           <button
             type="button"
             className="btn"
-            style={{ minHeight: 42, padding: '0 20px', background: 'var(--pp-ok-ink, #14532d)', color: '#fff' }}
+            style={{ minHeight: 42, padding: '0 22px', background: 'var(--pp-ok-ink, #14532d)', color: '#fff' }}
             onClick={() => {
-              window.dispatchEvent(new CustomEvent('mudra:select-tab', { detail: { tabId: 'request-status' } }));
+              window.dispatchEvent(
+                new CustomEvent('mudra:select-tab', { detail: { tabId: 'request-status', token: state.token } }),
+              );
               document.querySelector('.tablist')?.scrollIntoView({ behavior: 'smooth' });
             }}
           >
-            <Icon name="clock" size={16} /> View Status in Tab →
-          </button>
-          <a
-            href={`/request/${state.token}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn secondary"
-            style={{ minHeight: 42, padding: '0 18px' }}
-          >
-            Open Private Tracking Link ↗
-          </a>
-          <button
-            type="button"
-            className="btn secondary"
-            style={{ minHeight: 42, padding: '0 14px', marginLeft: 'auto' }}
-            onClick={() => setShowAnother(true)}
-          >
-            Submit another request
+            <Icon name="clock" size={16} /> View Status in Request Status Tab →
           </button>
         </div>
       </div>
@@ -138,15 +185,15 @@ export default function RequestPermissionForm({ recordId, recordTitle, useKey, h
         <div className="btn-row" style={{ marginTop: 20 }}>
           <button type="submit" disabled={pending}>
             {pending ? <LotusLoader size="xs" inline /> : null}
-            {pending ? 'Sending…' : 'Send request'}
+            <span>{pending ? 'Submitting request…' : 'Submit Permission Request'}</span>
           </button>
-          {onCancel && <button type="button" className="secondary" onClick={onCancel}>Cancel</button>}
+          {onCancel && (
+            <button type="button" className="secondary" onClick={onCancel}>
+              Cancel
+            </button>
+          )}
         </div>
       </form>
-
-      <p className="hint" style={{ marginTop: 16 }}>
-        A grant is a recorded statement, not a legal contract. After submitting, the form will close and you can monitor the status in the <strong>Request Status</strong> tab.
-      </p>
     </div>
   );
 }

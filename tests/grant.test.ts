@@ -168,5 +168,19 @@ test('end-to-end Ask → Grant workflow with SQLite', async () => {
     await revokeGrant(db, stewardActor, req2.requestId, 'Revoking test permission', key);
     const revokedGrant = await getGrant(db, decRes.grantId!);
     assert.equal(revokedGrant?.status, 'revoked');
+
+    // 7. Duplicate request from same email on same record must be rejected
+    const reqDuplicate = await createPermissionRequest(db, {
+      recordId: 'MDR-2026-TEST',
+      useKey: 'commercial_remix',
+      requesterName: 'Aline Designer Duplicate',
+      requesterContact: 'aline@example.com',
+      whatYouWillMake: 'Duplicate attempt',
+      whereAndHowLong: 'Online',
+    }, key);
+    assert.equal(reqDuplicate.ok, false);
+    if (!reqDuplicate.ok) {
+      assert.match(reqDuplicate.error, /already been submitted/i);
+    }
   }
 });
