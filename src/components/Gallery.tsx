@@ -17,6 +17,7 @@ export function Gallery({ items, withheld }: { items: GalleryItem[]; withheld?: 
   return (
     <div className="gal">
       <div className="gal-main">
+        <div className="gal-backdrop" style={{ backgroundImage: `url("${cur.url}")` }} aria-hidden="true" />
         <img src={cur.url} alt={cur.alt} />
         {items.length > 1 && (
           <>

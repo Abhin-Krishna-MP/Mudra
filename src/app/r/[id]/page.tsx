@@ -20,6 +20,7 @@ import { Icon } from '@/components/Icons';
 import { Seal } from '@/components/Seal';
 import { getStewardsForRecord } from '@/lib/repo-grants';
 import RequestPermissionForm from '@/components/RequestPermissionForm';
+import { RequestStatusTab } from '@/components/RequestStatusTab';
 
 export const dynamic = 'force-dynamic';
 
@@ -122,6 +123,9 @@ export default async function Passport({ params, searchParams }: { params: Promi
         <li key={t.seq} data-dot={t.hashOk ? '●' : '○'}><strong>{t.summary}</strong><br /><span className="muted"><time dateTime={t.at}>{new Date(t.at).toUTCString()}</time> · {t.role}{t.actor ? ` (${t.actor})` : ''} · integrity {t.hashOk ? 'ok' : 'broken'}</span></li>
       ))}</ol>
     ) },
+    { id: 'request-status', label: 'Request Status', icon: 'clock' as const, content: (
+      <RequestStatusTab recordId={v.id} recordTitle={v.title} hasSteward={hasSteward} />
+    ) },
   ];
 
   return (
@@ -186,15 +190,17 @@ export default async function Passport({ params, searchParams }: { params: Promi
             <ReusePills permissions={v.permissions} />
           </div>
 
-          <div className="pp-actions">
-            <a className="btn pp-primary" href="#studio-h"><Icon name="refresh" size={18} /> Check Reuse in Reuse Studio</a>
-            <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
-            <ShareButton title={v.title} />
-            <span className="pp-save"><BookmarkButton id={v.id} title={v.title} /></span>
-          </div>
-          <div className="pp-actions pp-actions-2">
-            {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
-            <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
+          <div className="pp-actions-bar">
+            <div className="pp-actions-main">
+              <a className="btn pp-primary" href="#studio-h"><Icon name="refresh" size={18} /> Check Reuse in Reuse Studio</a>
+              <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
+              <ShareButton title={v.title} />
+              {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
+              <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
+            </div>
+            <div className="pp-save-wrap">
+              <BookmarkButton id={v.id} title={v.title} />
+            </div>
           </div>
         </header>
 
