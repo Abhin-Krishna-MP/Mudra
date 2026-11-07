@@ -16,6 +16,7 @@ import './signin.css';
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
 import AddStewardSection from './AddStewardSection';
+import RecordManagementCard from './RecordManagementCard';
 import { PageSheet } from '@/components/PageSheet';
 import { Icon } from '@/components/Icons';
 
@@ -299,7 +300,7 @@ export default async function Review({
             )}
 
             {/* Steward requests */}
-            <RequestsSection requests={requests} />
+            <RequestsSection requests={requests} stewards={users} />
           </>
         )}
 
@@ -308,7 +309,7 @@ export default async function Review({
 
         {/* Steward requests for active stewards */}
         {isSteward && requests.length > 0 && (
-          <RequestsSection requests={requests} />
+          <RequestsSection requests={requests} stewards={users} />
         )}
 
         {/* Records / Pending drafts */}
@@ -331,207 +332,21 @@ export default async function Review({
             stewardsByRecord.get(String(r.id)) ?? [];
 
           return (
-            <section
+            <RecordManagementCard
               key={r.id}
-              className="panel ui"
-              aria-label={r.title}
-            >
-              <h3>
-                <a href={`/r/${r.id}`}>
-                  {r.title}
-                </a>{' '}
-                <span className="muted">
-                  ({r.id})
-                </span>
-              </h3>
-
-              {/* Record information */}
-              <ul className="chips">
-                <li className="chip">
-                  {String(r.status).replace('_', ' ')}
-                </li>
-
-                <li className="chip">
-                  {r.region}
-                </li>
-
-                <li className="chip">
-                  {r.category}
-                </li>
-
-                <li className="chip">
-                  {r.verification_level}
-                </li>
-
-                {r.disputed ? (
-                  <li className="chip ask">
-                    open report
-                  </li>
-                ) : null}
-
-                {linkedStewards.length > 0 ? (
-                  <li className="chip verified" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                    <Icon name="shield" size={13} />
-                    <span>Steward: {linkedStewards.map((s) => s.name).join(', ')}</span>
-                  </li>
-                ) : (
-                  <li className="chip muted" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
-                    <Icon name="shield" size={13} />
-                    <span>No steward</span>
-                  </li>
-                )}
-              </ul>
-
-              {linkedStewards.length > 0 && (
-                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6, margin: '8px 0 12px' }}>
-                  <span className="muted" style={{ fontSize: '0.8rem' }}>Assigned:</span>
-                  {linkedStewards.map((s) => (
-                    <form key={s.id} action={unassignStewardAction} style={{ display: 'inline', margin: 0 }}>
-                      <input type="hidden" name="recordId" value={r.id} />
-                      <input type="hidden" name="userId" value={s.id} />
-                      <button
-                        type="submit"
-                        title={`Unlink ${s.name} from this record`}
-                        className="chip"
-                        style={{
-                          cursor: 'pointer',
-                          background: 'rgba(180, 40, 30, 0.15)',
-                          borderColor: 'rgba(180, 40, 30, 0.35)',
-                          color: '#e57373',
-                          fontSize: '0.8rem',
-                          padding: '2px 8px',
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: 4,
-                        }}
-                      >
-                        {s.name} <span aria-hidden="true" style={{ fontWeight: 700 }}>✕</span>
-                      </button>
-                    </form>
-                  ))}
-                </div>
-              )}
-
-              {/* Revision note */}
-              {r.revision_note && (
-                <div
-                  className="sb-callout"
-                  style={{ margin: '10px 0' }}
-                >
-                  <strong>
-                    Current Revision Note:
-                  </strong>{' '}
-                  {r.revision_note}
-                </div>
-              )}
-
-              {/* Review actions */}
-              <form action={reviewFormAction}>
-                <input
-                  type="hidden"
-                  name="recordId"
-                  value={r.id}
-                />
-
-                <label htmlFor={`n-${r.id}`}>
-                  Required edits or reviewer note
-                  (required when requesting revision)
-                </label>
-
-                <input
-                  id={`n-${r.id}`}
-                  type="text"
-                  name="note"
-                  placeholder="Describe edits for author (e.g. Please verify tradition lineage)..."
-                />
-
-                <div
-                  className="btn-row"
-                  style={{ marginTop: 14 }}
-                >
-                  <button
-                    name="action"
-                    value="approve"
-                  >
-                    Approve
-                  </button>
-
-                  <button
-                    name="action"
-                    value="requestRevision"
-                    className="secondary"
-                  >
-                    Request Revision
-                  </button>
-
-                  <button
-                    name="action"
-                    value="remove"
-                    className="danger"
-                  >
-                    Deny
-                  </button>
-                </div>
-              </form>
-
-              {/* Evidence verification */}
-              <details className="evidence">
-                <summary>
-                  Verify with evidence
-                </summary>
-
-                <form action={reviewFormAction}>
-                  <input
-                    type="hidden"
-                    name="recordId"
-                    value={r.id}
-                  />
-
-                  <input
-                    type="hidden"
-                    name="action"
-                    value="verify"
-                  />
-
-                  <label htmlFor={`s-${r.id}`}>
-                    Evidence source
-                  </label>
-
-                  <input
-                    id={`s-${r.id}`}
-                    type="text"
-                    name="source"
-                    required
-                  />
-
-                  <label htmlFor={`u-${r.id}`}>
-                    URL (optional)
-                  </label>
-
-                  <input
-                    id={`u-${r.id}`}
-                    type="url"
-                    name="url"
-                  />
-
-                  <label htmlFor={`e-${r.id}`}>
-                    Evidence note
-                  </label>
-
-                  <textarea
-                    id={`e-${r.id}`}
-                    name="note"
-                    required
-                  />
-
-                  <div className="btn-row">
-                    <button type="submit">
-                      Mark verified
-                    </button>
-                  </div>
-                </form>
-              </details>
-            </section>
+              record={{
+                id: String(r.id),
+                status: String(r.status),
+                verification_level: String(r.verification_level),
+                disputed: Number(r.disputed),
+                title: String(r.title),
+                region: String(r.region),
+                category: String(r.category),
+                revision_note: String(r.revision_note || ''),
+              }}
+              linkedStewards={linkedStewards}
+              allStewards={users}
+            />
           );
         })}
       </PageSheet>
