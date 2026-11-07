@@ -2,6 +2,7 @@
 import { useActionState, useState } from 'react';
 import { loginAction } from '@/app/actions';
 import { Icon, type IconName } from '@/components/Icons';
+import { LotusLoader } from '@/components/LotusLoader';
 import type { ActionResult } from '@/lib/contracts';
 
 const svg = { width: 20, height: 20, viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strokeWidth: 1.7, strokeLinecap: 'round', strokeLinejoin: 'round', 'aria-hidden': true, focusable: false } as const;
@@ -44,7 +45,10 @@ export default function LoginForm() {
         </div>
 
         <div className="rs-actions">
-          <button type="submit" className="btn" disabled={pending}>{pending ? 'Signing in…' : <>Sign in <Icon name="arrow" size={18} /></>}</button>
+          <button type="submit" className="btn" disabled={pending}>
+            {pending ? <LotusLoader size="xs" inline /> : null}
+            {pending ? 'Signing in…' : <>Sign in <Icon name="arrow" size={18} /></>}
+          </button>
         </div>
       </form>
 

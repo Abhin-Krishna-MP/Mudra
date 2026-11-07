@@ -4,7 +4,7 @@ test('search → passport → Reuse Studio (commercial) → Ask first → copy c
   await context.grantPermissions(['clipboard-read', 'clipboard-write']);
   await page.goto('/catalogue');
   await page.getByLabel(/Search by title/).fill('Teyyam');
-  await page.getByRole('button', { name: 'Search' }).click();
+  await page.getByRole('button', { name: 'Search', exact: true }).click();
   await page.getByRole('link', { name: /Theyyam/i }).first().click();
   await page.getByRole('link', { name: /Print on merchandise/ }).click();
   await expect(page.getByRole('status').filter({ hasText: /Ask first|Not permitted/ })).toBeVisible();
