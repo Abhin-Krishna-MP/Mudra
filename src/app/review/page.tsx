@@ -15,6 +15,7 @@ import './review.css';
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
 import AddStewardSection from './AddStewardSection';
+import StewardApplicationsSection, { type StewardApplicationItem } from './StewardApplicationsSection';
 import RecordManagementCard, { RecordItem } from './RecordManagementCard';
 import { PageSheet } from '@/components/PageSheet';
 import { Icon } from '@/components/Icons';
@@ -68,6 +69,29 @@ export default async function Review({
   // Load dashboard data.
   const flags = await listFlags(db, actor);
   const requests = await listRequestsForSteward(db, actor);
+
+  // Load pending steward applications (KYC verification requests)
+  const pendingApplications: StewardApplicationItem[] = (
+    await db.execute(
+      `SELECT sa.id, sa.user_id, sa.id_document_url, sa.region, sa.category, sa.status, sa.created_at,
+              u.name as user_name, u.email as user_email, u.role as current_role
+       FROM steward_applications sa
+       JOIN users u ON u.id = sa.user_id
+       WHERE sa.status = 'pending'
+       ORDER BY sa.created_at DESC`,
+    )
+  ).rows.map((row) => ({
+    id: Number(row.id),
+    user_id: Number(row.user_id),
+    id_document_url: String(row.id_document_url || ''),
+    region: String(row.region || ''),
+    category: String(row.category || ''),
+    status: String(row.status || 'pending'),
+    created_at: String(row.created_at || ''),
+    user_name: String(row.user_name || 'Anonymous'),
+    user_email: String(row.user_email || ''),
+    current_role: String(row.current_role || 'author'),
+  }));
 
   // Load users with roles and regions for steward assignment.
   const users = (
@@ -239,6 +263,14 @@ export default async function Review({
           </div>
         )}
 
+        {/* Render success message banner if returned */}
+        {Boolean(sp.msg) && (
+          <div className="rc-callout" role="status" style={{ marginBottom: 20, borderColor: '#86efac', background: '#f0fdf4', color: '#166534' }}>
+            <Icon name="checkCircle" size={18} />
+            <span>{sp.msg}</span>
+          </div>
+        )}
+
         {/* Steward routing note if active */}
         {isSteward && (
           <div className="rc-callout" style={{ marginBottom: 20 }}>
@@ -277,6 +309,21 @@ export default async function Review({
                 <span className="rc-stat-label">Permission Requests</span>
                 <span className="rc-stat-text">
                   {openPermissionCount === 0 ? 'No open requests at this time.' : `${openPermissionCount} open request(s)`}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div className="rc-stat-card">
+            <div className="rc-stat-icon">
+              <Icon name="shield" size={24} />
+            </div>
+            <div className="rc-stat-mid">
+              <span className="rc-stat-num">{pendingApplications.length}</span>
+              <div className="rc-stat-details">
+                <span className="rc-stat-label">Steward Applications</span>
+                <span className="rc-stat-text">
+                  {pendingApplications.length === 0 ? 'No pending applications.' : `${pendingApplications.length} pending application(s)`}
                 </span>
               </div>
             </div>
@@ -351,7 +398,12 @@ export default async function Review({
         <RequestsSection requests={requests} stewards={users} />
 
         {/* =========================================================================
-            SECTION 3: SYSTEM STEWARDS
+            SECTION 3: STEWARD APPLICATIONS (KYC VERIFICATION)
+            ========================================================================= */}
+        <StewardApplicationsSection applications={pendingApplications} />
+
+        {/* =========================================================================
+            SECTION 4: SYSTEM STEWARDS
             ========================================================================= */}
         <section className="rc-section-block" aria-labelledby="heading-stewards">
           <div className="rc-section-header-wrap">
@@ -366,7 +418,7 @@ export default async function Review({
         </section>
 
         {/* =========================================================================
-            SECTION 4: ACTIVE RECORDS (PENDING REVIEW / VERIFICATION)
+            SECTION 5: ACTIVE RECORDS (PENDING REVIEW / VERIFICATION)
             ========================================================================= */}
         <section className="rc-section-block" aria-labelledby="heading-records">
           <div className="rc-section-header-wrap">
@@ -395,7 +447,7 @@ export default async function Review({
         </section>
 
         {/* =========================================================================
-            SECTION 5: PAST RECORDS & 30-DAY RECYCLE BIN
+            SECTION 6: PAST RECORDS & 30-DAY RECYCLE BIN
             ========================================================================= */}
         <section className="rc-section-block" aria-labelledby="heading-archives">
           <div className="rc-section-header-wrap">

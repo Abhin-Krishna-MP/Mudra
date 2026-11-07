@@ -238,12 +238,13 @@ export async function applyStewardAction(_prev: ActionResult | null, f: FormData
 
 export async function approveStewardAction(f: FormData): Promise<void> {
   const actor = await getActor();
-  if (!actor || actor.role !== 'admin') redirect('/login?error=Unauthorized');
+  if (!actor || !['admin', 'reviewer', 'steward'].includes(actor.role)) redirect('/login?error=Unauthorized');
 
   const appId = Number(f.get('applicationId'));
+  const redirectTo = str(f, 'redirectTo') || '/review';
   const db = await getDb();
   const app = (await db.execute('SELECT * FROM steward_applications WHERE id = ?', [appId])).rows[0];
-  if (!app) redirect('/admin?msg=Application+not+found');
+  if (!app) redirect(`${redirectTo}?msg=Application+not+found`);
 
   const now = new Date().toISOString();
   // Approve application and change role in users table to steward
@@ -258,14 +259,16 @@ export async function approveStewardAction(f: FormData): Promise<void> {
 
   revalidatePath('/admin');
   revalidatePath('/admin/stewards');
-  redirect('/admin?msg=Application+approved.+User+upgraded+to+Steward.');
+  revalidatePath('/review');
+  redirect(`${redirectTo}?msg=Application+approved.+User+upgraded+to+Steward.`);
 }
 
 export async function rejectStewardAction(f: FormData): Promise<void> {
   const actor = await getActor();
-  if (!actor || actor.role !== 'admin') redirect('/login?error=Unauthorized');
+  if (!actor || !['admin', 'reviewer', 'steward'].includes(actor.role)) redirect('/login?error=Unauthorized');
 
   const appId = Number(f.get('applicationId'));
+  const redirectTo = str(f, 'redirectTo') || '/review';
   const db = await getDb();
   const now = new Date().toISOString();
   await db.execute(
@@ -275,7 +278,8 @@ export async function rejectStewardAction(f: FormData): Promise<void> {
 
   revalidatePath('/admin');
   revalidatePath('/admin/stewards');
-  redirect('/admin?msg=Application+rejected.');
+  revalidatePath('/review');
+  redirect(`${redirectTo}?msg=Application+rejected.`);
 }
 
 /* ------------------------------------------------- permission requests */
