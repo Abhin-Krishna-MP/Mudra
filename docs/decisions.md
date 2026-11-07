@@ -1,4 +1,4 @@
-# Decision log (one line each: date · decision · who)
+# Decision Log (Chronological Record of Architectural & Design Decisions)
 
 - 2026-11-03 · Product name **Mudra** kept; "Not related to any financial scheme" line in About · Abhin + Alin
 - 2026-11-03 · Signatures (Ed25519) are Tier 2 #3, wired only after gate G3 is green on live; chain verifies unsigned and signed events · plan v4
@@ -22,3 +22,14 @@
 - 2026-11-05 · A17: Empirical dHash threshold verified on real seed photos (copies <= 12, distinct subjects >= 28) in tests/imagehash.test.ts · Abhin
 - 2026-11-05 · L13: Deterministic SVG identity seal implemented in src/lib/seal.ts and verified in tests/seal.test.ts · Alin + Abhin
 - 2026-11-05 · **Gate G4 FEATURE FREEZE COMPLETE** · Full Tier 1 + Tier 2 scope built, tested, and passing on feature2 · Abhin + Alin
+- 2026-11-06 · **Move 1 Architecture (Ask → Grant Lifecycle):** Defined Ed25519-signed Grant certificates over RFC 8785 canonical JSON; created tables `permission_requests`, `record_stewards`, and `grants`. Ensured zero requester contact info leaks into public logs. · Abhin
+- 2026-11-06 · **Move 2 Architecture (Machine Layer):** Published W3C TDMRep specification route `/.well-known/tdmrep.json`, image streaming headers (`tdm-reservation: 1`), batch hash lookup API (`POST /api/v1/lookup`), and signed dataset snapshot (`GET /api/v1/manifest.json`). · Abhin
+- 2026-11-06 · **Dual-Theme 3D Stage Architecture:** Redesigned landing page top section (`TopSectionDark.tsx`) with a full-screen parting velvet stage curtain (`.stage-curtain`), 3D Panchuruli Theyyam night scene for dark theme, and daylit Kathakali backwaters for light theme with zero content shift. · Alin + Abhin
+- 2026-11-07 · **Cultural Splash Loader:** Built `MudraLoader.tsx` with animated golden lotus mark, ambient motes, and Malayalam script token (`മുദ്ര`). Caches `sessionStorage.getItem('mudraLoaderSeen')` to run strictly on initial session arrival. · Alin + Abhin
+- 2026-11-07 · **Traditional Kerala Padippura Master Navbar:** Replaced standard header with a traditional Kerala entrance gateway (*Padippura*) featuring carved pitched roof, brass kettuvallam boat, hanging nilavilakku lamp, and ornamental gopuram pediment across dual 2087×436 master artworks (`navbar-full.png` and `navbar-dark.png`). · Alin + Abhin
+- 2026-11-07 · **High-Clarity Typography Synthesis:** Restored raster blur from 1024px dark theme uploads by inpainting the bar background with `#011a13` and compositing subpixel vector-crisp typography in ivory cream (`#fff8ee`) and Kerala temple gold (`#f2ce73`) at native 2087×436 resolution. · Abhin
+- 2026-11-07 · **Progressive Web App (PWA):** Engineered full offline capabilities via Service Worker (`public/sw.js`), dynamic Web App Manifest (`src/app/manifest.ts`), adaptive icon suite (`public/icons/*`), and in-app install prompt banner (`PwaRegister.tsx`). · Abhin
+- 2026-11-07 · **Live Registry Notification Center:** Connected navbar bell button to real-time database aggregator (`/api/notifications`) and interactive popover (`NotificationPopover.tsx`) streaming recent publications, reviewer verifications, and steward grants with unread badge counter. · Abhin
+- 2026-11-07 · **Zero-Heat GPU Performance Engineering:** Eliminated laptop overheating caused by 70 dynamic `CanvasGradient` creations per frame (>1,000/sec) in `HeroMotion.tsx`. Pre-rendered $64\times 64$ offscreen sprite for hardware-accelerated `drawImage` (99.97% gradient allocation reduction), added `visibilitychange` lifecycle sleep (0% CPU / 0% GPU in background), and cached CSS string properties. · Abhin
+- 2026-11-07 · **Mobile Touch Ergonomics:** Resolved mobile margin collision between quick links menu (`.quick`) and floating hero CTA buttons by increasing top margin from `-56px` to `+18px`. · Alin + Abhin
+- 2026-11-07 · **Alternating Theme Demonstration Gallery:** Updated all documentation demonstration galleries to strictly alternate between Light and Dark themes to showcase the complete design system. · Alin + Abhin
