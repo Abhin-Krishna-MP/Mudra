@@ -3,10 +3,12 @@ import { redirect } from 'next/navigation';
 import SubmitForm from './SubmitForm';
 import { PageSheet } from '@/components/PageSheet';
 import { Icon } from '@/components/Icons';
-import { getActor } from '@/lib/session';
+import { getSubmitter, UNAUTHORIZED_URL } from '@/lib/authz';
 import { getDb } from '@/lib/db';
 import { getDraft } from '@/lib/repo';
+import { logoutAction } from '@/app/actions';
 
+export const dynamic = 'force-dynamic';
 export const metadata = { title: 'Submit a work' };
 
 const POINTS = [
@@ -17,15 +19,23 @@ const POINTS = [
 
 export default async function Submit({ searchParams }: { searchParams: Promise<{ done?: string; edit?: string }> }) {
   // Step 1: Intercept request to /submit page and verify authenticated user with author role
-  const actor = await getActor();
-  if (!actor || (actor.role !== 'author' && actor.role !== 'admin')) {
-    redirect('/login?error=Unauthorized&redirect=/submit');
-  }
+  const submitter = await getSubmitter();
+  if (!submitter) redirect(UNAUTHORIZED_URL);
 
   const sp = await searchParams;
+  const signOut = (
+    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+      <a href="/author/dashboard" className="btn secondary">Author Dashboard</a>
+      <form action={logoutAction} className="sheet-action">
+        <input type="hidden" name="next" value="/login" />
+        <button className="secondary">Sign out ({submitter.name})</button>
+      </form>
+    </div>
+  );
+
   if (sp.done) return (
     <div className="wrap page submit-page">
-      <PageSheet eyebrow="Submit a record" title="Record submitted">
+      <PageSheet eyebrow="Submit a record" title="Record submitted" headExtra={signOut}>
         <div role="status" className="sb-done">
           <span className="sb-done-ico" aria-hidden="true"><Icon name="check" size={30} /></span>
           <p>
@@ -53,7 +63,7 @@ export default async function Submit({ searchParams }: { searchParams: Promise<{
         eyebrow={initialDraft ? "Edit Draft" : "Submit a record"}
         title={initialDraft ? "Edit and Resubmit Draft" : "Submit a Record"}
         lede={initialDraft ? `Updating draft: ${initialDraft.title}` : "Contribute a cultural work to the catalogue."}
-        headExtra={<a href="/author/dashboard" className="btn secondary">Author Dashboard</a>}
+        headExtra={signOut}
       >
         {initialDraft && (initialDraft.revision_note || initialDraft.revisionNote) && (
           <div className="sb-callout" role="alert" style={{ marginBottom: 20 }}>

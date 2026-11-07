@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState, useRef } from 'react';
-import { createPortal } from 'react-dom';
 import { Icon } from './Icons';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -25,6 +24,26 @@ export function PwaRegister() {
 
     if (isStandalone) {
       setInstalled(true);
+      return;
+    }
+
+    // Do not register service worker on localhost or during development to avoid caching webpack chunks
+    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    if (process.env.NODE_ENV !== 'production' || isLocalhost) {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (const reg of registrations) {
+            reg.unregister();
+          }
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then((keys) => {
+          for (const k of keys) {
+            if (k.startsWith('mudra-')) caches.delete(k);
+          }
+        });
+      }
       return;
     }
 
@@ -138,9 +157,9 @@ export function PwaRegister() {
     } catch {}
   };
 
-  if (installed || !showBanner || !deferredPrompt || typeof document === 'undefined') return null;
+  if (installed || !showBanner || !deferredPrompt) return null;
 
-  return createPortal(
+  return (
     <aside className="pwa-install-banner" aria-label="Install Mudra as an app" role="dialog">
       <div className="pwa-banner-main">
         <img
@@ -170,8 +189,7 @@ export function PwaRegister() {
           <Icon name="close" size={18} />
         </button>
       </div>
-    </aside>,
-    document.body
+    </aside>
   );
 }
 

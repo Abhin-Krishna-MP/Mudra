@@ -1,26 +1,37 @@
-import { PageSheet } from '@/components/PageSheet';
-import LoginClient from './LoginClient';
+import { redirect } from 'next/navigation';
 import '../reuse/reuse.css';
 import '../review/signin.css';
+import AuthForm from './AuthForm';
+import { PageSheet } from '@/components/PageSheet';
+import { getSubmitter } from '@/lib/authz';
+import { safeNext } from '@/lib/auth';
 
-export const metadata = { title: 'Sign In / Register' };
+export const dynamic = 'force-dynamic';
+export const metadata = { title: 'Author sign-in / sign-up' };
 
-export default async function LoginPage({
+export default async function Login({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string; msg?: string; redirect?: string }>;
+  searchParams: Promise<{ msg?: string; error?: string; next?: string; redirect?: string; mode?: string }>;
 }) {
   const sp = await searchParams;
-  const error = sp.error || sp.msg;
+  const nextTarget = sp.next || sp.redirect ? safeNext(sp.next || sp.redirect, '') : '';
+  if (await getSubmitter()) redirect(nextTarget || '/author/dashboard');
+
+  const mode = sp.mode === 'signup' ? 'signup' : 'login';
+  const notice =
+    sp.msg === 'Unauthorized' || sp.error === 'Unauthorized'
+      ? 'Unauthorized. Please sign in with an author account to submit a work.'
+      : (sp.msg || sp.error || null);
 
   return (
     <div className="wrap page reuse-page signin-page">
       <PageSheet
-        eyebrow="Authentication"
-        title="Account Access"
-        lede="Sign in to your author, steward, or reviewer account, or create an author profile."
+        eyebrow="Author access"
+        title={mode === 'signup' ? 'Create an Author Account' : 'Author Sign-In'}
+        lede="Sign in or register as an author to contribute cultural works to the registry."
       >
-        <LoginClient error={error} redirect={sp.redirect} />
+        <AuthForm mode={mode} next={nextTarget} notice={notice} />
       </PageSheet>
     </div>
   );

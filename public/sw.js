@@ -1,5 +1,5 @@
 // Mudra Progressive Web App — Service Worker
-const CACHE_NAME = 'mudra-v1';
+const CACHE_NAME = 'mudra-v2';
 
 const STATIC_PRECACHE = [
   '/',
@@ -38,8 +38,8 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Skip non-GET requests and API calls from aggressive caching
-  if (request.method !== 'GET' || url.pathname.startsWith('/api/')) {
+  // Skip non-GET requests, API calls, and Next.js internal chunks from service worker caching
+  if (request.method !== 'GET' || url.pathname.startsWith('/api/') || url.pathname.startsWith('/_next/')) {
     return;
   }
 
@@ -64,7 +64,7 @@ self.addEventListener('fetch', (event) => {
   }
 
   // 2. Static mudra assets and icons: Cache-first with network fallback
-  if (url.pathname.startsWith('/mudra/') || url.pathname.startsWith('/icons/') || url.pathname.startsWith('/_next/static/')) {
+  if (url.pathname.startsWith('/mudra/') || url.pathname.startsWith('/icons/')) {
     event.respondWith(
       caches.match(request).then((cached) => {
         if (cached) return cached;

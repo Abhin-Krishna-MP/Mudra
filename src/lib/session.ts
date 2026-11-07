@@ -2,11 +2,10 @@ import { cookies } from 'next/headers';
 import { readSession, signSession } from './auth';
 import type { Actor } from './contracts';
 
-const COOKIE = 'mudra_session';
-function secret(): string {
-  const s = process.env.SESSION_SECRET;
-  if (process.env.NODE_ENV === 'production' && (!s || s.startsWith('dev-only'))) throw new Error('SESSION_SECRET must be set in production');
-  return s || 'dev-only-change-me-dev-only-change-me';
+import { SESSION_COOKIE as COOKIE, sessionSecret as secret } from './session-secret';
+export async function getSession() {
+  const jar = await cookies();
+  return readSession(jar.get(COOKIE)?.value, secret());
 }
 export async function getActor(): Promise<Actor | null> {
   const jar = await cookies();
