@@ -130,11 +130,6 @@ export function InteractiveReuseGlance({
     }
   };
 
-  const handleUseChange = (u: Use) => {
-    setSelectedUse(u);
-    setIsOpen(true);
-  };
-
   return (
     <div className="reuse-glance-interactive-container" id="studio-h">
       {/* ---------- Status Badges Bar (Reuse at a Glance) ---------- */}
@@ -227,50 +222,8 @@ export function InteractiveReuseGlance({
             </button>
           </div>
 
-          {/* Quick Purpose Switcher */}
-          <div style={{ marginTop: 20, marginBottom: 18 }}>
-            <span className="muted" style={{ display: 'block', fontSize: '.82rem', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 8 }}>
-              Check another purpose:
-            </span>
-            <nav aria-label="Choose a use">
-              <ul className="uses" style={{ display: 'flex', flexWrap: 'wrap', gap: 8, margin: 0, padding: 0, listStyle: 'none' }}>
-                {USE_IDS.map((u) => (
-                  <li key={u}>
-                    <a
-                      href={`/r/${recordId}?use=${u}#studio-h`}
-                      className={`use-btn ${u === selectedUse ? 'is-active' : ''}`}
-                      aria-current={u === selectedUse ? 'true' : undefined}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        handleUseChange(u);
-                        if (typeof window !== 'undefined') {
-                          window.history.replaceState(null, '', `/r/${recordId}?use=${u}#studio-h`);
-                        }
-                      }}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        minHeight: 36,
-                        padding: '6px 14px',
-                        borderRadius: 999,
-                        border: '1px solid var(--pp-edge)',
-                        background: u === selectedUse ? 'var(--pp-ember, #8c2c25)' : 'rgba(0, 0, 0, .15)',
-                        color: u === selectedUse ? '#fff' : 'var(--pp-ink)',
-                        font: '600 .88rem var(--font-ui, system-ui)',
-                        textDecoration: 'none',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      {USES[u].label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </nav>
-          </div>
-
           {/* Verdict Card */}
-          <div style={{ marginTop: 14 }}>
+          <div style={{ marginTop: 18 }}>
             <VerdictCard
               verdict={out.verdict}
               useLabel={USES[selectedUse].label}
