@@ -19,6 +19,63 @@
   --rc-green-text: #1b5e20;
   color: var(--rc-ink);
   padding: 16px 0 48px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------- Same background artwork as Catalogue (Light & Dark) ---------- */
+:root:not([data-theme='dark']) body:has(.review-console-page) {
+  background-color: #0b4a3f;
+  background-image: none;
+  background-attachment: scroll;
+}
+:root:not([data-theme='dark']) body:has(.review-console-page)::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  height: 100vh; height: 100lvh;
+  background: url('/mudra/page-light-teal.webp') center / cover no-repeat, #0b4a3f;
+}
+:root:not([data-theme='dark']) body:has(.review-console-page)::after {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  height: 100vh; height: 100lvh;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 65%, rgba(2, 20, 16, .3) 100%);
+}
+
+:root[data-theme='dark'] body:has(.review-console-page) {
+  background-color: #0a0607;
+  background-image: none;
+  background-attachment: scroll;
+}
+:root[data-theme='dark'] body:has(.review-console-page)::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  height: 100vh; height: 100lvh;
+  background: url('/mudra/page-dark-clean.jpg') center / cover no-repeat, #0a0607;
+}
+:root[data-theme='dark'] body:has(.review-console-page)::after {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  height: 100vh; height: 100lvh;
+  background: radial-gradient(120% 90% at 50% 45%, transparent 60%, rgba(6, 3, 3, .38) 100%);
+}
+
+@media (max-width: 760px) {
+  :root:not([data-theme='dark']) body:has(.review-console-page)::before {
+    background: url('/mudra/page-light-teal-mobile.webp') center bottom / cover no-repeat, #0b4a3f;
+  }
+  :root[data-theme='dark'] body:has(.review-console-page)::before {
+    background: url('/mudra/page-dark-clean-mobile.webp') center bottom / cover no-repeat, #0a0607;
+  }
+}
+
+/* Floating header like Catalogue */
+html:root:root body:has(.review-console-page) .site-header.padippura-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-bottom: 0 !important;
+}
+body:has(.review-console-page) .site-header::after {
+  display: none !important;
 }
 
 :root[data-theme='dark'] .review-console-page {
