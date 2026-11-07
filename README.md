@@ -101,10 +101,11 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 - **Targeted Dashboard Queues:** When cultural stewards log in to their console (`/review`), the database queries pending drafts filtered strictly by their assigned region and category:
   $$\text{stewards only see drafts where: } \text{status} = \text{'pending'} \land \text{region} = \text{steward.region} \land \text{category} = \text{steward.category}$$
 
-### 4.10 Steward KYC Verification & Admin Review
+### 4.10 Steward KYC Verification & Reviewer Console Approvals
 - **Identity Document Upload (`/apply-steward`):** Authors can submit government or institutional identity documents to apply for steward elevation.
 - **Secure Private Cloud Storage:** Documents are never placed in public web directories. Stored using private Supabase buckets, `@vercel/blob`, or private disk with serverless `/tmp` fallbacks.
-- **Hidden Admin Governance Console (`/admin`):** Admins review pending KYC applications, stream documents via authenticated role-checked endpoints (`/api/admin/kyc-document/[id]`), and approve applicants, atomically promoting them to `steward` in the registry database.
+- **Reviewer Console Verification Area (`/review`):** Reviewers and stewards evaluate pending applications directly on `/review` via a dedicated **Steward Verification Requests** section (`StewardApplicationsSection.tsx`) accompanied by a centered overview metric card. Authorized accounts stream private KYC documents via authenticated role-checked endpoints (`/api/admin/kyc-document/[id]`), approve applicants (atomically promoting their database role to `steward` with their chosen region and category tags), or reject applications.
+- **Hidden Admin Governance Console (`/admin`):** System administrators retain a dedicated administrative view for full governance oversight.
 
 ### 4.11 Active AI Shield (W3C TDMRep Protocol)
 - **Global Manifest:** Static declaration at `/.well-known/tdmrep.json` asserting platform-wide machine-readable text and data mining reservations under the W3C standard and EU DSM Directive Art. 4.
@@ -114,6 +115,11 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 - **Non-Blocking Review:** Stewards click "Request Revision" on pending drafts, entering specific required corrections saved directly to `records.revision_note`, transitioning the status to `needs_revision`.
 - **Author Dashboard Alerts (`/author/dashboard`):** Authors receive clear notifications of flagged drafts with full steward revision notes.
 - **One-Click Resubmission:** An "Edit & Resubmit" action reopens the pre-filled submission form (`/submit?edit=[id]`), allowing authors to rectify details and resubmit, which atomically resets status to `pending`.
+
+### 4.13 Serverless Artwork Submission Resilience & Next.js 10MB Body Limit
+- **10MB Server Action Body Limit:** Next.js 15 App Router enforces a default 1MB request body limit on server actions. High-resolution mobile camera/phone photos and artworks routinely range from 2MB to 8MB. Configured `experimental: { serverActions: { bodySizeLimit: '10mb' } }` in `next.config.mjs` to eliminate HTTP 413 / 500 body-parser rejections.
+- **Serverless Storage Fallback:** On cloud serverless environments (e.g. Vercel read-only Lambda `/var/task` filesystems) where external Blob tokens may not be configured, `storeUpload` and `readLocalAsset` gracefully fall back to base64 `data:` URIs and `/tmp` storage, ensuring uploads never fail with `EROFS` or `ENOENT`.
+- **Top-Level Error Isolation:** Wrapped `createRecordAction` in structured `try...catch` handling with `isRedirectError` detection, ensuring intentional redirects (`/submit?done=...`) succeed while unforeseen issues surface clean inline validation messages rather than crashing into `error.tsx`.
 
 ---
 

@@ -114,7 +114,8 @@ To maintain cultural authenticity without central gatekeeping, Mudra separates s
 
 ### 3. Steward KYC Verification
 - Authors can apply to become verified stewards at `/apply-steward` by uploading identity documents.
-- Documents are saved in private, secure storage (never in public folders) and evaluated by admins on `/admin`.
+- Documents are saved in private, secure storage (never in public folders) and evaluated by admins on `/admin` and reviewers/stewards directly on `/review` via the **Steward Applications & Verification** section.
+- Reviewers and admins inspect private KYC proofs via the authenticated route `/api/admin/kyc-document/[id]`.
 - Upon approval, the user's role is atomically updated to `steward` with their designated region and category.
 
 ### 4. Asynchronous Feedback & Revision Loop
