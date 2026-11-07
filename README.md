@@ -152,172 +152,131 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ---
 
-## 6. System Architecture Diagram
 
-## Architecture
+## 6. System Architecture
 
 ```mermaid
 %%{init: {
   "theme": "base",
   "themeVariables": {
-    "background": "#0B090B",
-    "primaryColor": "#241820",
-    "primaryTextColor": "#F5E8CC",
-    "primaryBorderColor": "#C9A45C",
-    "lineColor": "#D6B66E",
-    "secondaryColor": "#19382F",
-    "tertiaryColor": "#30202A",
-    "fontFamily": "Inter, sans-serif",
-    "fontSize": "13px"
+    "background": "#0D1117",
+    "primaryColor": "#202124",
+    "primaryTextColor": "#E5E7EB",
+    "primaryBorderColor": "#59636E",
+    "lineColor": "#B8C0CA",
+    "secondaryColor": "#25282D",
+    "tertiaryColor": "#1B1F24",
+    "clusterBkg": "#11151B",
+    "clusterBorder": "#59636E",
+    "fontFamily": "Inter, Segoe UI, sans-serif",
+    "fontSize": "14px"
   },
   "flowchart": {
     "curve": "step",
-    "nodeSpacing": 35,
-    "rankSpacing": 55,
-    "htmlLabels": true
+    "nodeSpacing": 32,
+    "rankSpacing": 48,
+    "padding": 12,
+    "htmlLabels": true,
+    "useMaxWidth": true
   }
 }}%%
 
 flowchart TB
 
-    subgraph CLIENT["01 · CLIENT BROWSER"]
+    %% CLIENT LAYER
+    subgraph CLIENT["01  ·  CLIENT APPLICATION"]
         direction LR
 
-        UI["Next.js Server Components<br/>Progressive Web App · Service Worker"]
+        UI["Next.js 15 · React<br/>Progressive Web App"]
 
-        CULTURE["Kerala Padippura Navbar<br/>Light & Dark · 2087 × 436<br/>Kathakali Sunset · Panchuruli Theyyam"]
+        CULTURE["Cultural Interface<br/>Kerala Heritage UI<br/>Themes · Navigation · Loader"]
 
-        INTERACTION["Cultural Splash Loader<br/>Malayalam Calligraphy<br/>Museum Layout · Theme Toggle"]
+        STUDIO["Reuse Studio<br/>Live Notifications<br/>Filters · Interactive Popovers"]
 
-        STUDIO["Interactive Reuse Studio<br/>Live Notifications · Filtered Popover<br/>Real-time DB Events"]
+        IDENTITY["Identity & Requests<br/>SVG Seal · File Hash<br/>Permission Forms · Verification"]
 
-        IDENTITY["SVG Identity Seal<br/>Client-side File Hash<br/>Tamper Simulation · Fuzzy Search"]
-
-        REQUEST["4-Field Request Form<br/>Private Status Page<br/>Public Grant Verifier"]
-
-        UI --> CULTURE --> INTERACTION
-        INTERACTION --> STUDIO --> IDENTITY --> REQUEST
+        UI --> CULTURE --> STUDIO --> IDENTITY
     end
 
-    subgraph BACKEND["02 · NEXT.JS 15 RUNTIME / EDGE ENGINE"]
+    %% APPLICATION LAYER
+    subgraph APPLICATION["02  ·  APPLICATION & SECURITY ENGINE"]
         direction LR
 
-        PERMISSION["Permission Engine<br/>17,496 Tests"]
+        API["API & Access Layer<br/>REST · Server Actions<br/>Scrypt · RBAC · HMAC"]
 
-        AUDIT["SHA-256 Audit Chain<br/>Ed25519 Signatures"]
+        CORE["Permission & Audit Engine<br/>17,496 Tests<br/>SHA-256 Audit Chain"]
 
-        DHASH["Perceptual dHash Matcher<br/>64-bit Gradient Hash"]
+        CRYPTO["Cryptographic Services<br/>Ed25519 · RFC 8785<br/>Signed Grant Generation"]
 
-        GRANT["Ed25519 Grant Engine<br/>RFC 8785 Canonical JSON"]
+        MEDIA["Media & Discovery Engine<br/>Perceptual dHash<br/>Image Processing · QR · OG Cards"]
 
-        OG["Next/OG Card Generator<br/>1200 × 630 PNG + QR"]
+        STANDARDS["Web Standards & PWA<br/>W3C TDMRep · AI Signals<br/>Manifest · Offline Support"]
 
-        AUTH["Scrypt RBAC<br/>HMAC-signed Cookies<br/>Authentication Guard"]
+        REALTIME["Real-time Services<br/>Notification API<br/>Live Database Events"]
 
-        TDM["W3C TDMRep AI Signals<br/>tdm-reservation: 1"]
-
-        LOOKUP["Hash-only Lookup API<br/>POST /api/v1/lookup"]
-
-        MANIFEST["Signed Manifest API<br/>GET /api/v1/manifest"]
-
-        NOTIFY["Live Notification API<br/>/api/notifications"]
-
-        WEBMANIFEST["Web App Manifest Route<br/>/manifest.webmanifest"]
-
-        SPRITE["Zero-Heat Sprite Engine<br/>Hardware Blit & Sleep"]
+        API --> CORE
+        CORE --> CRYPTO
+        CORE --> MEDIA
+        CRYPTO --> STANDARDS
+        CRYPTO --> REALTIME
     end
 
-    subgraph DATABASE["03 · DATABASE & STORAGE LAYER · LIBSQL"]
+    %% STORAGE LAYER
+    subgraph STORAGE["03  ·  DATABASE & PERSISTENCE"]
         direction LR
 
-        TURSO[("Turso Cloud<br/>AWS ap-south-1<br/>Mumbai")]
+        TURSO[("Turso Cloud<br/>AWS · ap-south-1<br/>LibSQL")]
 
-        SQLITE[("Local SQLite<br/>data/mudra.db")]
+        SQLITE[("Local SQLite<br/>data/mudra.db<br/>Offline Persistence")]
 
-        RECORDS[("records<br/>Cultural Metadata<br/>Status · Permissions<br/>Sensitivity · Work Type")]
+        SCHEMA["Core Records<br/>records · credits<br/>assets · counters"]
 
-        CREDITS[("credits<br/>Artists · Tradition Bearers<br/>Photographers · Roles")]
+        AUDITDB["Governance & Audit<br/>audit_events · flags<br/>verifications"]
 
-        ASSETS[("assets<br/>SHA-256 · dHash<br/>Dimensions · MIME<br/>Storage Keys")]
+        ACCESSDB["Access & Permissions<br/>users · record_stewards<br/>permission_requests · grants"]
 
-        EVENTS[("audit_events<br/>Cryptographic Event Chain<br/>Sequential State Transitions")]
+        TURSO <-->|"Cloud Sync"| SQLITE
 
-        FLAGS[("flags<br/>Community Reports<br/>Disputes · Resolution Notes")]
-
-        VERIFICATIONS[("verifications<br/>Academic & Governmental<br/>Reviewer Citations")]
-
-        USERS[("users<br/>Reviewer & Steward<br/>Scrypt + Salt Credentials")]
-
-        COUNTERS[("counters<br/>Sequential Record IDs<br/>MDR-2026-NNNN")]
-
-        STEWARDS[("record_stewards<br/>Authorized Stewards<br/>Record Mapping")]
-
-        REQUESTS[("permission_requests<br/>Scoped Reuse Requests<br/>Tokens · Notes · Conditions")]
-
-        GRANTS[("grants<br/>Ed25519 Signatures<br/>Canonical JSON Payloads")]
+        TURSO --> SCHEMA
+        TURSO --> AUDITDB
+        TURSO --> ACCESSDB
     end
 
-    REQUEST -->|"HTTP / Server Actions / REST API"| PERMISSION
+    %% MAIN SYSTEM FLOW
+    IDENTITY -->|"HTTPS · API Requests"| API
 
-    PERMISSION --> AUDIT
-    PERMISSION --> AUTH
-    AUDIT --> DHASH
-    AUTH --> GRANT
-    GRANT --> OG
-    DHASH --> LOOKUP
-    GRANT --> MANIFEST
-    AUTH --> NOTIFY
-    MANIFEST --> TDM
-    NOTIFY --> WEBMANIFEST
-    TDM --> SPRITE
+    %% APPLICATION TO DATABASE
+    API --> TURSO
+    CORE -->|"Atomic Transactions"| TURSO
+    CRYPTO -->|"Signed Grants"| TURSO
+    MEDIA -->|"Hash Lookup"| TURSO
+    REALTIME <-->|"Live Events"| TURSO
 
-    AUDIT -->|"Atomic Transactions"| TURSO
-    GRANT --> TURSO
-    LOOKUP --> TURSO
-    NOTIFY --> TURSO
+    %% PRESENTATION & STANDARDS
+    STANDARDS -.->|"Web Manifest"| UI
+    REALTIME -.->|"Live Updates"| STUDIO
 
-    TURSO <-->|"Local / Cloud Persistence"| SQLITE
+    %% NODE STYLING
+    classDef client fill:#202124,stroke:#68717D,color:#E5E7EB,stroke-width:1.2px
+    classDef engine fill:#25282D,stroke:#87919D,color:#F1F3F5,stroke-width:1.3px
+    classDef storage fill:#202124,stroke:#89939F,color:#E5E7EB,stroke-width:1.5px
+    classDef cloud fill:#292D32,stroke:#B0B8C2,color:#FFFFFF,stroke-width:1.8px
 
-    TURSO --> RECORDS
-    TURSO --> CREDITS
-    TURSO --> ASSETS
-    TURSO --> EVENTS
-    TURSO --> FLAGS
-    TURSO --> VERIFICATIONS
-    TURSO --> USERS
-    TURSO --> COUNTERS
-    TURSO --> STEWARDS
-    TURSO --> REQUESTS
-    TURSO --> GRANTS
+    class UI,CULTURE,STUDIO,IDENTITY client
+    class API,CORE,CRYPTO,MEDIA,STANDARDS,REALTIME engine
+    class SCHEMA,AUDITDB,ACCESSDB storage
+    class TURSO,SQLITE cloud
 
-    classDef frontend fill:#291D26,stroke:#C9A45C,color:#F8E9CB,stroke-width:1.5px
-    classDef backend fill:#30202A,stroke:#D0A85D,color:#F8E9CB,stroke-width:1.5px
-    classDef database fill:#153B32,stroke:#B99A58,color:#E8EEDC,stroke-width:1.5px
-    classDef infrastructure fill:#203A31,stroke:#D6B66E,color:#F5E8CC,stroke-width:2px
+    %% SUBGRAPH STYLING
+    style CLIENT fill:#0D1117,stroke:#59636E,stroke-width:1.5px,color:#E5E7EB
+    style APPLICATION fill:#0D1117,stroke:#59636E,stroke-width:1.5px,color:#E5E7EB
+    style STORAGE fill:#0D1117,stroke:#59636E,stroke-width:1.5px,color:#E5E7EB
 
-    class UI,CULTURE,INTERACTION,STUDIO,IDENTITY,REQUEST frontend
-    class PERMISSION,AUDIT,DHASH,GRANT,OG,AUTH,TDM,LOOKUP,MANIFEST,NOTIFY,WEBMANIFEST,SPRITE backend
-    class RECORDS,CREDITS,ASSETS,EVENTS,FLAGS,VERIFICATIONS,USERS,COUNTERS,STEWARDS,REQUESTS,GRANTS database
-    class TURSO,SQLITE infrastructure
-
-    style CLIENT fill:#100D10,stroke:#C9A45C,stroke-width:2px,color:#E9D3A2
-    style BACKEND fill:#100D10,stroke:#B88A65,stroke-width:2px,color:#E9D3A2
-    style DATABASE fill:#0D1714,stroke:#A58F56,stroke-width:2px,color:#D8C99D
+    linkStyle default stroke:#AEB7C2,stroke-width:1.25px
 ```
 
-### Architecture Stack
-
-| Layer | Technology |
-|---|---|
-| Frontend | Next.js 15 · React · PWA |
-| Backend | Next.js Runtime · REST API |
-| Security | Scrypt · RBAC · HMAC |
-| Cryptography | SHA-256 · Ed25519 · RFC 8785 |
-| Image Matching | Perceptual dHash |
-| Database | LibSQL · Turso · SQLite |
-| Standards | W3C TDMRep |
-
 ---
+
 
 **Mudra — Preserving Heritage. Protecting Rights. Empowering Creators.**
 
