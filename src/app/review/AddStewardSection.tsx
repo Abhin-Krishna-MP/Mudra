@@ -33,9 +33,9 @@ export default function AddStewardSection({ users, records }: Props) {
   const stewardsList = users.filter((u) => u.role === 'steward' || u.role === 'reviewer' || u.role === 'admin');
 
   return (
-    <div style={{ margin: '20px 0 28px' }}>
-      {/* Top action bar with separate Add Steward button */}
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+    <div style={{ margin: '18px 0 24px' }}>
+      {/* Top action bar with separate Add Steward button matching user image */}
+      <div className="rc-steward-trigger-row">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
@@ -44,7 +44,7 @@ export default function AddStewardSection({ users, records }: Props) {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 9,
-            padding: '9px 22px',
+            padding: '9px 24px',
             fontSize: '0.94rem',
             fontWeight: 700,
             borderRadius: 999,
@@ -53,41 +53,43 @@ export default function AddStewardSection({ users, records }: Props) {
           aria-expanded={isOpen}
         >
           <Icon name="shield" size={17} />
-          <span>{isOpen ? 'Close Steward Manager' : '+ Add / Assign Steward'}</span>
+          <span>{isOpen ? 'Close Steward Section' : '+ Add / Assign Steward'}</span>
         </button>
 
-        <span className="muted" style={{ fontSize: '0.88rem' }}>
-          {stewardsList.length} active steward{stewardsList.length === 1 ? '' : 's'} registered in system
+        <span className="rc-steward-count" style={{ display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: '0.9rem', color: 'var(--rc-muted)' }}>
+          <Icon name="users" size={17} />
+          <span>{stewardsList.length} active steward{stewardsList.length === 1 ? '' : 's'} registered in system</span>
         </span>
       </div>
 
-      {/* Expandable management panel */}
+      {/* Expandable management panel — Light Theme First */}
       {isOpen && (
         <section
-          className="panel ui"
+          className="rc-steward-panel"
           style={{
-            marginTop: 18,
+            marginTop: 14,
             padding: '24px 28px',
             borderRadius: 18,
-            border: '2px solid var(--pp-accent, #e8782a)',
-            background: 'var(--pp-card, rgba(34, 21, 15, 0.95))',
-            boxShadow: '0 12px 32px rgba(0, 0, 0, 0.45)',
+            border: '2px solid var(--rc-accent, #c47c1a)',
+            background: 'var(--rc-panel, #ffffff)',
+            color: 'var(--rc-ink, #2b1810)',
+            boxShadow: '0 12px 34px rgba(80, 45, 20, 0.08)',
           }}
           aria-label="Steward Management"
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 12, marginBottom: 18 }}>
             <div>
-              <h3 style={{ margin: '0 0 6px', fontSize: '1.35rem', display: 'flex', alignItems: 'center', gap: 9 }}>
+              <h3 style={{ margin: '0 0 4px', fontSize: '1.3rem', display: 'flex', alignItems: 'center', gap: 9, color: 'var(--rc-maroon, #751b16)' }}>
                 <Icon name="users" size={22} />
-                <span>Steward Management</span>
+                <span>Steward Management Console</span>
               </h3>
-              <p className="muted" style={{ margin: 0, fontSize: '0.92rem' }}>
+              <p style={{ margin: 0, fontSize: '0.92rem', color: 'var(--rc-muted)' }}>
                 Assign verified community stewards to cultural catalogue records, or onboard a new steward.
               </p>
             </div>
 
             {/* Mode Switcher Buttons */}
-            <div style={{ display: 'inline-flex', background: 'rgba(0, 0, 0, 0.25)', padding: 4, borderRadius: 12, border: '1px solid var(--pp-edge, rgba(240, 137, 74, 0.3))' }}>
+            <div style={{ display: 'inline-flex', background: 'rgba(180, 140, 90, 0.12)', padding: 4, borderRadius: 12, border: '1px solid var(--rc-panel-border, #e0d0be)' }}>
               <button
                 type="button"
                 onClick={() => setMode('assign')}
@@ -124,14 +126,23 @@ export default function AddStewardSection({ users, records }: Props) {
             <form action={assignStewardAction} style={{ marginTop: 16 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
                 <div>
-                  <label htmlFor="assign-record-select" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                  <label htmlFor="assign-record-select" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     1. Select Catalogue Record
                   </label>
                   <select
                     id="assign-record-select"
                     name="recordId"
                     required
-                    style={{ width: '100%', minHeight: 46, padding: '8px 12px', borderRadius: 10, fontSize: '0.92rem' }}
+                    style={{
+                      width: '100%',
+                      minHeight: 44,
+                      padding: '8px 12px',
+                      borderRadius: 10,
+                      fontSize: '0.92rem',
+                      background: 'var(--rc-card, #ffffff)',
+                      color: 'var(--rc-ink, #2b1810)',
+                      border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                    }}
                   >
                     <option value="">— Select a Record —</option>
                     {records.map((r) => (
@@ -143,14 +154,23 @@ export default function AddStewardSection({ users, records }: Props) {
                 </div>
 
                 <div>
-                  <label htmlFor="assign-user-select" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                  <label htmlFor="assign-user-select" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     2. Select Steward to Link
                   </label>
                   <select
                     id="assign-user-select"
                     name="userId"
                     required
-                    style={{ width: '100%', minHeight: 46, padding: '8px 12px', borderRadius: 10, fontSize: '0.92rem' }}
+                    style={{
+                      width: '100%',
+                      minHeight: 44,
+                      padding: '8px 12px',
+                      borderRadius: 10,
+                      fontSize: '0.92rem',
+                      background: 'var(--rc-card, #ffffff)',
+                      color: 'var(--rc-ink, #2b1810)',
+                      border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                    }}
                   >
                     <option value="">— Select a Steward / Reviewer —</option>
                     {users.map((u) => (
@@ -179,7 +199,7 @@ export default function AddStewardSection({ users, records }: Props) {
             <form action={createOrPromoteStewardAction} style={{ marginTop: 16 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 14 }}>
                 <div>
-                  <label htmlFor="steward-name" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                  <label htmlFor="steward-name" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     Full Name *
                   </label>
                   <input
@@ -188,12 +208,20 @@ export default function AddStewardSection({ users, records }: Props) {
                     name="name"
                     required
                     placeholder="e.g. Kalamandalam Krishnan Nair"
-                    style={{ width: '100%', minHeight: 44, padding: '8px 12px', borderRadius: 10 }}
+                    style={{
+                      width: '100%',
+                      minHeight: 44,
+                      padding: '8px 12px',
+                      borderRadius: 10,
+                      background: 'var(--rc-card, #ffffff)',
+                      color: 'var(--rc-ink, #2b1810)',
+                      border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="steward-email" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                  <label htmlFor="steward-email" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     Email Address *
                   </label>
                   <input
@@ -202,12 +230,20 @@ export default function AddStewardSection({ users, records }: Props) {
                     name="email"
                     required
                     placeholder="e.g. steward@kalamandalam.org"
-                    style={{ width: '100%', minHeight: 44, padding: '8px 12px', borderRadius: 10 }}
+                    style={{
+                      width: '100%',
+                      minHeight: 44,
+                      padding: '8px 12px',
+                      borderRadius: 10,
+                      background: 'var(--rc-card, #ffffff)',
+                      color: 'var(--rc-ink, #2b1810)',
+                      border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="steward-region" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                  <label htmlFor="steward-region" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     Cultural Region
                   </label>
                   <input
@@ -215,12 +251,20 @@ export default function AddStewardSection({ users, records }: Props) {
                     type="text"
                     name="region"
                     placeholder="e.g. Kerala / Malabar / Valluvanad"
-                    style={{ width: '100%', minHeight: 44, padding: '8px 12px', borderRadius: 10 }}
+                    style={{
+                      width: '100%',
+                      minHeight: 44,
+                      padding: '8px 12px',
+                      borderRadius: 10,
+                      background: 'var(--rc-card, #ffffff)',
+                      color: 'var(--rc-ink, #2b1810)',
+                      border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                    }}
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="steward-category" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                  <label htmlFor="steward-category" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                     Artform / Category
                   </label>
                   <input
@@ -228,19 +272,35 @@ export default function AddStewardSection({ users, records }: Props) {
                     type="text"
                     name="category"
                     placeholder="e.g. Performing Art / Ritual Art"
-                    style={{ width: '100%', minHeight: 44, padding: '8px 12px', borderRadius: 10 }}
+                    style={{
+                      width: '100%',
+                      minHeight: 44,
+                      padding: '8px 12px',
+                      borderRadius: 10,
+                      background: 'var(--rc-card, #ffffff)',
+                      color: 'var(--rc-ink, #2b1810)',
+                      border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                    }}
                   />
                 </div>
               </div>
 
               <div style={{ marginTop: 14 }}>
-                <label htmlFor="steward-record-opt" style={{ fontWeight: 600, display: 'block', marginBottom: 6 }}>
+                <label htmlFor="steward-record-opt" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                   Link to Record immediately (Optional)
                 </label>
                 <select
                   id="steward-record-opt"
                   name="recordId"
-                  style={{ width: '100%', minHeight: 44, padding: '8px 12px', borderRadius: 10 }}
+                  style={{
+                    width: '100%',
+                    minHeight: 44,
+                    padding: '8px 12px',
+                    borderRadius: 10,
+                    background: 'var(--rc-card, #ffffff)',
+                    color: 'var(--rc-ink, #2b1810)',
+                    border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
+                  }}
                 >
                   <option value="">— Do not link to a record yet —</option>
                   {records.map((r) => (
@@ -264,8 +324,8 @@ export default function AddStewardSection({ users, records }: Props) {
           )}
 
           {/* Active Stewards Summary Chips */}
-          <div style={{ marginTop: 24, paddingTop: 18, borderTop: '1px solid var(--pp-edge, rgba(240, 137, 74, 0.25))' }}>
-            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--pp-muted)' }}>
+          <div style={{ marginTop: 24, paddingTop: 16, borderTop: '1px solid var(--rc-panel-border, #e0d0be)' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--rc-muted)' }}>
               Currently Active Stewards:
             </span>
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginTop: 8 }}>
@@ -277,7 +337,7 @@ export default function AddStewardSection({ users, records }: Props) {
                 >
                   <Icon name="shield" size={12} />
                   <strong>{s.name}</strong>
-                  {s.region && <span className="muted">({s.region})</span>}
+                  {s.region && <span style={{ opacity: 0.85 }}>({s.region})</span>}
                 </span>
               ))}
             </div>
@@ -287,4 +347,3 @@ export default function AddStewardSection({ users, records }: Props) {
     </div>
   );
 }
-
