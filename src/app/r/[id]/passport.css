@@ -337,6 +337,42 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   background: rgba(232, 147, 90, .14);
   border-color: var(--pp-accent);
 }
+
+/* Maroon Download Credit Card Button */
+.pp-actions-main .btn.pp-btn-maroon {
+  background: #751b16;
+  color: #ffffff !important;
+  border: 1.5px solid #5a1410;
+  box-shadow: 0 4px 14px rgba(117, 27, 22, .38), inset 0 1px 0 rgba(255, 255, 255, .28);
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+.pp-actions-main .btn.pp-btn-maroon .icon {
+  color: #ffffff !important;
+}
+.pp-actions-main .btn.pp-btn-maroon:hover {
+  background: #8e221b;
+  color: #ffffff !important;
+  border-color: #701c18;
+  box-shadow: 0 6px 18px rgba(117, 27, 22, .48);
+  transform: translateY(-1px);
+}
+:root:not([data-theme='dark']) .pp-actions-main .btn.pp-btn-maroon {
+  background: #751b16;
+  color: #ffffff !important;
+  border: 1.5px solid #5a1410;
+  box-shadow: 0 4px 14px rgba(117, 27, 22, .32), inset 0 1px 0 rgba(255, 255, 255, .28);
+}
+:root:not([data-theme='dark']) .pp-actions-main .btn.pp-btn-maroon .icon {
+  color: #ffffff !important;
+}
+:root:not([data-theme='dark']) .pp-actions-main .btn.pp-btn-maroon:hover {
+  background: #8e221b;
+  color: #ffffff !important;
+  border-color: #701c18;
+  box-shadow: 0 6px 18px rgba(117, 27, 22, .42);
+}
+
 .pp-actions-main .pp-primary {
   background: var(--pp-ember);
   color: var(--pp-ember-ink);
