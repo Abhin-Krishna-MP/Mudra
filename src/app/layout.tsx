@@ -14,6 +14,7 @@ import './kerala-light-footer.css';
 import './home-light-teal.css';
 import './loader.css';
 import './pwa.css';
+import './notifications.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
