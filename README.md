@@ -93,7 +93,7 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ---
 
-## 6. Technology Stack
+## 5. Technology Stack
 
 | Layer | Technologies |
 | --- | --- |
