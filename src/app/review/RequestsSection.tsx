@@ -23,6 +23,12 @@ interface RequestThread {
   items: RequestView[];
 }
 
+function formatTimestamp(isoString: string | null | undefined): string {
+  if (!isoString) return '—';
+  const clean = String(isoString).replace('T', ' ');
+  return clean.slice(0, 16);
+}
+
 export default function RequestsSection({ requests, stewards = [] }: Props) {
   const today = new Date().toISOString().split('T')[0];
 
@@ -120,8 +126,8 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                 <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
                   <strong>Project Scope:</strong> {r.scope?.whatYouWillMake || '—'} ({r.scope?.whereAndHowLong || '—'})
                 </p>
-                <p className="muted" style={{ margin: '4px 0 12px', fontSize: '0.84rem' }}>
-                  Submitted: {new Date(r.created_at).toLocaleString('en-IN')}
+                <p className="muted" style={{ margin: '4px 0 12px', fontSize: '0.84rem' }} suppressHydrationWarning>
+                  Submitted: {formatTimestamp(r.created_at)}
                 </p>
 
                 {/* Direct "Assign Steward" Shortcut to bridge the workflow gap */}
@@ -229,8 +235,8 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
               <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
                 <strong>Where & duration:</strong> {r.scope?.whereAndHowLong || '—'}
               </p>
-              <p className="muted" style={{ margin: '4px 0 16px', fontSize: '0.85rem' }}>
-                Submitted: {new Date(r.created_at).toLocaleString('en-IN')}
+              <p className="muted" style={{ margin: '4px 0 16px', fontSize: '0.85rem' }} suppressHydrationWarning>
+                Submitted: {formatTimestamp(r.created_at)}
               </p>
 
               {/* Duplicate submissions accordion if thread has multiple submissions */}
@@ -241,8 +247,8 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                   </summary>
                   <ul style={{ margin: '8px 0 0', paddingLeft: 20 }}>
                     {thread.items.map((item, idx) => (
-                      <li key={item.id} style={{ margin: '4px 0' }}>
-                        Submission #{idx + 1} ({item.id.slice(0, 8)}...) on {new Date(item.created_at).toLocaleString('en-IN')}
+                      <li key={item.id} style={{ margin: '4px 0' }} suppressHydrationWarning>
+                        Submission #{idx + 1} ({item.id.slice(0, 8)}...) on {formatTimestamp(item.created_at)}
                       </li>
                     ))}
                   </ul>
@@ -285,7 +291,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                       <label htmlFor={`vf-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
                         Valid from
                       </label>
-                      <input id={`vf-${r.id}`} type="date" name="validFrom" defaultValue={today} required className="rc-edit-note-input" style={{ minHeight: 42 }} />
+                      <input id={`vf-${r.id}`} type="date" name="validFrom" defaultValue={today} required suppressHydrationWarning className="rc-edit-note-input" style={{ minHeight: 42 }} />
                     </div>
                     <div>
                       <label htmlFor={`vu-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
@@ -354,7 +360,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                   <span className={`chip ${r.status === 'granted' ? 'verified' : 'ask'}`}>{r.status}</span>
                 </div>
 
-                {r.decision_note && <p className="muted" style={{ margin: '6px 0 10px', fontSize: '0.88rem' }}>Note: {r.decision_note}</p>}
+                {Boolean(r.decision_note) && <p className="muted" style={{ margin: '6px 0 10px', fontSize: '0.88rem' }}>Note: {r.decision_note}</p>}
 
                 {/* Inverted Hierarchy: Primary action is "View signed grant", Revoke is demoted with confirmation */}
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginTop: 10 }}>

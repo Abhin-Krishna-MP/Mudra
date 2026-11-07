@@ -187,7 +187,7 @@ export default function RecordManagementCard({ record: r, linkedStewards, allSte
           {/* Tab 1: Moderation & Review */}
           {activeTab === 'moderation' && (
             <div>
-              {r.revision_note && (
+              {Boolean(r.revision_note) && (
                 <div className="rc-callout" style={{ marginBottom: 14 }}>
                   <Icon name="quote" size={16} />
                   <div>

@@ -235,7 +235,7 @@ export default async function Review({
         }
       >
         {/* Informative alert banner if present (and not "Done.") */}
-        {showNotice && (
+        {Boolean(showNotice) && (
           <div className="rc-callout" role="status" style={{ marginBottom: 20 }}>
             <Icon name="info" size={18} />
             <span>{sp.msg}</span>
