@@ -27,7 +27,7 @@ export function PadippuraNavbar() {
 
   return (
     <>
-      <header className="site-header padippura-header">
+      <header className="site-header padippura-header" style={{ background: 'transparent' }}>
         {/* Desktop & Tablet: User's Exact Kerala Padippura Master Navbar */}
         <div className="padippura-desktop-stage" aria-label="Main Navigation">
           {/* Light Theme Artwork */}

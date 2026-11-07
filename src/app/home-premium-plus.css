@@ -394,6 +394,8 @@ body:has(.hero) .site-header.padippura-header {
   width: 100% !important;
   z-index: 80;
   background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
   border: none !important;
   box-shadow: none !important;
   display: flex !important;
@@ -406,11 +408,17 @@ body:has(.hero) .site-header.padippura-header {
 
 body:not(:has(.hero)) .site-header.padippura-header {
   position: relative !important;
-  background: linear-gradient(180deg, #09342b 0%, #06241e 100%) !important;
-  padding-bottom: 8px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding-bottom: 0 !important;
 }
 :root[data-theme='dark'] body:not(:has(.hero)) .site-header.padippura-header {
-  background: linear-gradient(180deg, #120908 0%, #0a0506 100%) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
 }
 
 /* No global header glass, borders or kasavu strip behind the artwork */

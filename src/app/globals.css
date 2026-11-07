@@ -173,6 +173,7 @@ code { font: .85em ui-monospace, SFMono-Regular, Menlo, monospace; }
 
 /* ---------- Header ---------- */
 .site-header { background: var(--header-bg); color: var(--header-ink); position: relative; z-index: 20; border-bottom: 1px solid rgba(233, 185, 73, .18); }
+.site-header.padippura-header { background: transparent !important; background-color: transparent !important; background-image: none !important; border: none !important; border-bottom: none !important; box-shadow: none !important; }
 .site-header .wrap { display: flex; align-items: center; gap: 28px; min-height: 76px; }
 
 /* Premium navbar ornament: thin double-rule with foil-gold accent line below nav */
@@ -220,12 +221,14 @@ body:has(.hero) .site-header { position: absolute; inset: 0 0 auto 0; background
 
 /* Decorative kasavu rule at base of non-hero header */
 body:not(:has(.hero)) .site-header { border-bottom: 0; }
-body:not(:has(.hero)) .site-header::after {
+body:not(:has(.hero)) .site-header.padippura-header::before,
+body:not(:has(.hero)) .site-header.padippura-header::after { display: none !important; content: none !important; }
+body:not(:has(.hero)) .site-header:not(.padippura-header)::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: 0; height: 3px;
   background: var(--kasavu, linear-gradient(90deg, #8c6914 0%, #f6d27a 25%, #fff3c4 40%, #e9b949 55%, #8c6914 80%, #f6d27a 100%));
   opacity: .9;
 }
-:root[data-theme='dark'] body:not(:has(.hero)) .site-header::after {
+:root[data-theme='dark'] body:not(:has(.hero)) .site-header:not(.padippura-header)::after {
   background: var(--foil-ember);
   opacity: .7;
 }
