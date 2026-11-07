@@ -223,3 +223,20 @@ test('Step 5: Asynchronous Feedback - Request Revision & Author Edit/Resubmit', 
   assert.equal(resubmittedRow.revision_note, '', 'Resubmit must clear previous revision note');
   assert.equal(resubmittedRow.title, 'Corrected Theyyam Record');
 });
+
+test('Step 3b: Steward KYC handles serverless environment without ENOENT', async () => {
+  const origVercel = process.env.VERCEL;
+  try {
+    process.env.VERCEL = '1';
+    const dummyDoc = Buffer.from('SERVERLESS-KYC-DATA');
+    const sha = 'e'.repeat(64);
+    const loc = await storeSecureKyc(dummyDoc, sha, 'application/pdf');
+    assert.ok(loc);
+    const retrieved = await readSecureKyc(loc);
+    assert.ok(retrieved);
+    assert.equal(retrieved.toString(), 'SERVERLESS-KYC-DATA');
+  } finally {
+    if (origVercel === undefined) delete process.env.VERCEL;
+    else process.env.VERCEL = origVercel;
+  }
+});
