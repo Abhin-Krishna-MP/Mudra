@@ -1,7 +1,7 @@
 # Mudra — Cultural Passports: Living Heritage Registry
 
 > **Event:** ART//CODE 2026 · **Problem Statement:** PS-03 "Credit the Culture"  
-> **Team:** Abhin Krishna M P & Alin · **License:** MIT Open Source  
+> **Team:** Abhin Krishna M P & Alin Alex · **License:** MIT Open Source  
 > **Live Production:** [mudra-one-ivory.vercel.app](https://mudra-one-ivory.vercel.app)  
 
 [![Tests](https://img.shields.io/badge/tests-43%20passed-success)](tests/)
