@@ -299,6 +299,21 @@ export default async function Review({
             </div>
           </div>
 
+          <div className="rc-stat-card rc-stat-card-center">
+            <div className="rc-stat-icon">
+              <Icon name="shield" size={24} />
+            </div>
+            <div className="rc-stat-mid">
+              <span className="rc-stat-num">{pendingApplications.length}</span>
+              <div className="rc-stat-details">
+                <span className="rc-stat-label">Steward Applications</span>
+                <span className="rc-stat-text">
+                  {pendingApplications.length === 0 ? 'No pending applications.' : `${pendingApplications.length} pending application(s)`}
+                </span>
+              </div>
+            </div>
+          </div>
+
           <div className="rc-stat-card">
             <div className="rc-stat-icon">
               <Icon name="users" size={24} />
@@ -309,21 +324,6 @@ export default async function Review({
                 <span className="rc-stat-label">Permission Requests</span>
                 <span className="rc-stat-text">
                   {openPermissionCount === 0 ? 'No open requests at this time.' : `${openPermissionCount} open request(s)`}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div className="rc-stat-card">
-            <div className="rc-stat-icon">
-              <Icon name="shield" size={24} />
-            </div>
-            <div className="rc-stat-mid">
-              <span className="rc-stat-num">{pendingApplications.length}</span>
-              <div className="rc-stat-details">
-                <span className="rc-stat-label">Steward Applications</span>
-                <span className="rc-stat-text">
-                  {pendingApplications.length === 0 ? 'No pending applications.' : `${pendingApplications.length} pending application(s)`}
                 </span>
               </div>
             </div>

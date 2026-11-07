@@ -143,13 +143,29 @@ body:has(.review-console-page) .site-header::after {
 /* Stats Row */
 .rc-stats-row {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 16px;
   margin-bottom: 20px;
+}
+@media (max-width: 960px) {
+  .rc-stats-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .rc-stat-card.rc-stat-card-center,
+  .rc-stats-row > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    max-width: 480px;
+    margin: 0 auto;
+    width: 100%;
+  }
 }
 @media (max-width: 680px) {
   .rc-stats-row {
     grid-template-columns: 1fr;
+  }
+  .rc-stat-card.rc-stat-card-center,
+  .rc-stats-row > :last-child:nth-child(odd) {
+    max-width: 100%;
   }
 }
 .rc-stat-card {
