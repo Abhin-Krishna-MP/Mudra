@@ -20,7 +20,7 @@ const REGIONS = ['Thiruvananthapuram', 'Kollam', 'Pathanamthitta', 'Alappuzha', 
 
 /** Which step each server field error belongs to, so the form can jump to the first problem. */
 const STEP_OF: Record<string, number> = {
-  title: 0, workType: 0, region: 0, language: 0, culturalContext: 0, submissionBasis: 0, sensitivity: 0,
+  title: 0, workType: 0, category: 0, region: 0, language: 0, culturalContext: 0, submissionBasis: 0, sensitivity: 0,
   asset: 1, image: 1, alt: 1, licence: 1, licenceSourceNote: 1, imageSourceNote: 1,
 };
 const stepOf = (k: string) => STEP_OF[k] ?? 2;
@@ -53,13 +53,13 @@ function GuideWaves() {
  * uncontrolled fields after a form action finishes, which would wipe everything the person typed
  * the moment a validation error comes back.
  */
-export default function SubmitForm() {
+export default function SubmitForm({ initialDraft }: { initialDraft?: any }) {
   const [s, action, pending] = useActionState<ActionResult | null, FormData>(createRecordAction, null);
   const [, startTransition] = useTransition();
   const fe = s?.fieldErrors ?? {};
   const errKeys = Object.keys(fe);
   const [step, setStep] = useState(0);
-  const [descLen, setDescLen] = useState(0);
+  const [descLen, setDescLen] = useState(initialDraft?.cultural_context?.length || 0);
   const [preview, setPreview] = useState<{ url: string; name: string } | null>(null);
   const first = useRef(true);
   const sumRef = useRef<HTMLDivElement>(null);
@@ -131,47 +131,48 @@ export default function SubmitForm() {
               )}
             </div>
           )}
+          {initialDraft?.id && <input type="hidden" name="draftId" value={initialDraft.id} />}
           <div className="hp" aria-hidden="true"><label>Leave empty<input type="text" name="website" tabIndex={-1} autoComplete="off" /></label></div>
 
           <fieldset className="panel step-panel" {...panel(0)}>
             <Mandala />
             <legend><h2 id="step-h-0" tabIndex={-1}>1. The Work</h2></legend>
-            <Field name="title" label="Title of the work" error={fe.title} required icon={<Icon name="book" size={20} />}>{(p) => <input type="text" name="title" placeholder="e.g. Theyyam" maxLength={160} {...p} />}</Field>
+            <Field name="title" label="Title of the work" error={fe.title} required icon={<Icon name="book" size={20} />}>{(p) => <input type="text" name="title" placeholder="e.g. Theyyam" maxLength={160} defaultValue={initialDraft?.title || ''} {...p} />}</Field>
             <div className="sb-two">
-              <Field name="workType" label="Category" error={fe.workType} required icon={<Icon name="layers" size={20} />}>{(p) => <select name="workType" {...p} defaultValue=""><option value="" disabled>Choose a category</option>{WORK_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>}</Field>
-              <Field name="region" label="Region" error={fe.region} required icon={<Icon name="pin" size={20} />}>{(p) => <><input type="text" name="region" list="sb-regions" placeholder="e.g. Kannur, Kerala" autoComplete="off" {...p} /><datalist id="sb-regions">{REGIONS.map((r) => <option key={r} value={r} />)}</datalist></>}</Field>
+              <Field name="category" label="Category" error={fe.workType || fe.category} required icon={<Icon name="layers" size={20} />}>{(p) => <select name="category" required {...p} defaultValue={initialDraft?.category || initialDraft?.work_type || ""}><option value="" disabled>Choose a category</option>{WORK_TYPES.map(([v, l]) => <option key={v} value={v}>{l}</option>)}</select>}</Field>
+              <Field name="region" label="Region" error={fe.region} required icon={<Icon name="pin" size={20} />}>{(p) => <select name="region" required {...p} defaultValue={initialDraft?.region || ""}><option value="" disabled>Choose a region</option>{REGIONS.map((r) => <option key={r} value={r}>{r}</option>)}</select>}</Field>
             </div>
-            <Field name="culturalContext" label="Brief description" error={fe.culturalContext} required>{(p) => <div className="fi fi-area"><span className="fi-ico" aria-hidden="true"><Icon name="file" size={20} /></span><textarea name="culturalContext" placeholder="Describe the work in your own words…" maxLength={500} onChange={(e) => setDescLen(e.target.value.length)} {...p} /></div>}</Field>
+            <Field name="culturalContext" label="Brief description" error={fe.culturalContext} required>{(p) => <div className="fi fi-area"><span className="fi-ico" aria-hidden="true"><Icon name="file" size={20} /></span><textarea name="culturalContext" placeholder="Describe the work in your own words…" maxLength={500} defaultValue={initialDraft?.cultural_context || ''} onChange={(e) => setDescLen(e.target.value.length)} {...p} /></div>}</Field>
             <p className="sb-count" aria-hidden="true">{descLen} / 500</p>
             <div className="sb-two">
-              <Field name="language" label="Language or dialect (optional)">{(p) => <input type="text" name="language" placeholder="e.g. Malayalam" {...p} />}</Field>
-              <Field name="sensitivity" label="Sensitivity" error={fe.sensitivity}>{(p) => <select name="sensitivity" {...p} defaultValue="public"><option value="public">Public</option><option value="handle_with_care">Handle with care (sacred or ceremonial)</option><option value="restricted">Restricted (hidden from the public)</option></select>}</Field>
+              <Field name="language" label="Language or dialect (optional)">{(p) => <input type="text" name="language" placeholder="e.g. Malayalam" defaultValue={initialDraft?.language || ''} {...p} />}</Field>
+              <Field name="sensitivity" label="Sensitivity" error={fe.sensitivity}>{(p) => <select name="sensitivity" {...p} defaultValue={initialDraft?.sensitivity || "public"}><option value="public">Public</option><option value="handle_with_care">Handle with care (sacred or ceremonial)</option><option value="restricted">Restricted (hidden from the public)</option></select>}</Field>
             </div>
-            <Field name="submissionBasis" label="How was this record prepared?" error={fe.submissionBasis} required>{(p) => <select name="submissionBasis" {...p} defaultValue=""><option value="" disabled>Choose an option</option><option value="creator_submitted">I am a creator or tradition bearer</option><option value="custodian_submitted">I represent an archive, temple committee or collective</option><option value="compiled_from_public_sources">I compiled it from public references</option></select>}</Field>
+            <Field name="submissionBasis" label="How was this record prepared?" error={fe.submissionBasis} required>{(p) => <select name="submissionBasis" {...p} defaultValue={initialDraft?.submission_basis || ""}><option value="" disabled>Choose an option</option><option value="creator_submitted">I am a creator or tradition bearer</option><option value="custodian_submitted">I represent an archive, temple committee or collective</option><option value="compiled_from_public_sources">I compiled it from public references</option></select>}</Field>
           </fieldset>
 
           <fieldset className="panel step-panel" {...panel(1)}>
             <Mandala />
             <legend><h2 id="step-h-1" tabIndex={-1}>2. Image and licence</h2></legend>
-            <Field name="image" label="Image (JPEG, PNG or WebP, up to 8 MB)" required error={fe.asset}>{(p) => (
+            <Field name="image" label={initialDraft ? "New image (optional, leave empty to keep current)" : "Image (JPEG, PNG or WebP, up to 8 MB)"} required={!initialDraft} error={fe.asset}>{(p) => (
               <div className={`sb-drop${fe.asset ? ' bad' : ''}`}>
                 <input type="file" name="image" accept="image/jpeg,image/png,image/webp" onChange={(e) => onFile(e.target.files?.[0])} {...p} />
                 {preview && <div className="sb-thumb"><img src={preview.url} alt="" /><span>{preview.name}</span></div>}
               </div>
             )}</Field>
-            <Field name="alt" label="Describe the image (alt text)" error={fe.alt} hint="Say what a person who cannot see it would need to know.">{(p) => <input type="text" name="alt" placeholder="e.g. Performer in a red headdress and face paint" {...p} />}</Field>
-            <Field name="licence" label="Licence for the image" required error={fe.licence}>{(p) => <select name="licence" {...p} defaultValue=""><option value="" disabled>Choose a licence</option>{LICENCE_IDS.map((l) => <option key={l} value={l}>{LICENCES[l].label}</option>)}</select>}</Field>
-            <Field name="licenceSourceNote" label="Where the image and its licence come from" required error={fe.licenceSourceNote} hint="Photographer, website or publication, and the date you checked.">{(p) => <input type="text" name="licenceSourceNote" placeholder="e.g. Photo by Sarah Welch, Wikimedia Commons, checked Nov 2026" {...p} />}</Field>
-            <Field name="imageSourceNote" label="Photo credit (optional)">{(p) => <input type="text" name="imageSourceNote" placeholder="e.g. Courtesy of Kerala Kalamandalam Archives" {...p} />}</Field>
-            <div className="check-row"><input id="attributionRequired" type="checkbox" name="attributionRequired" defaultChecked /><label htmlFor="attributionRequired">Ask for credit whenever this image is reused</label></div>
+            <Field name="alt" label="Describe the image (alt text)" error={fe.alt} hint="Say what a person who cannot see it would need to know.">{(p) => <input type="text" name="alt" placeholder="e.g. Performer in a red headdress and face paint" defaultValue={initialDraft?.alt || ''} {...p} />}</Field>
+            <Field name="licence" label="Licence for the image" required={!initialDraft} error={fe.licence}>{(p) => <select name="licence" {...p} defaultValue={initialDraft?.licence || ""}><option value="" disabled>Choose a licence</option>{LICENCE_IDS.map((l) => <option key={l} value={l}>{LICENCES[l].label}</option>)}</select>}</Field>
+            <Field name="licenceSourceNote" label="Where the image and its licence come from" required={!initialDraft} error={fe.licenceSourceNote} hint="Photographer, website or publication, and the date you checked.">{(p) => <input type="text" name="licenceSourceNote" placeholder="e.g. Photo by Sarah Welch, Wikimedia Commons, checked Nov 2026" defaultValue={initialDraft?.licence_source_note || ''} {...p} />}</Field>
+            <Field name="imageSourceNote" label="Photo credit (optional)">{(p) => <input type="text" name="imageSourceNote" placeholder="e.g. Courtesy of Kerala Kalamandalam Archives" defaultValue={initialDraft?.source_note || ''} {...p} />}</Field>
+            <div className="check-row"><input id="attributionRequired" type="checkbox" name="attributionRequired" defaultChecked={initialDraft ? !!initialDraft.attribution_required : true} /><label htmlFor="attributionRequired">Ask for credit whenever this image is reused</label></div>
           </fieldset>
 
           <div className="step-panel" {...panel(2)}>
             <fieldset className="panel">
               <Mandala />
               <legend><h2 id="step-h-2" tabIndex={-1}>3. Sources</h2></legend>
-              <Field name="contextSources" label="Sources (one per line)" error={fe.contextSources} hint="Required if you compiled this from public references.">{(p) => <textarea name="contextSources" placeholder="e.g. Kurup, K.K.N. (1986). The Cult of Theyyam and Folk Miracles." {...p} />}</Field>
-              <Field name="sourceUrl" label="Link to a reference (optional)">{(p) => <input type="url" name="sourceUrl" placeholder="https://" {...p} />}</Field>
+              <Field name="contextSources" label="Sources (one per line)" error={fe.contextSources} hint="Required if you compiled this from public references.">{(p) => <textarea name="contextSources" placeholder="e.g. Kurup, K.K.N. (1986). The Cult of Theyyam and Folk Miracles." defaultValue={Array.isArray(initialDraft?.contextSources) ? initialDraft.contextSources.join('\n') : (initialDraft?.context_sources_json ? JSON.parse(initialDraft.context_sources_json).join('\n') : '')} {...p} />}</Field>
+              <Field name="sourceUrl" label="Link to a reference (optional)">{(p) => <input type="url" name="sourceUrl" placeholder="https://" defaultValue={initialDraft?.source_url || ''} {...p} />}</Field>
             </fieldset>
 
             <fieldset className="panel">
