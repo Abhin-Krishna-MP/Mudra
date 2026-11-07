@@ -40,10 +40,27 @@ export function HeroKerala() {
     let isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     let rafId: number | null = null;
 
+    // String caches to eliminate redundant DOM style recalculations and heat
+    let prevMx = '', prevMy = '', prevKsy = '', prevCgx = '', prevCgy = '';
+    let prevEx = '', prevEy = '';
+
     const fig = hero.querySelector<HTMLElement>('.l-fig');
     const eyes = hero.querySelectorAll<HTMLElement>('.eye');
     let egx = 0;
     let egy = 0;
+
+    const startLoop = () => {
+      if (!rafId && isVisible && !isDark && !document.hidden) {
+        rafId = requestAnimationFrame(loop);
+      }
+    };
+
+    const stopLoop = () => {
+      if (rafId) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
+      }
+    };
 
     const onPointerMove = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return;
@@ -62,16 +79,19 @@ export function HeroKerala() {
       tgy = Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100));
       last = performance.now();
       hero.classList.add('is-over');
+      startLoop();
     };
 
     const onPointerLeave = () => {
       hero.classList.remove('is-over');
       tx = 0;
       ty = 0;
+      startLoop();
     };
 
     const onScroll = () => {
       tks = Math.min(window.scrollY, 900);
+      startLoop();
     };
 
     window.addEventListener('pointermove', onPointerMove, { passive: true });
@@ -99,22 +119,36 @@ export function HeroKerala() {
 
     const observer = new IntersectionObserver(([entry]) => {
       isVisible = entry.isIntersecting;
-      if (isVisible && !isDark && !rafId) {
-        rafId = requestAnimationFrame(loop);
+      if (isVisible && !isDark && !document.hidden) {
+        startLoop();
+      } else {
+        stopLoop();
       }
     });
     observer.observe(hero);
 
     const themeObserver = new MutationObserver(() => {
       isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-      if (!isDark && isVisible && !rafId) {
-        rafId = requestAnimationFrame(loop);
+      if (!isDark && isVisible && !document.hidden) {
+        startLoop();
+      } else {
+        stopLoop();
       }
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+    // Pause animation completely when user switches tabs or minimizes browser
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        stopLoop();
+      } else if (isVisible && !isDark) {
+        startLoop();
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
     const loop = (t: number) => {
-      if (!isVisible || isDark) {
+      if (!isVisible || isDark || document.hidden) {
         rafId = null;
         return;
       }
@@ -147,27 +181,43 @@ export function HeroKerala() {
 
       if (fig) {
         const k = (fig.clientWidth / 1303) * 8;
-        eyes.forEach((eye) => {
-          eye.style.setProperty('--ex', (egx * k).toFixed(2));
-          eye.style.setProperty('--ey', (egy * k * 0.7).toFixed(2));
-        });
+        const exStr = (egx * k).toFixed(2);
+        const eyStr = (egy * k * 0.7).toFixed(2);
+        if (exStr !== prevEx || eyStr !== prevEy) {
+          eyes.forEach((eye) => {
+            eye.style.setProperty('--ex', exStr);
+            eye.style.setProperty('--ey', eyStr);
+          });
+          prevEx = exStr;
+          prevEy = eyStr;
+        }
       }
 
-      hero.style.setProperty('--mx', mx.toFixed(3));
-      hero.style.setProperty('--my', my.toFixed(3));
-      hero.style.setProperty('--ksy', ksy.toFixed(1));
-      hero.style.setProperty('--cgx', `${gx.toFixed(1)}%`);
-      hero.style.setProperty('--cgy', `${gy.toFixed(1)}%`);
+      const mxStr = mx.toFixed(3);
+      const myStr = my.toFixed(3);
+      const ksyStr = ksy.toFixed(1);
+      const cgxStr = `${gx.toFixed(1)}%`;
+      const cgyStr = `${gy.toFixed(1)}%`;
+
+      if (mxStr !== prevMx || myStr !== prevMy || ksyStr !== prevKsy || cgxStr !== prevCgx || cgyStr !== prevCgy) {
+        hero.style.setProperty('--mx', mxStr);
+        hero.style.setProperty('--my', myStr);
+        hero.style.setProperty('--ksy', ksyStr);
+        hero.style.setProperty('--cgx', cgxStr);
+        hero.style.setProperty('--cgy', cgyStr);
+        prevMx = mxStr; prevMy = myStr; prevKsy = ksyStr; prevCgx = cgxStr; prevCgy = cgyStr;
+      }
 
       rafId = requestAnimationFrame(loop);
     };
 
-    rafId = requestAnimationFrame(loop);
+    startLoop();
 
     return () => {
-      if (rafId) cancelAnimationFrame(rafId);
+      stopLoop();
       observer.disconnect();
       themeObserver.disconnect();
+      document.removeEventListener('visibilitychange', onVisibilityChange);
       window.removeEventListener('pointermove', onPointerMove);
       document.removeEventListener('mouseleave', onPointerLeave);
       window.removeEventListener('scroll', onScroll);

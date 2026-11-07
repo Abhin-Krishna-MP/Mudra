@@ -151,14 +151,16 @@
   background: radial-gradient(60% 100% at 20% 60%, rgba(120, 190, 190, .2), transparent 70%),
               radial-gradient(50% 90% at 70% 40%, rgba(255, 190, 120, .14), transparent 70%);
   filter: blur(18px);
+  will-change: transform;
+  transform: translateZ(0);
   animation: mx-mist 24s ease-in-out infinite alternate;
 }
 @keyframes mx-mist {
-  from { transform: translateX(-4%); }
-  to   { transform: translateX(5%); }
+  from { transform: translate3d(-4%, 0, 0); }
+  to   { transform: translate3d(5%, 0, 0); }
 }
 
-/* 3 — Canvas embers */
+/* 3 — Canvas embers (GPU compositor layer) */
 .mx-embers {
   position: absolute;
   inset: 0;
@@ -167,6 +169,8 @@
   z-index: 2;
   pointer-events: none;
   mix-blend-mode: screen;
+  transform: translateZ(0);
+  will-change: contents;
 }
 
 /* 4 — Theyyam figure & smooth torchlight */
