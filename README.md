@@ -179,19 +179,20 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 
 
+
 ## 6. System Architecture
 
 ```mermaid
 %%{init: {
-  "theme": "neutral",
+  "theme": "default",
   "flowchart": {
-    "curve": "step",
-    "nodeSpacing": 42,
+    "curve": "linear",
+    "nodeSpacing": 35,
     "rankSpacing": 55,
-    "padding": 18,
+    "padding": 12,
     "htmlLabels": true,
     "useMaxWidth": true,
-    "wrappingWidth": 180
+    "wrappingWidth": 170
   },
   "fontFamily": "Inter, Segoe UI, sans-serif"
 }}%%
@@ -236,7 +237,7 @@ flowchart TB
         CRYPTO --> REALTIME
     end
 
-    %% STORAGE LAYER
+    %% DATABASE LAYER
     subgraph STORAGE["03 · DATABASE & PERSISTENCE"]
         direction LR
 
@@ -250,32 +251,31 @@ flowchart TB
 
         ACCESSDB["Access & Permissions<br/>users · record_stewards<br/>permission_requests · grants"]
 
-        TURSO <-->|"Cloud Sync"| SQLITE
+        TURSO <-->|Cloud Sync| SQLITE
 
         TURSO --> SCHEMA
         TURSO --> AUDITDB
         TURSO --> ACCESSDB
     end
 
-    %% MAIN SYSTEM FLOW
+    %% INTER-LAYER CONNECTIONS
     IDENTITY -->|"HTTPS · API Requests"| API
 
-    %% APPLICATION TO DATABASE
     API --> TURSO
     CORE -->|"Atomic Transactions"| TURSO
     CRYPTO -->|"Signed Grants"| TURSO
     MEDIA -->|"Hash Lookup"| TURSO
     REALTIME <-->|"Live Events"| TURSO
 
-    %% PRESENTATION & STANDARDS
+    %% FEEDBACK & INTEGRATION
     STANDARDS -.->|"Web Manifest"| UI
     REALTIME -.->|"Live Updates"| STUDIO
 
-    %% NODE STYLING
-    classDef client stroke-width:1.2px
-    classDef engine stroke-width:1.3px
+    %% NODE CLASSES
+    classDef client stroke-width:1.5px
+    classDef engine stroke-width:1.5px
     classDef storage stroke-width:1.5px
-    classDef cloud stroke-width:1.8px
+    classDef cloud stroke-width:2px
 
     class UI,CULTURE,STUDIO,IDENTITY client
     class API,CORE,CRYPTO,MEDIA,STANDARDS,REALTIME engine
@@ -287,7 +287,7 @@ flowchart TB
     style APPLICATION fill:transparent
     style STORAGE fill:transparent
 
-    linkStyle default stroke-width:1.25px
+    linkStyle default stroke-width:1.3px
 ```
 
 ---
