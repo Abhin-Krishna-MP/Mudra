@@ -46,12 +46,15 @@
   > "Instead of a dead end, Mudra gives the creator an actionable next step: 'Request permission'. Four clean fields: who you are, private contact details, what you will make, and where. Mudra never leaks requester contact info to public logs or public audit chains."
 - **Visual (2:10 – 2:45):** 
   - Switch to the authenticated Reviewer / Steward console (`/review`).
-  - Open the *Permission Requests* section. Show the incoming request with full contextual metadata.
+  - Show how drafts are tag-routed strictly to the steward whose assigned region (`Kannur`) and domain (`ritual`) match the submission.
+  - Demonstrate the asynchronous feedback loop: rather than scheduling a chat, the steward clicks *Request Revision*, enters lineage verification notes, and sets the draft to `needs_revision`.
+  - Briefly show the author's dashboard (`/author/dashboard`) receiving the alert and reopening the draft via *Edit & Resubmit*.
+  - Return to the *Permission Requests* queue. Open an inbound commercial reuse request.
   - Click *Grant permission & issue signed grant*.
   - Enter specific conditions: `Must display Mudra credit line alongside label; maximum 200 units`. Click *Confirm and Sign*.
 - **Voiceover:**
-  > "Now we cut to the steward console. Mudra never consents on behalf of a community—only a linked cultural steward decides. The steward reviews the request with its full context, enters specific conditions, and grants permission.
-  > Mudra cryptographically signs the grant certificate using an Ed25519 private key over RFC 8785 canonical JSON, and appends the grant event to the record's tamper-evident SHA-256 audit chain."
+  > "Now we cut to the steward console. Submissions are never scattered: drafts automatically route to stewards matching their exact region and craft domain. Instead of endless chat, stewards can request specific revisions asynchronously, sending notes directly to the author's dashboard.
+  > When reviewing reuse requests, Mudra never consents on behalf of a community—only a verified cultural steward decides. The steward enters specific conditions, and Mudra cryptographically signs the grant certificate using Ed25519 over RFC 8785 canonical JSON, appending the event to the record's tamper-evident SHA-256 audit chain."
 
 ---
 
@@ -75,18 +78,18 @@
 
 ---
 
-### Act 5: Machine-Readable Layer & Progressive Web App (3:30 – 4:00)
+### Act 5: Active AI Shield, Machine Layer & Progressive Web App (3:30 – 4:00)
 - **Visual (3:30 – 3:45):** 
   - Navigate to `/developers`.
-  - Highlight the three machine layer features:
-    1. Batch perceptual hash lookup API (`POST /api/v1/lookup`) for platforms to check community stances in batches of 50 without transmitting user imagery.
-    2. W3C TDMRep signals at `/.well-known/tdmrep.json` and HTTP asset headers (`tdm-reservation: 1`).
+  - Highlight the platform integration and AI defense architecture:
+    1. Active AI Shield: W3C TDMRep declaration at `/.well-known/tdmrep.json` and Edge Middleware injecting `tdm-reservation: 1` on all image upload requests (`/uploads/`).
+    2. Batch perceptual hash lookup API (`POST /api/v1/lookup`) for platforms to check community stances in batches of 50 without transmitting user imagery.
     3. Ed25519-signed dataset manifest (`GET /api/v1/manifest.json`) for AI dataset auditors.
 - **Visual (3:45 – 4:00):** 
   - Showcase the Progressive Web App (PWA) banner and mobile install experience.
   - Switch network tab to Offline mode in DevTools and refresh the catalogue to demonstrate instant Service Worker cache-first retrieval.
 - **Voiceover:**
-  > "For AI platforms and dataset builders, Mudra provides machine-readable consent signals: W3C TDMRep reservations, hash-only batch lookups, and signed dataset manifests.
+  > "For AI platforms and dataset builders, Mudra provides machine-readable consent signals and an active AI Shield: W3C TDMRep declarations, edge-injected reservation headers on all imagery, hash-only batch lookups, and signed dataset manifests.
   > And for field researchers and craft communities across rural Kerala, Mudra is a full Progressive Web App that works seamlessly offline."
 
 ---

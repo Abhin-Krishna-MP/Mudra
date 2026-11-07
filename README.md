@@ -4,7 +4,7 @@
 > **Team:** Abhin Krishna M P & Alin · **License:** MIT Open Source  
 > **Live Production:** [mudra-one-ivory.vercel.app](https://mudra-one-ivory.vercel.app)  
 
-[![Tests](https://img.shields.io/badge/tests-34%20passed-success)](tests/)
+[![Tests](https://img.shields.io/badge/tests-43%20passed-success)](tests/)
 [![WCAG AA](https://img.shields.io/badge/accessibility-WCAG%20AA%20Pass-emerald)](scripts/contrast.mjs)
 [![PWA](https://img.shields.io/badge/PWA-installable%20%7C%20offline-blue)](public/manifest.json)
 [![Next.js](https://img.shields.io/badge/Next.js-15%20App%20Router-black)](https://nextjs.org)
@@ -23,6 +23,7 @@ Mudra solves this by issuing **Cultural Passports** for traditional works:
 2. **Actionable Ask → Grant Workflow:** Reusers submit a structured 4-field request. Verified cultural stewards review requests in their console and issue cryptographically signed grants (Ed25519 over RFC 8785 canonical JSON) that platforms and print shops can verify online or offline.
 3. **Machine-Readable Layer for Platforms:** Publishes W3C TDMRep AI-training reservation signals (`/.well-known/tdmrep.json`), schema.org `CreativeWork` JSON-LD, signed dataset manifests, and privacy-preserving hash-only lookup APIs.
 4. **Living Cultural Experience (v2.0):** Features a master **Traditional Kerala Padippura** navbar, full **Progressive Web App (PWA)** offline capabilities, a **Live Registry Notification Center**, dual-theme **3D Heritage Stages**, and **Zero-Heat GPU Performance Engineering**.
+5. **Decentralized Author & Steward Governance:** Implements role-based author boundaries, automated tag-based steward routing (`region` + `category`), steward KYC identity verification with private cloud storage, edge-level AI Shield header injection, and asynchronous revision feedback.
 
 *Mudra is not an automated copyright filter and does not dispense legal claims. It records community consensus so reusers can ask before they build.*
 
@@ -90,6 +91,29 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 - **schema.org `CreativeWork`:** JSON-LD metadata embedded in every passport page.
 - **Privacy-Preserving Hash Lookup:** `POST /api/v1/lookup` checks cultural registration and AI stances in batches up to 50 items without image uploads.
 - **Signed Manifest:** `GET /api/v1/manifest.json` provides an Ed25519-signed snapshot of all registered works.
+
+### 4.8 Secure Author Submissions & Role-Based Access Control
+- **Dedicated Author Boundary:** Open registration (`/login?mode=signup`) defaults new user roles to `author` with required expertise fields (region and cultural domain).
+- **Two-Tier Route Protection:** Any attempt to access `/submit` is intercepted by Edge Middleware (`src/middleware.ts`) and verified against the signed HMAC session. Unauthorized or non-author requests are immediately redirected with an `Unauthorized` notification. Server actions (`createRecordAction`) re-verify the role against the database to prevent privilege escalation.
+
+### 4.9 Specific Steward Routing via Tag Matching
+- **Cultural Domain & Region Matching:** Draft submissions require both a **Region** (e.g. `Kannur`, `Thrissur`, `Palakkad`) and **Category** (e.g. `ritual`, `performing`, `handloom`, `craft`).
+- **Targeted Dashboard Queues:** When cultural stewards log in to their console (`/review`), the database queries pending drafts filtered strictly by their assigned region and category:
+  $$\text{stewards only see drafts where: } \text{status} = \text{'pending'} \land \text{region} = \text{steward.region} \land \text{category} = \text{steward.category}$$
+
+### 4.10 Steward KYC Verification & Admin Review
+- **Identity Document Upload (`/apply-steward`):** Authors can submit government or institutional identity documents to apply for steward elevation.
+- **Secure Private Cloud Storage:** Documents are never placed in public web directories. Stored using private Supabase buckets, `@vercel/blob`, or private disk with serverless `/tmp` fallbacks.
+- **Hidden Admin Governance Console (`/admin`):** Admins review pending KYC applications, stream documents via authenticated role-checked endpoints (`/api/admin/kyc-document/[id]`), and approve applicants, atomically promoting them to `steward` in the registry database.
+
+### 4.11 Active AI Shield (W3C TDMRep Protocol)
+- **Global Manifest:** Static declaration at `/.well-known/tdmrep.json` asserting platform-wide machine-readable text and data mining reservations under the W3C standard and EU DSM Directive Art. 4.
+- **Edge Header Injection:** Edge Middleware intercepts all incoming requests to the image asset directory (`/uploads/`) and attaches `tdm-reservation: 1` HTTP headers to prevent web scrapers and AI model training pipelines from extracting imagery.
+
+### 4.12 Asynchronous Revision Feedback Loop (Replacing Chat)
+- **Non-Blocking Review:** Stewards click "Request Revision" on pending drafts, entering specific required corrections saved directly to `records.revision_note`, transitioning the status to `needs_revision`.
+- **Author Dashboard Alerts (`/author/dashboard`):** Authors receive clear notifications of flagged drafts with full steward revision notes.
+- **One-Click Resubmission:** An "Edit & Resubmit" action reopens the pre-filled submission form (`/submit?edit=[id]`), allowing authors to rectify details and resubmit, which atomically resets status to `pending`.
 
 ---
 
@@ -312,13 +336,14 @@ npm run dev
 # Open http://localhost:3000 in your browser
 ```
 
-### Reviewer Evaluation Credentials
+### Evaluation Credentials
 
-| Field | Details |
-|:---|:---|
-| **Email** | `reviewer@mudra.demo` |
-| **Password** | `DemoReviewerPass123!` |
-| **Console** | Navigate to `http://localhost:3000/review` to inspect submissions, manage requests, and issue signed grants. |
+| Role | Email | Password | Dashboard & Access |
+|:---|:---|:---|:---|
+| **Cultural Reviewer** | `reviewer@mudra.demo` | `DemoReviewerPass123!` | `/review` — General review queue, flag resolution, and verification. |
+| **Cultural Steward** | `steward@mudra.demo` | `DemoStewardPass123!` | `/review` — Tag-filtered steward queue (`region` + `category`), revision requests, and signed grants. |
+| **System Admin** | `admin@mudra.internal` | `DemoAdminPass123!` | `/admin` — Steward KYC verification, identity document inspection, and steward elevation. |
+| **Cultural Author** | Any registered author | *Set at signup* | `/submit` & `/author/dashboard` — Sign up at `/login?mode=signup`, submit works, review revision notes, and apply for steward status (`/apply-steward`). |
 
 ### Offline Standalone Grant Verification
 
@@ -335,7 +360,7 @@ node scripts/verify-grant.mjs path/to/grant.json path/to/public-key.pem
 Run the full automated test and compliance harness:
 
 ```bash
-# 1. Unit & Cryptographic Test Suite (34 tests passing)
+# 1. Unit & Cryptographic Test Suite (43 tests passing)
 npm test
 
 # 2. TypeScript Strict Validation (0 errors)
@@ -360,19 +385,13 @@ npm run test:e2e
 
 ---
 
-<div align="center">
-
-**Mudra: Don't just take the imagery. Credit the culture.**
-
-</div>
-
-
-
-## Author access to `/submit`
+## 10. Governance & Author Submission Protocol
 
 Only signed-in users with the `author` role can submit drafts.
 
-- `users.role` defaults to `author`; the public sign-up form (`/login?mode=signup`) always creates authors.
-- `/submit` is guarded twice: `src/middleware.ts` verifies the signed session and answers with a 307 to `/login?msg=Unauthorized`; the page and `createRecordAction` then re-read the role from the database (`src/lib/authz.ts`), so a demoted author loses access immediately.
-- Reviewers and admins use `/review` and are not authors. To let them submit too, add their roles to `SUBMIT_ROLES` in `src/lib/authorRoles.ts`.
-- Databases created before this change keep their old `role` column without a default (SQLite cannot alter a default in place). Sign-up sets `author` explicitly, so this has no effect on behaviour.
+- `users.role` defaults to `author`; the public sign-up form (`/login?mode=signup`) creates authors with their assigned region and cultural domain.
+- `/submit` is guarded twice: `src/middleware.ts` verifies the signed HMAC session and responds with a 307 redirect to `/login?msg=Unauthorized`; the page and `createRecordAction` then re-read the role from the database (`src/lib/authz.ts`), ensuring immediate role revocation.
+- Reviewers and admins use `/review` and `/admin` respectively.
+- KYC identity applications on `/apply-steward` use private cloud/serverless storage and can be inspected only by authenticated admins on `/admin`.
+- Tag matching ensures that pending cultural drafts are routed exclusively to stewards with verified expertise in that craft's region and domain.
+- When revisions are requested, draft statuses transition to `needs_revision` with feedback notes, and authors can one-click edit and resubmit back to `pending`.

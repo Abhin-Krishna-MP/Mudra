@@ -117,16 +117,18 @@ The database is defined in `src/lib/db/schema.ts` and runs across both local SQL
 | Table Name | Primary Key | Foreign Keys | Key Columns & Types | Purpose |
 |---|---|---|---|---|
 | `counters` | `name TEXT` | None | `value INTEGER` | Atomically generates unique monotonic IDs (`MDR-2026-NNNN`). |
-| `records` | `id TEXT` | None | `title`, `work_type`, `region`, `cultural_context`, `sensitivity`, `licence`, `perm_share`, `perm_commercial`, `perm_adapt`, `perm_ai_training`, `custodian`, `status` | Core cultural passport entity; stores community permission stances and file licence. |
+| `records` | `id TEXT` | None | `title`, `work_type`, `region`, `category`, `cultural_context`, `sensitivity`, `licence`, `perm_share`, `perm_commercial`, `perm_adapt`, `perm_ai_training`, `custodian`, `status`, `revision_note`, `author_id` | Core cultural passport entity; stores community permission stances, file licence, and revision notes. |
 | `credits` | `id INTEGER AUTO` | `record_id -> records(id)` | `name TEXT`, `role TEXT`, `collective INTEGER`, `position INTEGER` | Attributed tradition bearers, lineages, artist cooperatives, and photographers. |
 | `assets` | `id TEXT` | `record_id -> records(id)` | `location TEXT`, `mime TEXT`, `sha256 TEXT`, `dhash TEXT`, `width INTEGER`, `height INTEGER`, `bytes INTEGER` | Digital asset metadata, exact SHA-256 digest, and 64-bit perceptual dHash. |
 | `audit_events` | `id INTEGER AUTO` | None | `record_id TEXT`, `seq INTEGER`, `actor_role TEXT`, `actor_name TEXT`, `action TEXT`, `diff_json TEXT`, `prev_hash TEXT`, `hash TEXT`, `signature TEXT`, `key_id TEXT` | Append-only SHA-256 cryptographic audit chain with optional Ed25519 signatures. |
 | `flags` | `id TEXT` | `record_id -> records(id)` | `type TEXT`, `text TEXT`, `reporter_contact TEXT`, `status TEXT`, `resolution_note TEXT` | Community reports, correction requests, and dispute tracking. |
 | `verifications` | `id INTEGER AUTO` | `record_id -> records(id)` | `source TEXT`, `url TEXT`, `note TEXT`, `reviewer TEXT` | Reviewer citations linking records to academic and governmental registries. |
-| `users` | `id INTEGER AUTO` | None | `email TEXT UNIQUE`, `name TEXT`, `role TEXT`, `password_hash TEXT` | Reviewers and cultural stewards with salted scrypt passwords. |
+| `users` | `id INTEGER AUTO` | None | `email TEXT UNIQUE`, `name TEXT`, `role TEXT DEFAULT 'author'`, `region TEXT`, `category TEXT`, `password_hash TEXT` | Authors, reviewers, cultural stewards, and admins with salted scrypt passwords. |
 | `record_stewards`| `id INTEGER AUTO` | `record_id -> records(id)`, `user_id -> users(id)` | `UNIQUE(record_id, user_id)` | Authorizes specific cultural stewards to decide requests for specific records. |
 | `permission_requests` | `id TEXT` | `record_id -> records(id)` | `use_key TEXT`, `scope_json TEXT`, `requester_name TEXT`, `requester_contact TEXT`, `status TEXT`, `decision_note TEXT`, `conditions_json TEXT`, `credit_text TEXT`, `valid_from TEXT`, `valid_until TEXT`, `token_hash TEXT` | Inbound reuse requests guarded by private token hashes and status lifecycle. |
 | `grants` | `id TEXT` | `request_id -> permission_requests(id)`, `record_id -> records(id)` | `payload_json TEXT`, `signature TEXT`, `key_id TEXT`, `created_at TEXT` | Digitally signed Ed25519 grant certificates referencing record audit head. |
+| `drafts` | `id TEXT` | `user_id -> users(id)` | `title TEXT`, `region TEXT`, `category TEXT`, `data_json TEXT`, `status TEXT DEFAULT 'pending'`, `revision_note TEXT`, `record_id TEXT` | Author draft storage for pending submissions and revision loops. |
+| `steward_applications` | `id INTEGER AUTO` | `user_id -> users(id)` | `id_document_url TEXT`, `region TEXT`, `category TEXT`, `status TEXT DEFAULT 'pending'`, `created_at TEXT`, `reviewed_at TEXT` | KYC identity verification documents for authors applying to become stewards. |
 
 ### 2.2 Codebase Directory Map
 
@@ -531,6 +533,66 @@ During v2.0 benchmarking, a thermal anomaly was diagnosed where background tabs 
 5. **GPU Compositor Layer Promotion:**
    - Promoted `.mx-mist` and `.mx-embers` with `transform: translateZ(0)` and `will-change: transform`, eliminating continuous CPU Gaussian blur re-rasterization.
 
+### 3.12 Secure Author Submissions & Role-Based Access Control
+1. **Author Sign-Up & Default Role:**
+   - The public registration endpoint (`/login?mode=signup`) sets new account roles to `author` by default.
+   - Authors register their target cultural domain (`category`) and geographical location (`region`).
+2. **Two-Tier Submission Interception:**
+   - **Edge Interception:** Next.js Edge Middleware (`src/middleware.ts`) intercepts any direct access to `/submit`. It decrypts and verifies the HMAC-signed session cookie. Requests without an active session or with non-author roles are immediately redirected to `/login?msg=Unauthorized`.
+   - **Action-Level Database Verification:** When `createRecordAction` executes, it re-queries `users.role` directly from the database via `src/lib/authz.ts`. Demoted or suspended authors lose submission access immediately without relying on client-side state.
+
+### 3.13 Specific Steward Routing via Cultural Tag Matching
+1. **Required Tag Attributes:**
+   - Author submissions require explicit specification of **Region** (e.g. `Kannur`, `Thrissur`, `Palakkad`, `Alappuzha`) and **Category** (e.g. `ritual`, `performing`, `handloom`, `craft`, `visual`).
+2. **Database-Filtered Steward Dashboard (`/review`):**
+   - Stewards do not pull an unpartitioned backlog of submissions.
+   - When a user with the `steward` role loads `/review`, the database executes an exact-match query:
+     ```sql
+     SELECT id, status, title, region, category, revision_note
+     FROM records
+     WHERE status = 'pending'
+       AND region = ?
+       AND (category = ? OR work_type = ?)
+     ORDER BY created_at DESC;
+     ```
+   - Only drafts matching the steward's assigned jurisdiction appear in their queue, preserving cultural context and regional expertise.
+
+### 3.14 Steward KYC Verification & Hidden Admin Console
+1. **Identity Document Upload (`/apply-steward`):**
+   - Authors with demonstrated community standing can upload proof of identity (PNG, JPEG, WebP, or PDF) to apply for steward elevation.
+2. **Private Storage Architecture (`src/lib/storage.ts`):**
+   - KYC documents are **strictly forbidden** from being placed in public directories (`public/uploads`).
+   - Supported storage backends:
+     - **Supabase Storage:** Authenticated bucket upload via service role key (`supabase://private-kyc/...`).
+     - **Vercel Blob Storage:** Cloud-persisted private blob storage via `BLOB_READ_WRITE_TOKEN`.
+     - **Serverless / Local Storage:** Automatically switches to `os.tmpdir()` (`/tmp/mudra_secure_kyc`) in read-only serverless runtimes (`/var/task`), preventing `ENOENT` filesystem crashes, with in-memory data URI fallback.
+3. **Hidden Admin Dashboard (`/admin`):**
+   - Admins review pending applications, view applicant profiles and current roles, and inspect identity documents via the secure authenticated stream `/api/admin/kyc-document/[id]`.
+   - The approval action atomically updates `steward_applications.status = 'approved'` and elevates `users.role = 'steward'` with the applicant's designated region and category.
+
+### 3.15 Active AI Shield (W3C TDMRep Protocol)
+1. **Global Manifest (`/.well-known/tdmrep.json`):**
+   - Static manifest served at the standardized W3C path asserting `tdm-reservation: 1` as the platform-wide legal declaration under EU Directive 2019/790 Article 4.
+2. **Edge Header Injection on Image Uploads (`src/middleware.ts`):**
+   - The Edge Middleware intercepts every HTTP request matching the image upload path (`/uploads/`).
+   - Before serving the image bytes, the middleware attaches the HTTP response header:
+     ```http
+     tdm-reservation: 1
+     ```
+   - Any compliant crawler, AI training bot, or scraper attempting to harvest registry imagery receives the legally binding machine-readable opt-out signal.
+
+### 3.16 Asynchronous Feedback & Revision Loop
+1. **Replacing Synchronous Chat:**
+   - Rather than requiring real-time presence, stewards click "Request Revision" directly on the review screen and enter detailed instructions (e.g. *"Please clarify the specific village temple lineage and provide academic reference"*).
+2. **Status Transition & Persistence:**
+   - The draft's status is set to `needs_revision`, and the notes are stored in `records.revision_note`.
+3. **Author Dashboard (`/author/dashboard`):**
+   - Authors log in to a dedicated dashboard displaying their submitted drafts.
+   - Items with `needs_revision` are surfaced with a distinct alert banner displaying the steward's feedback.
+4. **Edit & Resubmission Flow:**
+   - Clicking "Edit Draft" reopens the pre-filled submission form at `/submit?edit=[id]`.
+   - Modifying and submitting the draft updates the record, clears the revision note, and resets the status back to `pending`, returning it to the steward's review queue.
+
 ---
 
 ## 4. Complete Catalog of Seed Records (15 Real Works + 1 Demo)
@@ -582,7 +644,7 @@ Every color combination in both light and dark themes meets or exceeds WCAG AA c
 
 ---
 
-## 6. Complete Inventory of All Routes & Endpoints (28 Routes)
+## 6. Complete Inventory of All Routes & Endpoints (33 Routes)
 
 | Route Path | Type | Functionality & Key Components |
 |---|---|---|
@@ -596,11 +658,16 @@ Every color combination in both light and dark themes meets or exceeds WCAG AA c
 | `/check` | Client Component | Drag-and-drop image matcher with dHash distance calculation and human-review guidance. |
 | `/verify` | Server Component | Instant record lookup by ID with pre-populated real and sandbox examples. |
 | `/verify/[id]` | Client/Server | Cryptographic audit timeline, client-side SHA-256 file check, in-memory tamper simulator. |
-| `/review` | Server Component | Protected reviewer & steward console: open reports, permission request decisions (grant/decline/revoke), steward assignment, pending record approvals. |
-| `/submit` | Client Component | Multi-step submission form with field validation and attribution builder. |
+| `/review` | Server Component | Protected reviewer & steward console: tag-matched steward queue (`region` + `category`), revision requests, flag resolution, grant issuance. |
+| `/submit` | Client Component | Intercepted author submission form with region and category dropdowns, pre-fill editing, and attribution builder. |
+| `/login` | Client/Server | Unified authentication with dual tabs: Sign In and Author Sign Up (with region and domain specialization). |
+| `/author/dashboard` | Server Component | Author console: lists all submitted drafts, flags `needs_revision` items with steward feedback, and provides 1-click edit & resubmit. |
+| `/apply-steward` | Client/Server | Steward KYC identity document upload form, verification guidelines, and pending status tracker. |
+| `/admin` | Server Component | Hidden admin governance console: inspects pending steward applications, views identity proofs, and elevates author roles to steward. |
+| `/api/admin/kyc-document/[id]` | Protected Asset | Secure streaming of KYC identity documents; restricted strictly to users with the admin role; private caching. |
 | `/r/[id]/report` | Client Component | Community correction/dispute form with anti-bot honeypot and reviewer forwarding. |
 | `/about` | Static Page | Project philosophy, ethical guardrails, honest limitations, and AI tooling disclosure. |
-| `/.well-known/tdmrep.json` | JSON Route | W3C TDMRep specification endpoint publishing `tdm-reservation: 1` for records where AI training is not permitted. |
+| `/.well-known/tdmrep.json` | JSON Route | W3C TDMRep specification endpoint publishing `tdm-reservation: 1` as global machine-readable AI opt-out. |
 | `/api/v1/lookup` | REST API | Privacy-preserving batch hash lookup API (SHA-256 + dHash) returning commercial and AI stances without image uploads. |
 | `/api/v1/manifest.json` | JSON Route | Signed dataset snapshot of all registered works, hashes, and AI stances with Ed25519 signature. |
 | `/api/notifications` | REST API | Live registry notification endpoint streaming recent audit events, approvals, and steward grants with unread counts. |
@@ -624,7 +691,7 @@ Mudra incorporates an automated test harness covering logic, cryptographic integ
 ```bash
 # 1. Logic & Cryptographic Tests
 npm test
-# Result: 34 passed, 0 failed, 467 ms duration
+# Result: 43 passed, 0 failed, 520 ms duration
 # - 8 SHA-256 hash chain and Ed25519 signature tests
 # - 4 Cryptographic grant tests (signing, 1-byte alteration failure, expiration, SQLite request-grant-revoke loop)
 # - 7 Permission engine property-based and golden tests
@@ -632,6 +699,8 @@ npm test
 # - 1 Deterministic SVG seal test
 # - 1 UI wording invariant test (0 prohibited words across entire codebase)
 # - 7 Database transaction, concurrent ID, auth role, and governance tests
+# - 6 Author role, tag-matching steward routing, KYC private storage, serverless tmpdir, TDMRep header, and revision loop tests
+# - 7 Credit line formatting, alias search, and login redirect security tests
 
 # 2. Seed Floor & Licence Verification
 npm run check-licences
