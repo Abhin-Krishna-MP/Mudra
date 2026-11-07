@@ -24,11 +24,11 @@ export default async function Submit({ searchParams }: { searchParams: Promise<{
 
   const sp = await searchParams;
   const signOut = (
-    <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+    <div className="sheet-action">
       <a href="/author/dashboard" className="btn secondary">Author Dashboard</a>
-      <form action={logoutAction} className="sheet-action">
+      <form action={logoutAction} style={{ margin: 0 }}>
         <input type="hidden" name="next" value="/login" />
-        <button className="secondary">Sign out ({submitter.name})</button>
+        <button type="submit" className="btn secondary">Sign out ({submitter.name})</button>
       </form>
     </div>
   );

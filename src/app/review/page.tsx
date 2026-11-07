@@ -58,7 +58,7 @@ export default async function Review({ searchParams }: { searchParams: Promise<{
   }
   const byId = new Map(records.map((r) => [r.id, r]));
   return (
-    <div className="wrap page"><PageSheet title={isSteward ? "Steward Dashboard" : "Reviewer console"} lede={isSteward ? `Signed in as Steward ${actor.name} (Assigned Region: ${stewardRegion || 'Any'} · Category: ${stewardCategory || 'Any'})` : `Signed in as ${actor.name}.`} headExtra={<form action={logoutAction} className="sheet-action"><button className="secondary">Sign out ({actor.name})</button></form>}>
+    <div className="wrap page"><PageSheet title={isSteward ? "Steward Dashboard" : "Reviewer console"} lede={isSteward ? `Signed in as Steward ${actor.name} (Assigned Region: ${stewardRegion || 'Any'} · Category: ${stewardCategory || 'Any'})` : `Signed in as ${actor.name}.`} headExtra={<form action={logoutAction} className="sheet-action" style={{ margin: 0 }}><button type="submit" className="btn secondary">Sign out ({actor.name})</button></form>}>
       {sp.msg && <p className="notice" role="status">{sp.msg}</p>}
 
       {isSteward && (

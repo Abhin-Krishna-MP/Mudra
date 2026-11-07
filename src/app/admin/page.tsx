@@ -48,8 +48,8 @@ export default async function AdminDashboard({
         title="Steward KYC & Verification Dashboard"
         lede={`Signed in as Admin (${actor.name}). Review identity submissions and approve community stewards.`}
         headExtra={
-          <form action={logoutAction} className="sheet-action">
-            <button className="secondary">Sign out ({actor.name})</button>
+          <form action={logoutAction} className="sheet-action" style={{ margin: 0 }}>
+            <button type="submit" className="btn secondary">Sign out ({actor.name})</button>
           </form>
         }
       >
