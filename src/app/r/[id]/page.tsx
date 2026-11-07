@@ -3,24 +3,23 @@ import QRCode from 'qrcode';
 import { getDb } from '@/lib/db';
 import { getRecordView, getTimeline } from '@/lib/repo';
 import { publicKeys } from '@/lib/signing';
-import { evaluate, USES, USE_IDS, LICENCES, type Use } from '@/lib/permissions';
+import { USE_IDS, LICENCES, type Use } from '@/lib/permissions';
 import { allFormats } from '@/lib/credit';
 import { recordUrl } from '@/lib/site';
 import { COMPILED_NOTE, LAYER_NOTE } from '@/lib/copy';
 import { typeSingular } from '@/lib/ui';
-import { TwoLayers, ReusePills } from '@/components/Permissions';
+import { TwoLayers } from '@/components/Permissions';
 import { CopyButton } from '@/components/CopyButton';
 import { Gallery, type GalleryItem } from '@/components/Gallery';
 import { ShareButton } from '@/components/ShareButton';
 import { BookmarkButton } from '@/components/BookmarkButton';
 import './passport.css';
 import { Tabs } from '@/components/Tabs';
-import { VerdictCard } from '@/components/VerdictCard';
 import { Icon } from '@/components/Icons';
 import { Seal } from '@/components/Seal';
 import { getStewardsForRecord } from '@/lib/repo-grants';
-import RequestPermissionForm from '@/components/RequestPermissionForm';
 import { RequestStatusTab } from '@/components/RequestStatusTab';
+import { InteractiveReuseGlance } from '@/components/InteractiveReuseGlance';
 
 export const dynamic = 'force-dynamic';
 
@@ -38,7 +37,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
   const stewards = await getStewardsForRecord(db, id);
   const hasSteward = stewards.length > 0;
   const use = (USE_IDS.includes(sp.use as Use) ? sp.use : 'print_merch') as Use;
-  const out = evaluate({ use, licence: v.licence, cultural: v.permissions, attributionRequired: v.attributionRequired, sensitivity: v.sensitivity });
   const credit = allFormats({ title: v.title, credits: v.credits, licence: v.licence, attributionRequired: v.attributionRequired, recordUrl: recordUrl(v.id), recordId: v.id });
   const timeline = await getTimeline(db, id, publicKeys());
   const qr = await QRCode.toDataURL(recordUrl(v.id), { margin: 1, width: 240, errorCorrectionLevel: 'M' });
@@ -185,14 +183,24 @@ export default async function Passport({ params, searchParams }: { params: Promi
             </div>
           </div>
 
-          <div className="pp-glance" role="group" aria-label="Reuse at a glance">
-            <h2>Reuse at a Glance <a href="#studio-h" className="pp-info-ico" aria-label="How reuse is decided"><Icon name="info" size={16} /></a></h2>
-            <ReusePills permissions={v.permissions} />
-          </div>
+          <InteractiveReuseGlance
+            recordId={v.id}
+            recordTitle={v.title}
+            licence={v.licence}
+            permissions={v.permissions}
+            attributionRequired={v.attributionRequired}
+            sensitivity={v.sensitivity}
+            credit={credit}
+            hasSteward={hasSteward}
+            initialUse={use}
+            initialOpen={sp.ask === '1'}
+          />
 
           <div className="pp-actions-bar">
             <div className="pp-actions-main">
-              <a className="btn pp-primary" href="#studio-h"><Icon name="refresh" size={18} /> Check Reuse in Reuse Studio</a>
+              <a className="btn pp-primary" href="#studio-h">
+                <Icon name="refresh" size={18} /> Check Reuse Permissions
+              </a>
               <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
               <ShareButton title={v.title} />
               {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
@@ -206,32 +214,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
 
         <div className="pp-body">
           <Tabs label={`${v.title} passport sections`} tabs={tabs} />
-
-          <section aria-labelledby="studio-h" style={{ marginTop: 34 }}>
-            <h2 id="studio-h" style={{ marginTop: 0 }}>Reuse Studio</h2>
-            <p className="muted">Pick what you want to do. The answer combines both layers and always takes the more careful one.</p>
-            <nav aria-label="Choose a use"><ul className="uses">{USE_IDS.map((u) => <li key={u}><a href={`/r/${v.id}?use=${u}#studio-h`} aria-current={u === use ? 'true' : undefined}>{USES[u].label}</a></li>)}</ul></nav>
-            <div style={{ marginTop: 16 }}><VerdictCard verdict={out.verdict} useLabel={USES[use].label} guidance={out.guidance} /></div>
-            {out.verdict === 'ask_first' && (
-              <details className="panel ui" style={{ marginTop: 16 }} open={sp.ask === '1'}>
-                <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Request permission from {hasSteward ? 'steward' : 'community contact'}</summary>
-                <RequestPermissionForm recordId={v.id} recordTitle={v.title} useKey={use} hasSteward={hasSteward} />
-              </details>
-            )}
-            <div className="two" style={{ marginTop: 14 }}>
-              <div className="panel" style={{ margin: 0 }}><h3>Cultural layer</h3><p>{out.cultural.statement}</p></div>
-              <div className="panel" style={{ margin: 0 }}><h3>File licence layer</h3><p>{out.licence.statement}</p></div>
-            </div>
-            {out.notes.map((n) => <p key={n} className="notice">{n}</p>)}
-            <p style={{ marginTop: 14 }}><strong>Next step:</strong> {out.nextAction}</p>
-            <p className="ui">{out.creditRequired ? 'Credit is required here. ' : 'Credit is not required by the licence, but is recommended. '}Copy a credit line:</p>
-            {([['plain', 'Plain text', credit.plain], ['markdown', 'Markdown', credit.markdown], ['html', 'HTML snippet', credit.html], ['short', 'Short caption', credit.short]] as const).map(([k, label, text]) => (
-              <div key={k} className="credit-block"><h3>{label}</h3><pre className="credit">{text}</pre><CopyButton text={text} label={`Copy ${label.toLowerCase()}`} /></div>
-            ))}
-            <div className="btn-row">
-              <a className="btn secondary" href={`/r/${v.id}/report`}>Report a problem</a>
-            </div>
-          </section>
         </div>
       </article>
     </div>

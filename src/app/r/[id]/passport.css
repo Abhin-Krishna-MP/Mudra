@@ -190,6 +190,81 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
 .rpill.ask { background: var(--pp-ask-bg); color: var(--pp-ask-ink); border-color: rgba(107, 74, 6, .25); }
 .rpill.no { background: var(--pp-no-bg); color: var(--pp-no-ink); border-color: rgba(122, 31, 23, .25); }
 
+/* Interactive Badge Behavior */
+.rpill-interactive {
+  cursor: pointer;
+  user-select: none;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, outline .18s ease;
+}
+.rpill-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .25);
+  border-color: var(--pp-accent);
+}
+:root:not([data-theme='dark']) .rpill-interactive:hover {
+  box-shadow: 0 6px 14px rgba(70, 36, 12, .12);
+}
+.rpill-interactive.is-active {
+  outline: 2px solid var(--pp-accent);
+  outline-offset: 2px;
+  box-shadow: 0 0 16px rgba(232, 147, 90, .4);
+  font-weight: 700;
+}
+.rpill-toggle-arrow {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 2px;
+  opacity: .7;
+  transition: transform .2s ease;
+}
+.rpill-toggle-arrow .open {
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* Light theme overrides for interactive drawer & credit widget */
+:root:not([data-theme='dark']) .reuse-interactive-drawer {
+  background: var(--pp-card) !important;
+  box-shadow: 0 18px 46px rgba(70, 36, 12, .12), 0 0 0 1px rgba(138, 115, 85, .3) !important;
+}
+:root:not([data-theme='dark']) .dual-layer-early-card {
+  background: rgba(255, 255, 255, .65) !important;
+  border-color: rgba(138, 115, 85, .3) !important;
+}
+:root:not([data-theme='dark']) .tk-tooltip-box {
+  background: #fff8eb !important;
+  border-color: rgba(217, 119, 6, .35) !important;
+  color: #78350f !important;
+}
+:root:not([data-theme='dark']) .layer-col {
+  background: rgba(255, 255, 255, .82) !important;
+  border-color: rgba(138, 115, 85, .3) !important;
+}
+:root:not([data-theme='dark']) .use-btn {
+  background: rgba(255, 255, 255, .8) !important;
+  border-color: rgba(138, 115, 85, .35) !important;
+  color: #3b1d0f !important;
+}
+:root:not([data-theme='dark']) .use-btn.is-active {
+  background: var(--pp-ember) !important;
+  color: #fff !important;
+  border-color: transparent !important;
+}
+:root:not([data-theme='dark']) .cw-tabs {
+  background: rgba(138, 115, 85, .15) !important;
+}
+:root:not([data-theme='dark']) .cw-body {
+  background: #ffffff !important;
+  border-color: rgba(138, 115, 85, .35) !important;
+}
+:root:not([data-theme='dark']) .cw-pre {
+  color: #2b1408 !important;
+}
+:root:not([data-theme='dark']) .cw-actions-bar {
+  background: #fdfbf7 !important;
+  border-top-color: rgba(138, 115, 85, .25) !important;
+}
+
 /* ---------- Unified Actions Bar ---------- */
 .pp-actions-bar {
   display: flex;
