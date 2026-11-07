@@ -164,25 +164,30 @@ export async function reviewFormAction(f: FormData) {
     input = { recordId, action, evidence: { source: str(f, 'source'), url: str(f, 'url'), note: str(f, 'note') } };
   } else if (action === 'resolveFlag') {
     input = { recordId, action, flagId: str(f, 'flagId'), note: str(f, 'note') };
-  } else if (action === 'approve' || action === 'needsChanges' || action === 'remove') {
+  } else if (action === 'approve' || action === 'needsChanges' || action === 'remove' || action === 'deny' || action === 'restore') {
     input = { recordId, action, note: str(f, 'note') };
   } else if (action === 'requestRevision' || action === 'needsRevision') {
     input = { recordId, action: 'requestRevision', note: str(f, 'note') };
   } else {
-    redirect('/review?msg=Unknown+action');
+    redirect('/review');
   }
-  let msg = 'Done.';
+  let errorMsg: string | null = null;
   try {
     const res = await reviewAction(await getDb(), await getActor(), input!, signingKey());
-    if (!res.ok) msg = res.error ?? 'Could not complete that action.';
+    if (!res.ok) errorMsg = res.error ?? 'Could not complete that action.';
   } catch (e) {
     if (e instanceof AuthError) redirect('/review');
     throw e;
   }
   revalidatePath('/');
+  revalidatePath('/catalogue');
+  revalidatePath('/review');
   revalidatePath(`/r/${recordId}`);
   revalidatePath('/author/dashboard');
-  redirect(`/review?msg=${encodeURIComponent(msg)}`);
+  if (errorMsg) {
+    redirect(`/review?msg=${encodeURIComponent(errorMsg)}`);
+  }
+  redirect('/review');
 }
 
 /* ------------------------------------------------- steward applications (KYC) */

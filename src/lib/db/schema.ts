@@ -17,7 +17,8 @@ export const SCHEMA = [
     perm_ai_training TEXT NOT NULL DEFAULT 'unspecified',
     custodian TEXT NOT NULL DEFAULT '', is_demo INTEGER NOT NULL DEFAULT 0,
     created_at TEXT NOT NULL, published_at TEXT,
-    category TEXT NOT NULL DEFAULT '', revision_note TEXT NOT NULL DEFAULT '', author_id INTEGER
+    category TEXT NOT NULL DEFAULT '', revision_note TEXT NOT NULL DEFAULT '', author_id INTEGER,
+    deleted_at TEXT, recycle_until TEXT
   )`,
 
   `CREATE TABLE IF NOT EXISTS credits (
@@ -163,6 +164,8 @@ export async function migrate(db: Db) {
     "ALTER TABLE records ADD COLUMN category TEXT NOT NULL DEFAULT ''",
     "ALTER TABLE records ADD COLUMN revision_note TEXT NOT NULL DEFAULT ''",
     "ALTER TABLE records ADD COLUMN author_id INTEGER",
+    "ALTER TABLE records ADD COLUMN deleted_at TEXT",
+    "ALTER TABLE records ADD COLUMN recycle_until TEXT",
     "ALTER TABLE drafts ADD COLUMN revision_note TEXT NOT NULL DEFAULT ''",
     "ALTER TABLE drafts ADD COLUMN region TEXT NOT NULL DEFAULT ''",
     "ALTER TABLE drafts ADD COLUMN category TEXT NOT NULL DEFAULT ''",
