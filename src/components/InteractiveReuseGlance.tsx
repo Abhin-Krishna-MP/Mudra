@@ -67,7 +67,6 @@ export function InteractiveReuseGlance({
 }: Props) {
   const [selectedUse, setSelectedUse] = useState<Use>(initialUse);
   const [isOpen, setIsOpen] = useState(initialOpen);
-  const [showTooltip, setShowTooltip] = useState(false);
   const drawerRef = useRef<HTMLDivElement>(null);
 
   // Current capability corresponding to selected use
@@ -228,107 +227,8 @@ export function InteractiveReuseGlance({
             </button>
           </div>
 
-          {/* =========================================================================
-              CLARIFY DUAL-LAYER CONCEPT EARLY (AT THE VERY TOP OF THE REUSE SECTION)
-              Explains why users must ask to use a file that is freely accessible online.
-              ========================================================================= */}
-          <div className="dual-layer-early-card" style={{ marginTop: 20, marginBottom: 22, padding: '20px 22px', borderRadius: 16, background: 'rgba(0, 0, 0, .2)', border: '1px solid var(--pp-edge)' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
-              <div>
-                <span className="eyebrow" style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: '.78rem', letterSpacing: '.12em', textTransform: 'uppercase', color: 'var(--pp-accent)', fontWeight: 700 }}>
-                  <Icon name="layers" size={15} />
-                  <span>The Mudra Dual-Layer Protocol</span>
-                </span>
-                <h4 style={{ margin: '6px 0 0', fontSize: '1.18rem', display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span>Why must I ask if this file is free on the internet?</span>
-                  <button
-                    type="button"
-                    className="tooltip-info-btn"
-                    onClick={() => setShowTooltip(!showTooltip)}
-                    aria-label="Read traditional knowledge protection note"
-                    aria-expanded={showTooltip}
-                    style={{ background: 'transparent', border: 0, color: 'var(--pp-accent)', cursor: 'pointer', display: 'inline-flex', padding: 2 }}
-                  >
-                    <Icon name="info" size={18} />
-                  </button>
-                </h4>
-              </div>
-
-              <div style={{ fontSize: '.84rem', color: 'var(--pp-muted)' }}>
-                <span>Rule: <strong>More protective layer always wins</strong></span>
-              </div>
-            </div>
-
-            {/* Traditional Knowledge Protection Tooltip Explainer */}
-            <div
-              className="tk-tooltip-box"
-              style={{
-                marginTop: 12,
-                padding: '12px 16px',
-                borderRadius: 12,
-                background: 'rgba(232, 147, 90, .14)',
-                border: '1px solid rgba(232, 147, 90, .35)',
-                fontSize: '.92rem',
-                lineHeight: 1.5,
-              }}
-            >
-              <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <span style={{ color: 'var(--pp-accent)', flex: 'none', marginTop: 2, display: 'inline-flex' }}>
-                  <Icon name="shield" size={18} />
-                </span>
-                <div>
-                  <p style={{ margin: 0 }}>
-                    <strong>Protection of Living Cultural Knowledge:</strong> A digital image licence (such as Creative Commons or Wikimedia) only covers the digital photograph file taken by a camera. It does not grant permission to exploit or commodify the sacred traditions, generational handloom designs, or living art forms belonging to the community.
-                  </p>
-                  <p style={{ margin: '6px 0 0', color: 'var(--pp-muted)', fontSize: '.86rem' }}>
-                    Mudra checks what the tradition bearers and communities stated alongside copyright laws, ensuring cultural heritage is treated with respect.
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Side-by-Side Dual-Layer Cards */}
-            <div className="dual-layers-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginTop: 16 }}>
-              {/* Cultural Layer */}
-              <div className="layer-col layer-cultural" style={{ padding: '14px 16px', borderRadius: 12, background: 'rgba(0, 0, 0, .25)', border: '1px solid var(--pp-edge)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ color: 'var(--pp-accent)', display: 'inline-flex' }}>
-                      <Icon name="users" size={18} />
-                    </span>
-                    <strong style={{ fontSize: '.96rem' }}>1. Cultural Layer (Heritage)</strong>
-                  </div>
-                  <span className={`rpill ${CLS[permissions[activeCap]]}`} style={{ minHeight: 24, padding: '2px 10px', fontSize: '.78rem' }}>
-                    {cap(permissions[activeCap])}
-                  </span>
-                </div>
-                <p style={{ margin: 0, fontSize: '.9rem', color: 'var(--pp-ink)', lineHeight: 1.45 }}>
-                  {out.cultural.statement}
-                </p>
-              </div>
-
-              {/* File Licence Layer */}
-              <div className="layer-col layer-licence" style={{ padding: '14px 16px', borderRadius: 12, background: 'rgba(0, 0, 0, .25)', border: '1px solid var(--pp-edge)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ color: 'var(--pp-accent)', display: 'inline-flex' }}>
-                      <Icon name="scale" size={18} />
-                    </span>
-                    <strong style={{ fontSize: '.96rem' }}>2. File Licence (Copyright)</strong>
-                  </div>
-                  <span className="rpill ok" style={{ minHeight: 24, padding: '2px 10px', fontSize: '.78rem' }}>
-                    {lic.label.split(' ')[0]}
-                  </span>
-                </div>
-                <p style={{ margin: 0, fontSize: '.9rem', color: 'var(--pp-ink)', lineHeight: 1.45 }}>
-                  {out.licence.statement} {lic.url && <a href={lic.url} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--pp-accent)', textDecoration: 'underline' }}>View licence terms ↗</a>}
-                </p>
-              </div>
-            </div>
-          </div>
-
           {/* Quick Purpose Switcher */}
-          <div style={{ marginBottom: 18 }}>
+          <div style={{ marginTop: 20, marginBottom: 18 }}>
             <span className="muted" style={{ display: 'block', fontSize: '.82rem', textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 8 }}>
               Check another purpose:
             </span>

@@ -227,19 +227,6 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   background: var(--pp-card) !important;
   box-shadow: 0 18px 46px rgba(70, 36, 12, .12), 0 0 0 1px rgba(138, 115, 85, .3) !important;
 }
-:root:not([data-theme='dark']) .dual-layer-early-card {
-  background: rgba(255, 255, 255, .65) !important;
-  border-color: rgba(138, 115, 85, .3) !important;
-}
-:root:not([data-theme='dark']) .tk-tooltip-box {
-  background: #fff8eb !important;
-  border-color: rgba(217, 119, 6, .35) !important;
-  color: #78350f !important;
-}
-:root:not([data-theme='dark']) .layer-col {
-  background: rgba(255, 255, 255, .82) !important;
-  border-color: rgba(138, 115, 85, .3) !important;
-}
 :root:not([data-theme='dark']) .use-btn {
   background: rgba(255, 255, 255, .8) !important;
   border-color: rgba(138, 115, 85, .35) !important;
@@ -264,32 +251,43 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   background: #fdfbf7 !important;
   border-top-color: rgba(138, 115, 85, .25) !important;
 }
+:root:not([data-theme='dark']) .req-detail-card {
+  background: #ffffff !important;
+  border-color: rgba(138, 115, 85, .32) !important;
+  box-shadow: 0 6px 20px rgba(70, 36, 12, .08) !important;
+}
+:root:not([data-theme='dark']) .req-scope-box {
+  background: #fdfbf7 !important;
+  border-color: rgba(138, 115, 85, .25) !important;
+}
+:root:not([data-theme='dark']) .req-token-box {
+  background: #faf6f0 !important;
+  border-color: rgba(138, 115, 85, .28) !important;
+}
 
 /* ---------- Unified Actions Bar ---------- */
 .pp-actions-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 18px;
-  flex-wrap: wrap;
+  margin-top: 20px;
+  width: 100%;
 }
 .pp-actions-main {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 10px 12px;
-  flex: 1;
+  gap: 10px;
+  width: 100%;
 }
 .pp-actions-main .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 44px;
-  padding: 0 20px;
+  min-height: 40px;
+  padding: 0 18px;
   border-radius: 999px;
-  font: 600 .93rem/1 var(--font-ui, system-ui);
+  font: 600 .88rem/1 var(--font-ui, system-ui);
   text-decoration: none;
   white-space: nowrap;
   box-sizing: border-box;
@@ -301,8 +299,8 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   color: var(--pp-ink);
 }
 :root:not([data-theme='dark']) .pp-actions-main .btn.secondary {
-  background: rgba(255, 255, 255, .78);
-  border-color: rgba(138, 115, 85, .4);
+  background: rgba(255, 255, 255, .82);
+  border: 1.5px solid rgba(138, 115, 85, .38);
   color: #3b1d0f;
   box-shadow: 0 2px 8px rgba(70, 36, 12, .06);
 }
@@ -320,49 +318,40 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   background: var(--pp-ember);
   color: var(--pp-ember-ink);
   border: 0;
-  box-shadow: 0 6px 18px rgba(196, 89, 15, .35), inset 0 1px 0 rgba(255, 255, 255, .28);
+  box-shadow: 0 4px 14px rgba(196, 89, 15, .32), inset 0 1px 0 rgba(255, 255, 255, .28);
 }
 .pp-actions-main .pp-primary:hover {
   filter: brightness(1.08);
 }
-.pp-save-wrap {
-  display: inline-flex;
-  align-items: center;
-  flex: none;
+
+@media (max-width: 900px) {
+  .pp-actions-main {
+    gap: 8px;
+  }
+  .pp-actions-main .btn {
+    padding: 0 14px;
+    font-size: .84rem;
+    min-height: 38px;
+    gap: 6px;
+  }
 }
-.pp-save-wrap .tile-save {
-  position: static;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  border: 1.5px solid var(--pp-edge);
-  background: rgba(24, 15, 11, .7);
-  color: var(--pp-ink);
-  cursor: pointer;
-  transition: all .2s ease;
-}
-:root:not([data-theme='dark']) .pp-save-wrap .tile-save {
-  background: rgba(255, 255, 255, .78);
-  border-color: rgba(138, 115, 85, .4);
-  color: #3b1d0f;
-  box-shadow: 0 2px 8px rgba(70, 36, 12, .06);
-}
-:root:not([data-theme='dark']) .pp-save-wrap .tile-save:hover {
-  background: #ffffff;
-  border-color: var(--pp-accent);
-  color: var(--pp-accent);
-}
-.pp-save-wrap .tile-save:hover {
-  border-color: var(--pp-accent);
-  color: var(--pp-accent);
-}
-.pp-save-wrap .tile-save[aria-pressed='true'] {
-  background: var(--pp-ember);
-  color: #fff;
-  border-color: transparent;
+
+@media (max-width: 680px) {
+  .pp-actions-main {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .pp-actions-main .pp-primary {
+    grid-column: 1 / -1;
+  }
+  .pp-actions-main .btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+    padding: 0 10px;
+    font-size: .82rem;
+  }
 }
 
 /* ---------- Tabs ---------- */

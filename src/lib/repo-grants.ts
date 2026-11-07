@@ -103,7 +103,20 @@ export async function createPermissionRequest(
   const rec = (await db.execute(`SELECT id, status FROM records WHERE id = ? AND status = 'published'`, [input.recordId])).rows[0];
   if (!rec) return { ok: false, error: 'Record not found or not published.' };
 
-  // Rate limit: at most 3 open requests from same contact per record
+  // Single request per email ID per catalogue item constraint
+  const contactClean = input.requesterContact.trim().toLowerCase();
+  const existingForEmail = (await db.execute(
+    `SELECT id FROM permission_requests WHERE record_id = ? AND LOWER(requester_contact) = ? LIMIT 1`,
+    [input.recordId, contactClean],
+  )).rows[0];
+  if (existingForEmail) {
+    return {
+      ok: false,
+      error: 'A permission request has already been submitted for this catalogue item using this email address. Please use your request token to check its status in the Request Status tab.',
+    };
+  }
+
+  // Rate limit: at most 10 open requests per record
   const existing = (await db.execute(
     `SELECT COUNT(*) as n FROM permission_requests WHERE record_id = ? AND status = 'open'`,
     [input.recordId],

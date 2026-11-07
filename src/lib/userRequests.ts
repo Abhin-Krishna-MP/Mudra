@@ -14,26 +14,30 @@ export interface StoredRequestInfo {
 
 const STORAGE_KEY = 'mudra_requests';
 
-export function getStoredRequests(): StoredRequestInfo[] {
-  if (typeof window === 'undefined') return [];
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? JSON.parse(raw) : [];
-  } catch {
-    return [];
-  }
-}
-
-export function saveStoredRequest(req: StoredRequestInfo) {
+/**
+ * Ephemeral session requirement:
+ * Requests are NOT stored persistently across browser reloads or for public viewing.
+ * A person must use their private token code to view their request.
+ * This clears any legacy requests previously left in storage or cookies.
+ */
+export function clearLegacyStoredRequests() {
   if (typeof window === 'undefined') return;
   try {
-    const list = getStoredRequests().filter((r) => r.token !== req.token);
-    list.unshift(req);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-    // Also save in cookie for server awareness
-    document.cookie = `mudra_requests=${encodeURIComponent(JSON.stringify(list.map((r) => ({ token: r.token, recordId: r.recordId }))))}; path=/; max-age=31536000; SameSite=Lax`;
+    localStorage.removeItem(STORAGE_KEY);
+    document.cookie = `${STORAGE_KEY}=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
   } catch {
-    /* storage unavailable */
+    /* ignore */
   }
 }
 
+/**
+ * Deprecated stubs to preserve interface compatibility:
+ * Always returns empty array per ephemeral privacy requirement.
+ */
+export function getStoredRequests(): StoredRequestInfo[] {
+  return [];
+}
+
+export function saveStoredRequest(_req: StoredRequestInfo) {
+  // Intentionally no-op per ephemeral policy
+}

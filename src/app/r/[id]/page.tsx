@@ -12,7 +12,6 @@ import { TwoLayers } from '@/components/Permissions';
 import { CopyButton } from '@/components/CopyButton';
 import { Gallery, type GalleryItem } from '@/components/Gallery';
 import { ShareButton } from '@/components/ShareButton';
-import { BookmarkButton } from '@/components/BookmarkButton';
 import './passport.css';
 import { Tabs } from '@/components/Tabs';
 import { Icon } from '@/components/Icons';
@@ -89,11 +88,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
         </section>
       </div>
     ) },
-    { id: 'media', label: `Media (${gallery.length})`, icon: 'image' as const, content: (
-      gallery.length > 0 ? (
-        <ul className="pp-media">{gallery.map((g, n) => <li key={g.url + n}><a href={g.url} target="_blank" rel="noopener noreferrer"><img src={g.url} alt={g.alt} loading="lazy" /></a></li>)}</ul>
-      ) : <p className="muted">No media has been added to this record.</p>
-    ) },
     { id: 'creators', label: 'Creators', icon: 'users' as const, content: (
       <>
         <ul>{v.credits.map((c) => <li key={c.name + c.role}><strong>{c.name}</strong> — {c.role}{c.collective ? ' (collective)' : ''}</li>)}</ul>
@@ -106,6 +100,9 @@ export default async function Passport({ params, searchParams }: { params: Promi
         <p className="hint" style={{ marginBottom: 12 }}>{LAYER_NOTE}</p>
         <TwoLayers permissions={v.permissions} licence={v.licence} />
       </>
+    ) },
+    { id: 'request-status', label: 'Request Status', icon: 'clock' as const, content: (
+      <RequestStatusTab recordId={v.id} recordTitle={v.title} hasSteward={hasSteward} />
     ) },
     { id: 'sources', label: 'Sources', icon: 'link' as const, content: (
       (v.contextSources.length > 0 || v.sourceUrl || v.asset?.sourceNote) ? (
@@ -120,9 +117,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
       <ol className="timeline">{timeline.map((t) => (
         <li key={t.seq} data-dot={t.hashOk ? '●' : '○'}><strong>{t.summary}</strong><br /><span className="muted"><time dateTime={t.at}>{new Date(t.at).toUTCString()}</time> · {t.role}{t.actor ? ` (${t.actor})` : ''} · integrity {t.hashOk ? 'ok' : 'broken'}</span></li>
       ))}</ol>
-    ) },
-    { id: 'request-status', label: 'Request Status', icon: 'clock' as const, content: (
-      <RequestStatusTab recordId={v.id} recordTitle={v.title} hasSteward={hasSteward} />
     ) },
   ];
 
@@ -205,9 +199,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
               <ShareButton title={v.title} />
               {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
               <a className="btn secondary" href={`/verify/${v.id}`}><Icon name="shield" size={16} /> Verify this record</a>
-            </div>
-            <div className="pp-save-wrap">
-              <BookmarkButton id={v.id} title={v.title} />
             </div>
           </div>
         </header>
