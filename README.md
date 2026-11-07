@@ -278,9 +278,14 @@ flowchart TB
 ---
 
 
+<div align="center">
+
 **Mudra — Preserving Heritage. Protecting Rights. Empowering Creators.**
 
+</div>
+
 ---
+
 
 ## 7. Installation & Quickstart
 
@@ -301,16 +306,22 @@ npm run seed
 
 # 5. Start development server
 npm run dev
+
 # Open http://localhost:3000 in your browser
 ```
 
 ### Reviewer Evaluation Credentials
-- **Email:** `reviewer@mudra.demo`
-- **Password:** `DemoReviewerPass123!`
-- **Console:** Navigate to `http://localhost:3000/review` to inspect submissions, manage requests, and issue signed grants.
+
+| Field | Details |
+|:---|:---|
+| **Email** | `reviewer@mudra.demo` |
+| **Password** | `DemoReviewerPass123!` |
+| **Console** | Navigate to `http://localhost:3000/review` to inspect submissions, manage requests, and issue signed grants. |
 
 ### Offline Standalone Grant Verification
+
 Verify any permission grant artifact offline with zero network connectivity:
+
 ```bash
 node scripts/verify-grant.mjs path/to/grant.json path/to/public-key.pem
 ```
@@ -340,9 +351,17 @@ npm run test:e2e
 ## 9. Ethical Guardrails & Attribution
 
 - **No Hallucinated Culture:** AI tools were utilized strictly for programming and scaffolding. Every cultural fact, tradition bearer credit, geographical origin, and license attribution was researched, cited, and checked by human team members from primary academic and governmental sources (UNESCO, Kerala Kalamandalam, Kerala Folklore Academy, and the Geographical Indications Registry of India).
+
 - **Prohibited Words Invariant:** Enforced via `tests/wording.test.ts`. The extractive legalistic words `owner`, `ownership`, `proof of ownership`, `stolen`, `detected`, `infringement`, and `authentic` are forbidden throughout the codebase.
+
 - **License:** MIT Open Source (see [`LICENSE`](LICENSE)).
 
 ---
 
+<div align="center">
+
 **Mudra: Don't just take the imagery. Credit the culture.**
+
+</div>
+
+
