@@ -190,7 +190,12 @@ export default async function Passport({ params, searchParams }: { params: Promi
               <div className="layer d-fig dk" />
             </div>
           </div>
-          <a className="pp-back" href="/catalogue"><Icon name="arrow" size={16} className="flip" /> Back to Catalogue</a>
+          <a className="pp-back" href="/catalogue">
+            <span className="pp-back-icon">
+              <Icon name="arrow" size={15} className="flip" />
+            </span>
+            <span>Back to Catalogue</span>
+          </a>
           <div className="pp-top">
             <div className="pp-media-col">
               <p className="pp-id">{v.id}</p>
