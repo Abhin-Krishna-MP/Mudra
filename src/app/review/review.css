@@ -4,13 +4,13 @@
    ========================================================================= */
 
 .review-console-page {
-  --rc-bg: #fffbf4;
+  --rc-bg: #fdfbf7;
   --rc-card: #ffffff;
-  --rc-border: rgba(180, 140, 90, 0.32);
+  --rc-border: #ebe2d5;
   --rc-ink: #2b1810;
-  --rc-muted: #7d6b5c;
-  --rc-panel: #fffdf9;
-  --rc-panel-border: rgba(180, 140, 90, 0.35);
+  --rc-muted: #725c48;
+  --rc-panel: #ffffff;
+  --rc-panel-border: #ebe2d5;
   --rc-maroon: #751b16;
   --rc-maroon-hover: #8e221b;
   --rc-accent: #c47c1a;
@@ -70,20 +70,20 @@
   background: var(--rc-panel);
   border: 1.5px solid var(--rc-panel-border);
   border-radius: 16px;
-  padding: 14px 20px;
-  box-shadow: 0 4px 12px rgba(80, 45, 20, 0.03);
+  padding: 18px 24px;
+  box-shadow: 0 4px 14px rgba(80, 45, 20, 0.04);
+  gap: 16px;
 }
 .rc-stat-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
   background: #fdf3e7;
   color: #c47c1a;
   border: 1px solid #fae2c6;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 14px;
   flex: none;
 }
 :root[data-theme='dark'] .rc-stat-icon {
@@ -93,28 +93,35 @@
 }
 .rc-stat-mid {
   display: flex;
-  flex-direction: column;
-}
-.rc-stat-label {
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--rc-ink);
-  margin-bottom: 2px;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
 }
 .rc-stat-num {
-  font-size: 1.6rem;
+  font-size: 2.6rem;
+  font-weight: 800;
+  color: var(--rc-maroon, #751b16);
+  line-height: 1;
+  font-family: var(--font-display, Georgia, serif);
+  min-width: 36px;
+}
+:root[data-theme='dark'] .rc-stat-num {
+  color: #ff9e4a;
+}
+.rc-stat-details {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+}
+.rc-stat-label {
+  font-size: 0.95rem;
   font-weight: 700;
   color: var(--rc-ink);
-  line-height: 1;
-}
-.rc-stat-divider {
-  width: 1px;
-  height: 38px;
-  background: var(--rc-panel-border);
-  margin: 0 16px;
+  letter-spacing: -0.01em;
 }
 .rc-stat-text {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   color: var(--rc-muted);
 }
 
@@ -420,4 +427,223 @@
   color: var(--rc-muted, #7d6b5c);
   font-size: 0.94rem;
 }
+
+/* =========================================================================
+   2-Column Request Metadata Grid
+   ========================================================================= */
+.rc-req-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px 18px;
+  background: var(--rc-panel, #ffffff);
+  border: 1px solid var(--rc-panel-border, #ebe2d5);
+  border-radius: 12px;
+  padding: 14px 18px;
+  margin: 12px 0 10px;
+}
+:root[data-theme='dark'] .rc-req-grid {
+  background: rgba(30, 18, 13, 0.6);
+  border-color: rgba(232, 147, 90, 0.25);
+}
+.rc-req-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+.rc-req-label {
+  font-weight: 700;
+  color: var(--rc-ink, #2b1810);
+  white-space: nowrap;
+}
+.rc-req-val {
+  color: var(--rc-muted, #725c48);
+  word-break: break-word;
+}
+
+/* =========================================================================
+   Validity Date Range Row with arrow
+   ========================================================================= */
+.rc-date-range-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 12px;
+  max-width: 480px;
+}
+.rc-date-arrow {
+  padding-bottom: 10px;
+  font-size: 1.25rem;
+  color: var(--rc-muted, #725c48);
+  font-weight: 700;
+  flex: none;
+}
+.rc-date-sublabel {
+  font-size: 0.8rem;
+  color: var(--rc-muted, #725c48);
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* =========================================================================
+   Past Requests List (Horizontal Flow & Action Clustering)
+   ========================================================================= */
+.rc-past-req-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rc-panel-border, #ebe2d5);
+}
+.rc-past-req-item:last-child {
+  border-bottom: none;
+}
+.rc-past-req-info {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1 1 280px;
+}
+.rc-past-req-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.rc-past-req-link {
+  color: var(--rc-maroon, #751b16);
+  text-decoration: none;
+}
+.rc-past-req-link:hover {
+  text-decoration: underline;
+}
+.rc-past-req-sep {
+  color: var(--rc-muted, #725c48);
+}
+.rc-past-req-name {
+  color: var(--rc-ink, #2b1810);
+}
+.rc-past-req-purpose {
+  font-size: 0.85rem;
+  color: var(--rc-muted, #725c48);
+}
+.rc-past-req-note {
+  font-size: 0.82rem;
+  color: var(--rc-muted, #725c48);
+  font-style: italic;
+}
+.rc-past-req-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.rc-btn-view-grant {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  font-size: 0.84rem;
+  padding: 6px 16px;
+  border-radius: 999px;
+  border: 1.5px solid var(--rc-maroon, #751b16);
+  color: var(--rc-maroon, #751b16);
+  background: var(--rc-card, #ffffff);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+.rc-btn-view-grant:hover {
+  background: #fdf5e8;
+}
+.rc-revoke-details {
+  position: relative;
+  display: inline-block;
+}
+.rc-revoke-link {
+  cursor: pointer;
+  font-size: 0.82rem;
+  color: #c53030;
+  text-decoration: underline;
+  opacity: 0.85;
+}
+.rc-revoke-link:hover {
+  opacity: 1;
+}
+.rc-revoke-form {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 20;
+  width: 280px;
+  margin-top: 6px;
+  padding: 12px 14px;
+  background: var(--rc-card, #ffffff);
+  border: 1.5px solid #feb2b2;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+:root[data-theme='dark'] .rc-revoke-form {
+  background: #25120d;
+  border-color: rgba(220, 53, 69, 0.4);
+}
+
+/* =========================================================================
+   System Stewards 2x2 Grid Layout
+   ========================================================================= */
+.rc-steward-grid-2x2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+@media (max-width: 640px) {
+  .rc-steward-grid-2x2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* =========================================================================
+   Approve Button (Positive Green) & Flat Status Badge
+   ========================================================================= */
+.rc-btn-approve {
+  background: #1b5e20 !important;
+  color: #ffffff !important;
+  border: 1.5px solid #144918 !important;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  box-shadow: 0 2px 6px rgba(27, 94, 32, 0.25);
+  cursor: pointer;
+  border-radius: 8px;
+  padding: 8px 18px;
+  transition: all 0.2s ease;
+}
+.rc-btn-approve:hover {
+  background: #144918 !important;
+  box-shadow: 0 4px 10px rgba(27, 94, 32, 0.35);
+}
+:root[data-theme='dark'] .rc-btn-approve {
+  background: #2e7d32 !important;
+  border-color: #388e3c !important;
+}
+
+.rc-status-flat-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: rgba(27, 94, 32, 0.1);
+  color: #1b5e20;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: none;
+}
+:root[data-theme='dark'] .rc-status-flat-badge {
+  background: rgba(46, 125, 50, 0.2);
+  color: #a5d6a7;
+}
+
 

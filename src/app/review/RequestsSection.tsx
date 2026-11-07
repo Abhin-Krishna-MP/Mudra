@@ -60,7 +60,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
       <div className="rc-section-header-wrap">
         <h2 id="reqs-heading" className="rc-section-heading" style={{ margin: 0 }}>
           <Icon name="users" size={22} />
-          <span>Ask First Requests ({openReqs.length} open{stalledReqs.length > 0 ? `, ${stalledReqs.length} stalled` : ''})</span>
+          <span>Permission Requests ({openReqs.length} open{stalledReqs.length > 0 ? `, ${stalledReqs.length} stalled` : ''})</span>
         </h2>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           {(openReqs.length > openThreads.length || stalledReqs.length > stalledThreads.length) && (
@@ -120,15 +120,28 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                   </div>
                 </div>
 
-                <p style={{ margin: '8px 0 4px', fontSize: '0.94rem' }}>
-                  <strong>From:</strong> {r.requester_name} · <strong>Purpose:</strong> {r.use_key.replace(/_/g, ' ')}
-                </p>
-                <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
-                  <strong>Project Scope:</strong> {r.scope?.whatYouWillMake || '—'} ({r.scope?.whereAndHowLong || '—'})
-                </p>
-                <p className="muted" style={{ margin: '4px 0 12px', fontSize: '0.84rem' }} suppressHydrationWarning>
+                {/* 2-Column Key-Value Data Grid */}
+                <div className="rc-req-grid">
+                  <div className="rc-req-cell">
+                    <span className="rc-req-label">From:</span>
+                    <span className="rc-req-val">{r.requester_name}</span>
+                  </div>
+                  <div className="rc-req-cell">
+                    <span className="rc-req-label">Purpose:</span>
+                    <span className="rc-req-val">{r.use_key.replace(/_/g, ' ')}</span>
+                  </div>
+                  <div className="rc-req-cell">
+                    <span className="rc-req-label">What:</span>
+                    <span className="rc-req-val">{r.scope?.whatYouWillMake || '—'}</span>
+                  </div>
+                  <div className="rc-req-cell">
+                    <span className="rc-req-label">Where:</span>
+                    <span className="rc-req-val">{r.scope?.whereAndHowLong || '—'}</span>
+                  </div>
+                </div>
+                <div className="muted" style={{ margin: '0 0 12px', fontSize: '0.82rem' }} suppressHydrationWarning>
                   Submitted: {formatTimestamp(r.created_at)}
-                </p>
+                </div>
 
                 {/* Direct "Assign Steward" Shortcut to bridge the workflow gap */}
                 <div
@@ -226,18 +239,28 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                 </div>
               </div>
 
-              <p style={{ margin: '8px 0 4px', fontSize: '0.94rem' }}>
-                <strong>From:</strong> {r.requester_name} · <strong>Purpose:</strong> {r.use_key.replace(/_/g, ' ')}
-              </p>
-              <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
-                <strong>What:</strong> {r.scope?.whatYouWillMake || '—'}
-              </p>
-              <p style={{ margin: '4px 0', fontSize: '0.92rem' }}>
-                <strong>Where & duration:</strong> {r.scope?.whereAndHowLong || '—'}
-              </p>
-              <p className="muted" style={{ margin: '4px 0 16px', fontSize: '0.85rem' }} suppressHydrationWarning>
+              {/* 2-Column Key-Value Data Grid */}
+              <div className="rc-req-grid">
+                <div className="rc-req-cell">
+                  <span className="rc-req-label">From:</span>
+                  <span className="rc-req-val">{r.requester_name}</span>
+                </div>
+                <div className="rc-req-cell">
+                  <span className="rc-req-label">Purpose:</span>
+                  <span className="rc-req-val">{r.use_key.replace(/_/g, ' ')}</span>
+                </div>
+                <div className="rc-req-cell">
+                  <span className="rc-req-label">What:</span>
+                  <span className="rc-req-val">{r.scope?.whatYouWillMake || '—'}</span>
+                </div>
+                <div className="rc-req-cell">
+                  <span className="rc-req-label">Where:</span>
+                  <span className="rc-req-val">{r.scope?.whereAndHowLong || '—'}</span>
+                </div>
+              </div>
+              <div className="muted" style={{ margin: '0 0 14px', fontSize: '0.82rem' }} suppressHydrationWarning>
                 Submitted: {formatTimestamp(r.created_at)}
-              </p>
+              </div>
 
               {/* Duplicate submissions accordion if thread has multiple submissions */}
               {thread.items.length > 1 && (
@@ -286,18 +309,21 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                     style={{ minHeight: 42, marginBottom: 12 }}
                   />
 
-                  <div className="two" style={{ marginTop: 8, display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginBottom: 12 }}>
-                    <div>
-                      <label htmlFor={`vf-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
-                        Valid from
-                      </label>
-                      <input id={`vf-${r.id}`} type="date" name="validFrom" defaultValue={today} required suppressHydrationWarning className="rc-edit-note-input" style={{ minHeight: 42 }} />
-                    </div>
-                    <div>
-                      <label htmlFor={`vu-${r.id}`} style={{ fontWeight: 600, display: 'block', marginBottom: 4, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
-                        Valid until (optional)
-                      </label>
-                      <input id={`vu-${r.id}`} type="date" name="validUntil" className="rc-edit-note-input" style={{ minHeight: 42 }} />
+                  {/* Connected Date Range Row with arrow */}
+                  <div style={{ margin: '10px 0 14px' }}>
+                    <span style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
+                      Validity Period
+                    </span>
+                    <div className="rc-date-range-row">
+                      <div style={{ flex: '1 1 180px' }}>
+                        <label htmlFor={`vf-${r.id}`} className="rc-date-sublabel">Valid from</label>
+                        <input id={`vf-${r.id}`} type="date" name="validFrom" defaultValue={today} required suppressHydrationWarning className="rc-edit-note-input" style={{ minHeight: 40 }} />
+                      </div>
+                      <div className="rc-date-arrow" aria-hidden="true">→</div>
+                      <div style={{ flex: '1 1 180px' }}>
+                        <label htmlFor={`vu-${r.id}`} className="rc-date-sublabel">Valid until (optional)</label>
+                        <input id={`vu-${r.id}`} type="date" name="validUntil" className="rc-edit-note-input" style={{ minHeight: 40 }} />
+                      </div>
                     </div>
                   </div>
 
@@ -343,75 +369,54 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
           <summary style={{ cursor: 'pointer', fontWeight: 700, fontSize: '0.98rem', color: 'var(--rc-ink)', outline: 'none' }}>
             ▶ Past Requests ({pastReqs.length})
           </summary>
-          <div style={{ marginTop: 14, paddingTop: 12, borderTop: '1px solid var(--rc-panel-border, rgba(180, 140, 90, 0.2))' }}>
+          <div style={{ marginTop: 14, paddingTop: 6 }}>
             {pastReqs.map((r) => (
               <div
                 key={r.id}
-                style={{
-                  borderBottom: '1px solid var(--border)',
-                  paddingBottom: 14,
-                  marginBottom: 14,
-                }}
+                className="rc-past-req-item"
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-                  <p style={{ margin: 0, fontSize: '0.98rem' }}>
-                    <strong>{r.record_id}</strong> — {r.requester_name} ({r.use_key.replace(/_/g, ' ')})
-                  </p>
-                  <span className={`chip ${r.status === 'granted' ? 'verified' : 'ask'}`}>{r.status}</span>
+                {/* Left: Requester Info, Record, Purpose, Note */}
+                <div className="rc-past-req-info">
+                  <div className="rc-past-req-title">
+                    <a href={`/r/${r.record_id}`} className="rc-past-req-link">
+                      {r.record_id}
+                    </a>
+                    <span className="rc-past-req-sep">·</span>
+                    <span className="rc-past-req-name">{r.requester_name}</span>
+                  </div>
+                  <div className="rc-past-req-purpose">
+                    Purpose: {r.use_key.replace(/_/g, ' ')}
+                  </div>
+                  {Boolean(r.decision_note) && (
+                    <div className="rc-past-req-note">Note: {r.decision_note}</div>
+                  )}
                 </div>
 
-                {Boolean(r.decision_note) && <p className="muted" style={{ margin: '6px 0 10px', fontSize: '0.88rem' }}>Note: {r.decision_note}</p>}
+                {/* Right: Horizontally Aligned Actions & Status Cluster */}
+                <div className="rc-past-req-actions">
+                  <span className={`chip ${r.status === 'granted' ? 'verified' : 'ask'}`}>{r.status}</span>
 
-                {/* Inverted Hierarchy: Primary action is "View signed grant", Revoke is demoted with confirmation */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginTop: 10 }}>
-                  {r.grantId ? (
+                  {r.grantId && (
                     <a
                       href={`/g/${r.grantId}`}
-                      className="btn secondary"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 7,
-                        fontWeight: 700,
-                        fontSize: '0.88rem',
-                        padding: '7px 18px',
-                        borderRadius: 999,
-                        border: '1.5px solid var(--rc-maroon, #751b16)',
-                        color: 'var(--rc-maroon, #751b16)',
-                        background: 'var(--rc-card, #ffffff)',
-                        textDecoration: 'none',
-                      }}
+                      className="btn secondary rc-btn-view-grant"
                     >
-                      <Icon name="shield" size={15} />
+                      <Icon name="shield" size={14} />
                       <span>View signed grant →</span>
                     </a>
-                  ) : <div />}
+                  )}
 
                   {r.status === 'granted' && (
-                    <details style={{ display: 'inline-block' }}>
-                      <summary
-                        style={{
-                          cursor: 'pointer',
-                          fontSize: '0.82rem',
-                          color: '#e57373',
-                          textDecoration: 'underline',
-                          opacity: 0.85,
-                        }}
-                      >
+                    <details className="rc-revoke-details">
+                      <summary className="rc-revoke-link">
                         Revoke grant...
                       </summary>
                       <form
                         action={revokeGrantAction}
-                        style={{
-                          marginTop: 8,
-                          padding: '10px 14px',
-                          background: 'rgba(220, 53, 69, 0.1)',
-                          border: '1px solid rgba(220, 53, 69, 0.3)',
-                          borderRadius: 10,
-                        }}
+                        className="rc-revoke-form"
                       >
                         <input type="hidden" name="requestId" value={r.id} />
-                        <label htmlFor={`revoke-note-${r.id}`} style={{ fontSize: '0.8rem', display: 'block', marginBottom: 4 }}>
+                        <label htmlFor={`revoke-note-${r.id}`} style={{ fontSize: '0.8rem', display: 'block', marginBottom: 4, color: 'var(--rc-ink)' }}>
                           Reason for revocation (required):
                         </label>
                         <input
@@ -420,12 +425,13 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                           name="note"
                           placeholder="e.g. Terms breached / copyright dispute"
                           required
+                          className="rc-edit-note-input"
                           style={{
                             fontSize: '0.84rem',
                             padding: '6px 10px',
                             marginBottom: 8,
                             width: '100%',
-                            borderRadius: 6,
+                            minHeight: 34,
                           }}
                         />
                         <button
@@ -436,6 +442,7 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
                             padding: '5px 14px',
                             borderRadius: 6,
                             cursor: 'pointer',
+                            width: '100%',
                           }}
                         >
                           Confirm Revocation

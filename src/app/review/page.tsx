@@ -25,7 +25,7 @@ export const metadata = { title: 'Reviewer console' };
 export default async function Review({
   searchParams,
 }: {
-  searchParams: Promise<{ msg?: string }>;
+  searchParams: Promise<{ msg?: string; error?: string }>;
 }) {
   const sp = await searchParams;
   const actor = await getActor();
@@ -213,9 +213,6 @@ export default async function Review({
     (r) => r.status === 'open' || r.status === 'forwarded',
   ).length;
 
-  // Clean notice message (User Request: "Remove done in reviewer console")
-  const showNotice = sp.msg && !/^done\.?$/i.test(sp.msg.trim());
-
   return (
     <div className="wrap page review-console-page">
       <PageSheet
@@ -234,11 +231,11 @@ export default async function Review({
           </form>
         }
       >
-        {/* Informative alert banner if present (and not "Done.") */}
-        {Boolean(showNotice) && (
-          <div className="rc-callout" role="status" style={{ marginBottom: 20 }}>
-            <Icon name="info" size={18} />
-            <span>{sp.msg}</span>
+        {/* Render error banner only if an explicit error is returned */}
+        {Boolean(sp.error) && (
+          <div className="rc-callout error" role="alert" style={{ marginBottom: 20, borderColor: '#fca5a5', background: '#fef2f2', color: '#991b1b' }}>
+            <Icon name="alertCircle" size={18} />
+            <span>{sp.error}</span>
           </div>
         )}
 
@@ -253,33 +250,35 @@ export default async function Review({
           </div>
         )}
 
-        {/* Top Overview Stats Cards */}
+        {/* Top Overview Stats Cards — Large Bold Metrics & Centered Hierarchy */}
         <div className="rc-stats-row">
           <div className="rc-stat-card">
             <div className="rc-stat-icon">
-              <Icon name="file" size={22} />
+              <Icon name="file" size={24} />
             </div>
             <div className="rc-stat-mid">
-              <span className="rc-stat-label">Open Reports</span>
               <span className="rc-stat-num">{flags.length}</span>
-            </div>
-            <div className="rc-stat-divider" />
-            <div className="rc-stat-text">
-              {flags.length === 0 ? 'No open reports.' : `${flags.length} open report(s)`}
+              <div className="rc-stat-details">
+                <span className="rc-stat-label">Open Reports</span>
+                <span className="rc-stat-text">
+                  {flags.length === 0 ? 'No open reports.' : `${flags.length} open report(s)`}
+                </span>
+              </div>
             </div>
           </div>
 
           <div className="rc-stat-card">
             <div className="rc-stat-icon">
-              <Icon name="users" size={22} />
+              <Icon name="users" size={24} />
             </div>
             <div className="rc-stat-mid">
-              <span className="rc-stat-label">Permission Requests</span>
               <span className="rc-stat-num">{openPermissionCount}</span>
-            </div>
-            <div className="rc-stat-divider" />
-            <div className="rc-stat-text">
-              {openPermissionCount === 0 ? 'No open requests at this time.' : `${openPermissionCount} open request(s)`}
+              <div className="rc-stat-details">
+                <span className="rc-stat-label">Permission Requests</span>
+                <span className="rc-stat-text">
+                  {openPermissionCount === 0 ? 'No open requests at this time.' : `${openPermissionCount} open request(s)`}
+                </span>
+              </div>
             </div>
           </div>
         </div>
