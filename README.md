@@ -42,8 +42,8 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 | Screen | Description |
 | --- | --- |
-| ![Home & Redesigned 3D Theyyam Stage](docs/screenshots/01-home-dark.png) | **Dark Theme Hero & Master Padippura Navbar:** Traditional Kerala entrance roof, razor-sharp typography, 3D Panchuruli Theyyam stage, and rising ember particles. |
 | ![Home & Kathakali Backwaters Stage](docs/screenshots/02-home-light.png) | **Light Theme Hero:** Daylit Kerala backwaters, Kathakali stage with animated eye tracking, floating Kasavu silk cloth, and warm nilavilakku lamp glow. |
+| ![Home & Redesigned 3D Theyyam Stage](docs/screenshots/01-home-dark.png) | **Dark Theme Hero & Master Padippura Navbar:** Traditional Kerala entrance roof, razor-sharp typography, 3D Panchuruli Theyyam stage, and rising ember particles. |
 | ![Live Registry Notifications](docs/screenshots/05-live-notifications.png) | **Live Registry Notifications Popover:** Interactive notification bell displaying real-time database updates for new publications, reviewer verifications, and steward grants. |
 | ![Cultural Passport](docs/screenshots/03-cultural-passport.png) | **Cultural Passport (`/r/[id]`):** Uncropped museum artwork mat, deterministic SVG identity seal, verifiable metadata tabs, and edge-rendered QR card. |
 | ![Interactive Reuse Studio](docs/screenshots/04-reuse-studio.png) | **Reuse Studio (`/reuse`):** Dual-layer mathematical permission engine with live verdict cards, one-click copyable credit formats, and request trigger. |
