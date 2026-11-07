@@ -7,12 +7,15 @@ import { Icon } from './Icons';
 import { TAGLINE } from '@/lib/copy';
 import { TABS, MORE } from './MobileChrome';
 import { InstallAppButton } from './PwaRegister';
+import { NotificationPopover, useNotifications } from './NotificationPopover';
 
 export function PadippuraNavbar() {
   const path = usePathname() || '/';
   const [open, setOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const { notifications, unreadCount, markAllAsRead } = useNotifications();
 
-  useEffect(() => { setOpen(false); }, [path]);
+  useEffect(() => { setOpen(false); setNotifOpen(false); }, [path]);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
@@ -118,9 +121,11 @@ export function PadippuraNavbar() {
             <button
               type="button"
               className="padippura-hotspot spot-bell"
-              aria-label="Notifications: 1 new update"
-              onClick={() => alert('Mudra Notification: 1 cultural work recently verified by community elders.')}
+              aria-label={`Notifications: ${unreadCount} new update${unreadCount === 1 ? '' : 's'}`}
+              aria-expanded={notifOpen}
+              onClick={() => setNotifOpen((o) => !o)}
             >
+              {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
               <span className="sr-only">Notifications</span>
             </button>
 
@@ -144,6 +149,17 @@ export function PadippuraNavbar() {
           </a>
           <div className="mobile-actions">
             <ThemeToggle />
+            <button
+              type="button"
+              className="icon-btn notif-mobile-btn"
+              aria-label={`Notifications: ${unreadCount} updates`}
+              aria-expanded={notifOpen}
+              onClick={() => setNotifOpen((o) => !o)}
+              style={{ position: 'relative' }}
+            >
+              <Icon name="bell" size={20} />
+              {unreadCount > 0 && <span className="notif-badge">{unreadCount}</span>}
+            </button>
             <button
               type="button"
               className="icon-btn menu-btn"
@@ -185,6 +201,15 @@ export function PadippuraNavbar() {
           aria-hidden="true"
         />
       )}
+
+      {/* Real Live Registry Notifications Popover */}
+      <NotificationPopover
+        isOpen={notifOpen}
+        onClose={() => setNotifOpen(false)}
+        notifications={notifications}
+        unreadCount={unreadCount}
+        onMarkAllAsRead={markAllAsRead}
+      />
 
       {/* Mobile Bottom Tab Bar: completely outside <header> so no containing block or backdrop-filter traps it! */}
       <nav className="bottom-nav" aria-label="Primary">
