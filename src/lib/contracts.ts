@@ -2,7 +2,7 @@ import type { Capability, CulturalState, LicenceId, Sensitivity } from './permis
 
 export type Status = 'pending' | 'published' | 'needs_changes' | 'removed';
 export type Basis = 'creator_submitted' | 'custodian_submitted' | 'compiled_from_public_sources';
-export type Role = 'reviewer' | 'admin';
+export type Role = 'author' | 'reviewer' | 'admin';
 export interface Actor { role: string; name: string }
 
 export interface CreditView { name: string; role: string; collective: boolean }

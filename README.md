@@ -367,3 +367,12 @@ npm run test:e2e
 </div>
 
 
+
+## Author access to `/submit`
+
+Only signed-in users with the `author` role can submit drafts.
+
+- `users.role` defaults to `author`; the public sign-up form (`/login?mode=signup`) always creates authors.
+- `/submit` is guarded twice: `src/middleware.ts` verifies the signed session and answers with a 307 to `/login?msg=Unauthorized`; the page and `createRecordAction` then re-read the role from the database (`src/lib/authz.ts`), so a demoted author loses access immediately.
+- Reviewers and admins use `/review` and are not authors. To let them submit too, add their roles to `SUBMIT_ROLES` in `src/lib/authorRoles.ts`.
+- Databases created before this change keep their old `role` column without a default (SQLite cannot alter a default in place). Sign-up sets `author` explicitly, so this has no effect on behaviour.

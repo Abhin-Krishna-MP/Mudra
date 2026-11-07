@@ -43,3 +43,11 @@ export function readSession(token: string | undefined, secret: string, now = Dat
     return d.exp > now ? d : null;
   } catch { return null; }
 }
+
+export { SUBMIT_ROLES, canSubmit } from './authorRoles';
+
+/** Only same-site relative paths may be used as a post-login destination (blocks open redirects like //evil.com). */
+export function safeNext(raw: unknown, fallback: string): string {
+  const v = typeof raw === 'string' ? raw : '';
+  return v.startsWith('/') && !v.startsWith('//') && !v.includes('\\') && !/[\r\n]/.test(v) ? v : fallback;
+}

@@ -50,7 +50,7 @@ export const SCHEMA = [
 
   `CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
-    role TEXT NOT NULL, password_hash TEXT NOT NULL
+    role TEXT NOT NULL DEFAULT 'author', password_hash TEXT NOT NULL
   )`,
 
   `CREATE INDEX IF NOT EXISTS idx_credits_record ON credits(record_id)`,

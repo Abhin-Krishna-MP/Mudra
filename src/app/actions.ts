@@ -6,7 +6,8 @@ import { createRecord, submitFlag, reviewAction, type CreateInput, type FlagInpu
 import { processImage } from '@/lib/imagehash';
 import { storeUpload } from '@/lib/storage';
 import { signingKey } from '@/lib/signing';
-import { AuthError, checkPassword } from '@/lib/auth';
+import { AuthError, checkPassword, hashPassword, canSubmit, safeNext } from '@/lib/auth';
+import { getSubmitter, UNAUTHORIZED_URL } from '@/lib/authz';
 import { getActor, startSession, endSession } from '@/lib/session';
 import type { ActionResult } from '@/lib/contracts';
 import type { Capability, CulturalState } from '@/lib/permissions';
@@ -16,6 +17,9 @@ const str = (f: FormData, k: string) => String(f.get(k) ?? '');
 
 /* ---------------------------------------------------------------- submit */
 export async function createRecordAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+  // Server actions are public POST endpoints, so the author check must be repeated here, not just on the page.
+  const submitter = await getSubmitter();
+  if (!submitter) redirect(UNAUTHORIZED_URL);
   const db = await getDb();
   const file = f.get('image');
   let asset: CreateInput['asset'] | undefined;
@@ -39,7 +43,7 @@ export async function createRecordAction(_prev: ActionResult | null, f: FormData
     permissions: { share: perm('share'), commercial: perm('commercial'), adapt: perm('adapt'), ai_training: perm('ai_training') } as Record<Capability, CulturalState>,
     credits, asset: asset as CreateInput['asset'], honeypot: str(f, 'website'),
   };
-  const res = await createRecord(db, input, { role: 'public', name: 'Submitter' }, { key: signingKey() });
+  const res = await createRecord(db, input, { role: 'author', name: submitter.name }, { key: signingKey() });
   if (!res.ok) return res;
   redirect(`/submit?done=${encodeURIComponent(res.id!)}`);
 }
@@ -68,9 +72,26 @@ export async function loginAction(_prev: ActionResult | null, f: FormData): Prom
     return { ok: false, error: 'Email or password is not right.' };
   }
   await startSession({ id: Number(u.id), name: u.name, role: u.role });
-  redirect('/review');
+  redirect(safeNext(str(f, 'next'), canSubmit(u.role) ? '/submit' : '/review'));
 }
-export async function logoutAction() { await endSession(); redirect('/review'); }
+
+/** Public sign-up. Always creates an `author` (the role is never read from the form). */
+export async function signupAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+  const name = str(f, 'name').trim();
+  const email = str(f, 'email').trim().toLowerCase();
+  const password = str(f, 'password');
+  if (name.length < 2 || name.length > 80) return { ok: false, error: 'Enter your name (2 to 80 characters).' };
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 254) return { ok: false, error: 'Enter a valid email address.' };
+  if (password.length < 10) return { ok: false, error: 'Password must be at least 10 characters.' };
+  const db = await getDb();
+  if ((await db.execute('SELECT 1 FROM users WHERE email = ?', [email])).rows.length) return { ok: false, error: 'An account with this email already exists. Sign in instead.' };
+  await db.execute('INSERT INTO users (email, name, role, password_hash) VALUES (?, ?, ?, ?)', [email, name, 'author', hashPassword(password)]);
+  const u = (await db.execute('SELECT id FROM users WHERE email = ?', [email])).rows[0];
+  await startSession({ id: Number(u.id), name, role: 'author' });
+  redirect(safeNext(str(f, 'next'), '/submit'));
+}
+
+export async function logoutAction(f?: FormData) { await endSession(); redirect(f ? safeNext(f.get('next'), '/review') : '/review'); }
 
 export async function reviewFormAction(f: FormData) {
   const recordId = str(f, 'recordId');
