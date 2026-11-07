@@ -50,18 +50,26 @@ export default function RequestsSection({ requests, stewards = [] }: Props) {
   const stalledThreads = groupThreads(stalledReqs);
 
   return (
-    <section aria-labelledby="reqs-heading" style={{ marginTop: 12 }}>
-      {(openReqs.length > 0 || stalledReqs.length > 0) && (
-        <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 12 }}>
-          <h2 id="reqs-heading" className="rc-section-heading" style={{ margin: 0 }}>
-            <Icon name="users" size={22} />
-            <span>Ask First Requests ({openReqs.length} open{stalledReqs.length > 0 ? `, ${stalledReqs.length} stalled` : ''})</span>
-          </h2>
+    <section className="rc-section-block" aria-labelledby="reqs-heading">
+      <div className="rc-section-header-wrap">
+        <h2 id="reqs-heading" className="rc-section-heading" style={{ margin: 0 }}>
+          <Icon name="users" size={22} />
+          <span>Ask First Requests ({openReqs.length} open{stalledReqs.length > 0 ? `, ${stalledReqs.length} stalled` : ''})</span>
+        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           {(openReqs.length > openThreads.length || stalledReqs.length > stalledThreads.length) && (
             <span className="chip" style={{ fontSize: '0.8rem', background: 'rgba(232, 120, 42, 0.15)', borderColor: 'rgba(232, 120, 42, 0.35)' }}>
-              <Icon name="layers" size={13} /> Duplicate requests consolidated into threads
+              <Icon name="layers" size={13} /> Threads consolidated
             </span>
           )}
+          <span className="rc-section-tag requests">Ask First System</span>
+        </div>
+      </div>
+
+      {openReqs.length === 0 && stalledReqs.length === 0 && (
+        <div className="rc-empty-card" style={{ marginTop: 12 }}>
+          <Icon name="checkCircle" size={18} />
+          <span>No open or stalled permission requests at this time.</span>
         </div>
       )}
 
