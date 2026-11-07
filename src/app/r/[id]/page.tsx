@@ -78,12 +78,31 @@ export default async function Passport({ params, searchParams }: { params: Promi
           {v.submissionBasis === 'compiled_from_public_sources' && <p className="notice">{COMPILED_NOTE}</p>}
         </section>
         <section className="pp-card-in pp-glance-card" aria-labelledby="glance-h">
-          <h2 id="glance-h">At a Glance <Icon name="info" size={16} className="pp-i" /></h2>
-          <dl>
-            {period && <div><dt><Icon name="calendar" size={18} />Period</dt><dd>{period}</dd></div>}
-            <div><dt><Icon name="users" size={18} />Type</dt><dd>{typeSingular(v.workType)}</dd></div>
-            {v.language && <div><dt><Icon name="book" size={18} />Language</dt><dd>{v.language}</dd></div>}
-            <div><dt><Icon name="pin" size={18} />Region</dt><dd>{v.region}</dd></div>
+          <h2 id="glance-h">
+            <span>At a Glance</span>
+            <Icon name="info" size={18} className="pp-i" />
+          </h2>
+          <dl className="pp-glance-list">
+            {period && (
+              <div className="pp-glance-item">
+                <dt><Icon name="calendar" size={18} />Period</dt>
+                <dd>{period}</dd>
+              </div>
+            )}
+            <div className="pp-glance-item">
+              <dt><Icon name="users" size={18} />Type</dt>
+              <dd>{typeSingular(v.workType)}</dd>
+            </div>
+            {v.language && (
+              <div className="pp-glance-item">
+                <dt><Icon name="book" size={18} />Language</dt>
+                <dd>{v.language}</dd>
+              </div>
+            )}
+            <div className="pp-glance-item">
+              <dt><Icon name="pin" size={18} />Region</dt>
+              <dd>{v.region}</dd>
+            </div>
           </dl>
         </section>
       </div>

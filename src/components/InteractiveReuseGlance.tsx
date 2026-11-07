@@ -134,7 +134,7 @@ export function InteractiveReuseGlance({
     <div className="reuse-glance-interactive-container" id="studio-h">
       {/* ---------- Status Badges Bar (Reuse at a Glance) ---------- */}
       <div className="pp-glance" role="group" aria-label="Reuse at a glance status">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        <div className="pp-glance-left">
           <h2>
             <span>Reuse at a Glance</span>
             <button
@@ -143,12 +143,13 @@ export function InteractiveReuseGlance({
               aria-label="Explain how cultural reuse is decided"
               aria-expanded={isOpen}
               onClick={() => setIsOpen(!isOpen)}
-              style={{ background: 'transparent', border: 0, padding: 0, cursor: 'pointer' }}
+              style={{ background: 'transparent', border: 0, padding: 0, cursor: 'pointer', display: 'inline-flex' }}
             >
-              <Icon name="info" size={16} />
+              <Icon name="info" size={17} />
             </button>
           </h2>
-          <span className="badge-hint hide-sm" style={{ fontSize: '.78rem', color: 'var(--pp-muted)', fontStyle: 'italic' }}>
+          <span className="pp-glance-sep hide-sm" aria-hidden="true">|</span>
+          <span className="badge-hint hide-sm">
             (Click any badge to check rules or request consent)
           </span>
         </div>

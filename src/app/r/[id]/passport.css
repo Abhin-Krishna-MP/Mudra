@@ -142,18 +142,24 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 20px;
   margin-top: 24px;
-  padding: 14px 20px;
-  border-radius: 16px;
+  padding: 16px 24px;
+  border-radius: 18px;
   border: 1px solid var(--pp-edge);
   background: rgba(24, 15, 11, .78);
   box-shadow: 0 4px 18px rgba(0, 0, 0, .2);
 }
 :root:not([data-theme='dark']) .pp-glance {
-  background: rgba(255, 255, 255, .72);
+  background: rgba(255, 255, 255, .75);
   border-color: rgba(138, 115, 85, .35);
   box-shadow: 0 4px 16px rgba(70, 36, 12, .06);
+}
+.pp-glance-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 .pp-glance h2 {
   display: inline-flex;
@@ -161,29 +167,43 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   gap: 8px;
   margin: 0;
   flex: none;
-  font: 700 1.15rem var(--font-display, Georgia, serif);
+  font: 700 1.35rem var(--font-display, Georgia, serif);
   color: var(--pp-ink);
+  white-space: nowrap;
+}
+.pp-glance-sep {
+  color: var(--pp-edge);
+  font-weight: 300;
+  font-size: 1.2rem;
+  opacity: .55;
+  user-select: none;
+}
+:root:not([data-theme='dark']) .pp-glance-sep {
+  color: rgba(138, 115, 85, .55);
+}
+.badge-hint {
+  font-size: .88rem;
+  color: var(--pp-muted);
+  font-style: italic;
   white-space: nowrap;
 }
 .pp-info-ico { display: inline-grid; color: var(--pp-accent); }
 .reuse-pills {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  gap: 8px 12px;
   align-items: center;
-  gap: 8px 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
 }
 .rpill {
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  min-height: 34px;
-  padding: 5px 14px;
+  gap: 8px;
+  min-height: 36px;
+  padding: 6px 16px;
   border-radius: 999px;
-  font: 600 .86rem/1.2 var(--font-ui, system-ui);
+  font: 600 .88rem/1.2 var(--font-ui, system-ui);
   border: 1px solid transparent;
+  white-space: nowrap;
 }
 .rpill-ico { display: inline-grid; place-items: center; width: 16px; height: 16px; font-weight: 800; }
 .rpill.ok { background: var(--pp-ok-bg); color: var(--pp-ok-ink); border-color: rgba(29, 90, 42, .25); }
@@ -370,11 +390,88 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
 .pp-card-in h2 { display: flex; align-items: center; gap: 8px; margin: 0 0 12px; font: 700 1.5rem var(--font-display, Georgia, serif); color: var(--pp-ink); }
 .pp-card-in .pp-i { color: var(--pp-accent); }
 .pp-about p { margin: 0 0 10px; font: 400 1.04rem/1.65 var(--font-ui, system-ui); color: var(--pp-ink); }
-.pp-glance-card dl { display: grid; gap: 14px; margin: 0; }
-.pp-glance-card dl > div { display: grid; grid-template-columns: 120px 1fr; gap: 12px; align-items: start; }
-.pp-glance-card dt { display: flex; align-items: center; gap: 10px; font: 600 1rem var(--font-ui, system-ui); color: var(--pp-ink); }
-.pp-glance-card dt .icon { color: var(--pp-accent); }
-.pp-glance-card dd { margin: 0; font: 400 1rem/1.4 var(--font-ui, system-ui); color: var(--pp-ink); opacity: .9; }
+
+/* ---------- At a Glance Card ---------- */
+.pp-glance-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 24px;
+}
+.pp-glance-card h2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 0 22px;
+  font: 700 1.65rem var(--font-display, Georgia, serif);
+  color: var(--pp-ink);
+  text-align: center;
+}
+.pp-glance-card .pp-i {
+  color: var(--pp-accent);
+}
+.pp-glance-card .pp-glance-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 0;
+}
+.pp-glance-card .pp-glance-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 16px 20px;
+  border-radius: 14px;
+  background: rgba(232, 147, 90, .09);
+  border: 1px solid var(--pp-edge);
+  gap: 6px;
+  box-sizing: border-box;
+  transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+.pp-glance-card .pp-glance-item:hover {
+  transform: translateY(-2px);
+  border-color: var(--pp-accent);
+}
+:root:not([data-theme='dark']) .pp-glance-card .pp-glance-item {
+  background: rgba(255, 255, 255, .82);
+  border-color: rgba(138, 115, 85, .32);
+  box-shadow: 0 3px 12px rgba(70, 36, 12, .05);
+}
+:root:not([data-theme='dark']) .pp-glance-card .pp-glance-item:hover {
+  box-shadow: 0 6px 18px rgba(140, 44, 37, .1);
+}
+.pp-glance-card dt {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font: 700 .98rem var(--font-ui, system-ui);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--pp-accent);
+  margin: 0;
+}
+.pp-glance-card dt .icon {
+  color: var(--pp-accent);
+}
+.pp-glance-card dd {
+  margin: 0;
+  font: 700 1.45rem/1.25 var(--font-ui, system-ui);
+  color: var(--pp-ink);
+  text-align: center;
+  letter-spacing: -.01em;
+}
+:root:not([data-theme='dark']) .pp-glance-card dd {
+  color: #2b1408;
+}
 
 .pp-media { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin: 0; padding: 0; list-style: none; }
 .pp-media a { display: block; aspect-ratio: 4 / 3; border-radius: 12px; overflow: hidden; border: 1px solid var(--pp-edge); }
@@ -412,16 +509,13 @@ html:root:root body:has(.passport-page) .site-header.padippura-header { backgrou
   .pp-glance { padding: 14px; }
   .reuse-pills { gap: 8px; }
   .rpill { font-size: .86rem; padding: 6px 12px; }
-  .pp-actions-bar { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
-  .pp-actions-main { display: grid; grid-template-columns: 1fr; gap: 10px; width: 100%; }
-  .pp-actions-main .btn { width: 100%; min-height: 46px; padding: 0 14px; white-space: normal; text-align: center; }
-  .pp-save-wrap { width: 100%; }
-  .pp-save-wrap .tile-save { width: 100%; border-radius: 999px; min-height: 44px; }
+  .pp-actions-bar { margin-top: 14px; width: 100%; }
+  .pp-actions-main { display: grid; grid-template-columns: 1fr; gap: 8px; width: 100%; }
+  .pp-actions-main .btn { width: 100%; min-height: 44px; padding: 0 14px; white-space: normal; text-align: center; }
   .pp-body { padding: 0 14px 22px; }
   .passport-page .tablist { margin: 4px -14px 0; padding: 0 14px; }
   .passport-page .tablist button { padding: 0 16px; min-height: 48px; font-size: .95rem; }
   .pp-card-in { padding: 18px 16px; border-radius: 16px; }
   .pp-card-in h2 { font-size: 1.3rem; }
-  .pp-glance-card dl > div { grid-template-columns: 104px 1fr; }
   .pp-media { grid-template-columns: repeat(2, 1fr); }
 }
