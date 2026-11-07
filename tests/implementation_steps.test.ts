@@ -157,7 +157,7 @@ test('Step 3: Steward KYC Verification - Private storage and Admin approval', as
   assert.equal(updatedUser.category, 'ritual');
 });
 
-test('Step 4: AI Shield (TDMRep Protocol) - Static manifest and header injection on /uploads/', () => {
+test('Step 4: AI Shield (TDMRep Protocol) - Static manifest and header injection on /uploads/', async () => {
   // 1. Static manifest check
   const manifestPath = join(process.cwd(), 'public', '.well-known', 'tdmrep.json');
   assert.equal(existsSync(manifestPath), true, 'Static manifest /.well-known/tdmrep.json must exist');
@@ -166,7 +166,7 @@ test('Step 4: AI Shield (TDMRep Protocol) - Static manifest and header injection
 
   // 2. Middleware interception on /uploads/
   const req = new NextRequest('http://localhost:3000/uploads/test-image.jpg');
-  const res = middleware(req);
+  const res = await middleware(req);
   assert.equal(res.headers.get('tdm-reservation'), '1', 'Server must inject tdm-reservation: 1 on image requests');
 });
 

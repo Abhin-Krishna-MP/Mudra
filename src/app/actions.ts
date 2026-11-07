@@ -10,7 +10,7 @@ import { signingKey } from '@/lib/signing';
 import { AuthError, checkPassword, hashPassword, canSubmit, safeNext } from '@/lib/auth';
 import { getSubmitter, UNAUTHORIZED_URL } from '@/lib/authz';
 import { getActor, startSession, endSession } from '@/lib/session';
-import type { ActionResult } from '@/lib/contracts';
+import type { ActionResult, Actor } from '@/lib/contracts';
 import type { Capability, CulturalState } from '@/lib/permissions';
 import { createPermissionRequest, decideRequest, revokeGrant, assignSteward, type RequestInput, type DecisionInput } from '@/lib/repo-grants';
 
@@ -21,7 +21,7 @@ export async function createRecordAction(_prev: ActionResult | null, f: FormData
   // Server actions are public POST endpoints, so the author check must be repeated here
   const submitter = await getSubmitter();
   if (!submitter) redirect(UNAUTHORIZED_URL);
-  const actor = await getActor();
+  const actor: Actor = (await getActor()) ?? { role: 'author', name: submitter.name, id: submitter.id };
   const db = await getDb();
   const draftId = str(f, 'draftId');
   const file = f.get('image');
