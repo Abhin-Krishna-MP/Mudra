@@ -167,7 +167,7 @@ export default function RequestPermissionForm({ recordId, recordTitle, useKey, h
         <input type="text" name="website" style={{ display: 'none' }} tabIndex={-1} autoComplete="off" />
 
         <label htmlFor="req-name">Your name <span aria-hidden>*</span></label>
-        <input id="req-name" name="requesterName" required autoComplete="name" />
+        <input id="req-name" name="requesterName" required type="text" autoComplete="name" placeholder="Your full name" />
 
         <label htmlFor="req-contact">Your contact (email or phone) <span aria-hidden>*</span></label>
         <input id="req-contact" name="requesterContact" required type="text"
