@@ -93,17 +93,20 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ---
 
-## 5. Technology Stack
+## 6. Technology Stack
 
-| Domain | Technologies |
+| Layer | Technologies |
 | --- | --- |
-| **Framework & Engine** | Next.js 15 (App Router), React 19, TypeScript (Strict) |
-| **Database & Storage** | LibSQL / Turso Cloud (Edge replicated) + Local SQLite (`data/mudra.db`), Vercel Blob |
-| **PWA & Offline** | Web App Manifest, Service Worker (Cache-First + Network-First Fallback), Touch Icons |
-| **Cryptography** | Node.js `crypto` (SHA-256, Ed25519, scrypt, HMAC-SHA256), RFC 8785 `canonicalize` |
-| **Imaging & Assets** | `sharp` (dHash, WebP optimization), `@vercel/og` (1200×630 dynamic cards), `qrcode` |
-| **Styling & Fonts** | Pure Vanilla CSS (CSS Custom Properties, GPU compositor layers), Playfair Display, Inter, Noto Serif Malayalam |
-| **Testing & Quality** | `node:test` (34 tests), Playwright (E2E journeys), WCAG AA contrast audit (`contrast.mjs`) |
+| **Framework** | ![Next.js](https://img.shields.io/badge/Next.js_15-000000?style=flat-square&logo=nextdotjs&logoColor=white) ![React](https://img.shields.io/badge/React_19-20232A?style=flat-square&logo=react&logoColor=61DAFB) ![TypeScript](https://img.shields.io/badge/TypeScript_Strict-3178C6?style=flat-square&logo=typescript&logoColor=white) |
+| **Runtime** | ![Node.js](https://img.shields.io/badge/Node.js_22.5+-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white) |
+| **Database & Storage** | ![Turso](https://img.shields.io/badge/Turso_LibSQL-4FF8D2?style=flat-square&logo=turso&logoColor=black) ![SQLite](https://img.shields.io/badge/SQLite_local-003B57?style=flat-square&logo=sqlite&logoColor=white) ![Vercel Blob](https://img.shields.io/badge/Vercel_Blob-000000?style=flat-square&logo=vercel&logoColor=white) |
+| **Cryptography** | ![Ed25519](https://img.shields.io/badge/Ed25519-2563eb?style=flat-square&logo=gnuprivacyguard&logoColor=white) ![SHA-256](https://img.shields.io/badge/SHA--256-7c3aed?style=flat-square) ![scrypt](https://img.shields.io/badge/scrypt-db2777?style=flat-square) ![HMAC](https://img.shields.io/badge/HMAC--SHA256-ea580c?style=flat-square) ![RFC 8785](https://img.shields.io/badge/RFC_8785-475569?style=flat-square) |
+| **Imaging & Assets** | ![sharp](https://img.shields.io/badge/sharp_dHash_·_WebP-99CC00?style=flat-square) ![OG](https://img.shields.io/badge/@vercel/og_1200×630-000000?style=flat-square&logo=vercel&logoColor=white) ![QR](https://img.shields.io/badge/qrcode-1f2937?style=flat-square) |
+| **Web Standards** | ![PWA](https://img.shields.io/badge/PWA_Offline-5A0FC8?style=flat-square&logo=pwa&logoColor=white) ![W3C](https://img.shields.io/badge/W3C_TDMRep-005A9C?style=flat-square&logo=w3c&logoColor=white) ![schema.org](https://img.shields.io/badge/schema.org_JSON--LD-0D6EFD?style=flat-square) |
+| **Styling & Fonts** | ![CSS](https://img.shields.io/badge/Vanilla_CSS-1572B6?style=flat-square&logo=w3c&logoColor=white) ![Google Fonts](https://img.shields.io/badge/Playfair_·_Inter_·_Noto_Serif_Malayalam-4285F4?style=flat-square&logo=googlefonts&logoColor=white) |
+| **Testing & Quality** | ![node:test](https://img.shields.io/badge/node:test_34-5FA04E?style=flat-square&logo=nodedotjs&logoColor=white) ![Playwright](https://img.shields.io/badge/Playwright_E2E-2EAD33?style=flat-square&logo=playwright&logoColor=white) ![WCAG](https://img.shields.io/badge/WCAG_AA_Contrast-10b981?style=flat-square) |
+| **Deployment** | ![Vercel](https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white) ![AWS](https://img.shields.io/badge/Turso_on_AWS_ap--south--1-FF9900?style=flat-square&logo=amazonwebservices&logoColor=white) |
+
 
 ---
 
