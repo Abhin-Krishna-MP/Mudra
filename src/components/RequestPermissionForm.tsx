@@ -1,7 +1,9 @@
 'use client';
-import { useActionState, useState } from 'react';
+import { useActionState, useState, useEffect, useRef } from 'react';
 import { requestPermissionAction } from '@/app/actions';
 import { LotusLoader } from '@/components/LotusLoader';
+import { Icon } from '@/components/Icons';
+import { saveStoredRequest } from '@/lib/userRequests';
 import type { ActionResult } from '@/lib/contracts';
 
 interface Props {
@@ -10,13 +12,95 @@ interface Props {
   useKey: string;
   hasSteward: boolean;
   onCancel?: () => void;
+  onSuccess?: (info: { token: string; requestId: string }) => void;
 }
 
-export default function RequestPermissionForm({ recordId, recordTitle, useKey, hasSteward, onCancel }: Props) {
-  const [state, formAction, pending] = useActionState<ActionResult | null, FormData>(requestPermissionAction, null);
+export default function RequestPermissionForm({ recordId, recordTitle, useKey, hasSteward, onCancel, onSuccess }: Props) {
+  const [state, formAction, pending] = useActionState<
+    (ActionResult & { token?: string; requestId?: string }) | null,
+    FormData
+  >(requestPermissionAction, null);
+  const [showAnother, setShowAnother] = useState(false);
+  const formContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (state?.ok && state.token) {
+      // 1. Save to local storage and cookies so the Request Status tab has it immediately
+      saveStoredRequest({
+        token: state.token,
+        requestId: state.requestId || '',
+        recordId,
+        recordTitle,
+        useKey,
+        createdAt: new Date().toISOString(),
+      });
+
+      // 2. Dispatch event to wake up RequestStatusTab
+      window.dispatchEvent(
+        new CustomEvent('mudra:request-submitted', {
+          detail: { token: state.token, requestId: state.requestId, recordId, useKey },
+        }),
+      );
+
+      // 3. Close parent <details> if inside one
+      const detailsParent = formContainerRef.current?.closest('details');
+      if (detailsParent) {
+        detailsParent.open = false;
+      }
+
+      // 4. Call onSuccess callback if provided
+      if (onSuccess && state.requestId) {
+        onSuccess({ token: state.token, requestId: state.requestId });
+      }
+    }
+  }, [state, recordId, recordTitle, useKey, onSuccess]);
+
+  if (state?.ok && !showAnother) {
+    return (
+      <div ref={formContainerRef} className="panel ui req-success-card" style={{ marginTop: 18, border: '1.5px solid rgba(22, 101, 52, .35)', background: 'var(--pp-ok-bg, #eef9ee)', padding: '20px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, color: 'var(--pp-ok-ink, #14532d)' }}>
+          <Icon name="checkCircle" size={24} />
+          <h3 style={{ margin: 0, fontSize: '1.2rem', color: 'var(--pp-ok-ink, #14532d)' }}>Request Submitted — Form Closed</h3>
+        </div>
+        <p style={{ margin: '8px 0 16px', color: 'var(--pp-ok-ink, #14532d)', fontSize: '.95rem', lineHeight: 1.5 }}>
+          Your permission request for <strong>{recordTitle}</strong> ({useKey.replace(/_/g, ' ')}) has been submitted. The form is now closed, and you can monitor the status anytime.
+        </p>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
+          <button
+            type="button"
+            className="btn"
+            style={{ minHeight: 42, padding: '0 20px', background: 'var(--pp-ok-ink, #14532d)', color: '#fff' }}
+            onClick={() => {
+              window.dispatchEvent(new CustomEvent('mudra:select-tab', { detail: { tabId: 'request-status' } }));
+              document.querySelector('.tablist')?.scrollIntoView({ behavior: 'smooth' });
+            }}
+          >
+            <Icon name="clock" size={16} /> View Status in Tab →
+          </button>
+          <a
+            href={`/request/${state.token}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn secondary"
+            style={{ minHeight: 42, padding: '0 18px' }}
+          >
+            Open Private Tracking Link ↗
+          </a>
+          <button
+            type="button"
+            className="btn secondary"
+            style={{ minHeight: 42, padding: '0 14px', marginLeft: 'auto' }}
+            onClick={() => setShowAnother(true)}
+          >
+            Submit another request
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="panel ui" style={{ marginTop: 20 }}>
+    <div ref={formContainerRef} className="panel ui" style={{ marginTop: 20 }}>
       <h3 style={{ marginTop: 0 }}>Request permission to use this work</h3>
       <p className="hint">
         {hasSteward
@@ -61,7 +145,7 @@ export default function RequestPermissionForm({ recordId, recordTitle, useKey, h
       </form>
 
       <p className="hint" style={{ marginTop: 16 }}>
-        A grant is a recorded statement, not a legal contract. After submitting, you will receive a private link to track the status of your request.
+        A grant is a recorded statement, not a legal contract. After submitting, the form will close and you can monitor the status in the <strong>Request Status</strong> tab.
       </p>
     </div>
   );

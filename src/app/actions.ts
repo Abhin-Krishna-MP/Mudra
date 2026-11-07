@@ -263,7 +263,7 @@ export async function rejectStewardAction(f: FormData): Promise<void> {
 }
 
 /* ------------------------------------------------- permission requests */
-export async function requestPermissionAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+export async function requestPermissionAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult & { token?: string; requestId?: string; recordId?: string; useKey?: string }> {
   const recordId = String(f.get('recordId') ?? '');
   const input: RequestInput = {
     recordId,
@@ -276,7 +276,7 @@ export async function requestPermissionAction(_prev: ActionResult | null, f: For
   };
   const res = await createPermissionRequest(await getDb(), input, signingKey());
   if (!res.ok) return res;
-  redirect(`/request/${res.token}?sent=1`);
+  return { ok: true, token: res.token, requestId: res.requestId, recordId, useKey: input.useKey };
 }
 
 export async function grantDecisionAction(f: FormData): Promise<void> {
