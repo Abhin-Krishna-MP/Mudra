@@ -183,20 +183,7 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
 
 ```mermaid
 %%{init: {
-  "theme": "base",
-  "themeVariables": {
-    "background": "#0D1117",
-    "primaryColor": "#202124",
-    "primaryTextColor": "#E5E7EB",
-    "primaryBorderColor": "#59636E",
-    "lineColor": "#B8C0CA",
-    "secondaryColor": "#25282D",
-    "tertiaryColor": "#1B1F24",
-    "clusterBkg": "#11151B",
-    "clusterBorder": "#59636E",
-    "fontFamily": "Inter, Segoe UI, sans-serif",
-    "fontSize": "14px"
-  },
+  "theme": "neutral",
   "flowchart": {
     "curve": "step",
     "nodeSpacing": 42,
@@ -205,7 +192,8 @@ $$\mathbf{Check} \quad\longrightarrow\quad \mathbf{Ask} \quad\longrightarrow\qua
     "htmlLabels": true,
     "useMaxWidth": true,
     "wrappingWidth": 180
-  }
+  },
+  "fontFamily": "Inter, Segoe UI, sans-serif"
 }}%%
 
 flowchart TB
@@ -284,10 +272,10 @@ flowchart TB
     REALTIME -.->|"Live Updates"| STUDIO
 
     %% NODE STYLING
-    classDef client fill:#202124,stroke:#68717D,color:#E5E7EB,stroke-width:1.2px
-    classDef engine fill:#25282D,stroke:#87919D,color:#F1F3F5,stroke-width:1.3px
-    classDef storage fill:#202124,stroke:#89939F,color:#E5E7EB,stroke-width:1.5px
-    classDef cloud fill:#292D32,stroke:#B0B8C2,color:#FFFFFF,stroke-width:1.8px
+    classDef client stroke-width:1.2px
+    classDef engine stroke-width:1.3px
+    classDef storage stroke-width:1.5px
+    classDef cloud stroke-width:1.8px
 
     class UI,CULTURE,STUDIO,IDENTITY client
     class API,CORE,CRYPTO,MEDIA,STANDARDS,REALTIME engine
@@ -295,11 +283,11 @@ flowchart TB
     class TURSO,SQLITE cloud
 
     %% SUBGRAPH STYLING
-    style CLIENT fill:#0D1117,stroke:#59636E,stroke-width:1.5px,color:#E5E7EB
-    style APPLICATION fill:#0D1117,stroke:#59636E,stroke-width:1.5px,color:#E5E7EB
-    style STORAGE fill:#0D1117,stroke:#59636E,stroke-width:1.5px,color:#E5E7EB
+    style CLIENT fill:transparent
+    style APPLICATION fill:transparent
+    style STORAGE fill:transparent
 
-    linkStyle default stroke:#AEB7C2,stroke-width:1.25px
+    linkStyle default stroke-width:1.25px
 ```
 
 ---
@@ -311,7 +299,6 @@ flowchart TB
 </div>
 
 ---
-
 
 ## 7. Installation & Quickstart
 
