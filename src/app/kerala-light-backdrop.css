@@ -16,32 +16,45 @@
 }
 
 /* ---------- The fixed artwork layer (same technique as the dark one) ---------- */
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page)) {
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap)) {
   background-color: #0b4a3f;
   background-image: none;
   background-attachment: scroll;
 }
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page))::before {
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap))::before {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   height: 100vh; height: 100lvh;
   background: var(--cbl-bg) center / cover no-repeat, #0b4a3f;
 }
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page))::after {
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap))::after {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   height: 100vh; height: 100lvh;
   background: radial-gradient(120% 90% at 50% 45%, transparent 65%, rgba(2, 20, 16, .3) 100%);
 }
 @media (max-width: 760px) {
-  html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page))::before {
+  html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap))::before {
     background: var(--cbl-bg-mobile) center bottom / cover no-repeat, #0b4a3f;
   }
 }
 
-/* navbar floats over the artwork on all of these pages */
-html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page)) .site-header.padippura-header {
-  background: transparent !important; border: 0 !important; box-shadow: none !important; padding-bottom: 0 !important;
+/* navbar floats over the artwork unconditionally on all pages, loading states, and tab switches */
+html:root:root:not([data-theme='dark']) .site-header.padippura-header,
+html:root:root:not([data-theme='dark']) body .site-header.padippura-header,
+html:root:root:not([data-theme='dark']) body:not(:has(.hero)) .site-header.padippura-header,
+html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page, .loading-page-wrap)) .site-header.padippura-header {
+  background: transparent !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  padding-bottom: 0 !important;
 }
-html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page)) .site-header::after { display: none; }
+html:root:root:not([data-theme='dark']) .site-header.padippura-header::before,
+html:root:root:not([data-theme='dark']) .site-header.padippura-header::after,
+html:root:root:not([data-theme='dark']) body .site-header.padippura-header::after {
+  display: none !important;
+  content: none !important;
+}
 
 /* ---------- About: its gold wave strip is not needed, the artwork has a shoreline ---------- */
 :root:not([data-theme='dark']) body:has(.about-page) main::after { display: none; }
