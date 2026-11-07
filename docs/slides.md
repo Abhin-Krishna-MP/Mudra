@@ -1,4 +1,4 @@
-# Mudra — Presentation Deck (10 Slides)
+# Mudra — Presentation Deck (Executive Technical Overview)
 > **Event:** ART//CODE 2026 · **Problem Statement:** PS-03 "Credit the Culture"  
 > **Team:** Abhin Krishna M P & Alin  
 > **Live Production:** `https://mudra-one-ivory.vercel.app`  
@@ -51,7 +51,17 @@
 
 ---
 
-## Slide 5: Move 1 — The Ask → Grant Consent Engine
+## Slide 5: Author Submissions, Steward KYC & Tag-Based Routing
+**Decentralized Community Governance with Verified Cultural Stewardship**
+
+- **Role-Based Author Boundary:** Public sign-up (`/login?mode=signup`) assigns the `author` role; `/submit` is intercepted by Edge Middleware and verified against the database.
+- **Specific Steward Routing (Tag Matching):** Inbound drafts are tagged with `region` and `category`; steward consoles (`/review`) strictly filter pending drafts matching the steward's assigned expertise.
+- **Steward KYC Verification (`/apply-steward` & `/admin`):** Authors submit identity documents to private storage (Supabase / Vercel Blob / serverless tmp); hidden admin dashboard evaluates credentials and elevates roles to `steward`.
+- **Asynchronous Revision Loop:** Stewards request specific edits via structured revision notes (`needs_revision`); authors review notes on `/author/dashboard` and one-click edit & resubmit back to `pending`.
+
+---
+
+## Slide 5b: Move 1 — The Ask → Grant Consent Engine
 **Cryptographically Verifiable Permission Without Central Authority**
 
 - **Structured 4-Field Request Form:** Requester submits scope, medium, duration, and private contact info (honeypot-protected and rate-limited).
@@ -62,10 +72,11 @@
 
 ---
 
-## Slide 6: Move 2 — Machine-Readable Layer for Platforms & Responsible AI
-**Standardized Protocols for Automated Ingestion & Consent Enforcement**
+## Slide 6: Move 2 — Machine Layer & Active AI Shield (W3C TDMRep)
+**Standardized Protocols for Automated Ingestion & Legal Opt-Out Enforcement**
 
-- **W3C TDMRep Opt-Out Signals:** Publishes dynamic `/.well-known/tdmrep.json` and `tdm-reservation: 1` HTTP asset headers for records where community AI training consent has not been granted.
+- **Active AI Shield (Edge Header Injection):** Edge Middleware intercepts all incoming requests to `/uploads/` and attaches `tdm-reservation: 1` HTTP response headers, preventing scrapers and training pipelines from harvesting imagery.
+- **Global Manifest (`/.well-known/tdmrep.json`):** Static machine-readable manifest legally reserving text and data mining rights under W3C standard and EU DSM Directive Art. 4.
 - **Hash-Only Platform Lookup API (`POST /api/v1/lookup`):** Platforms check batches of up to 50 SHA-256 and perceptual dHash digests without uploading user images.
 - **Signed Dataset Manifest (`GET /api/v1/manifest.json`):** Cryptographically signed snapshot of all registered cultural works, hashes, and AI stances for dataset auditors.
 - **Semantic Structured Data:** schema.org `CreativeWork` and `ImageObject` JSON-LD embedded on every passport page linking to licensing and reuse terms.

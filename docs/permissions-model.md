@@ -83,3 +83,40 @@ For automated systems and AI crawlers:
 The mathematical correctness of the permission engine is verified by exhaustive automated property tests (`tests/permissions.test.ts`):
 - Evaluates all $6\text{ uses} \times 6\text{ licences} \times 3^4\text{ cultural states} \times 2\text{ attribution options} \times 3\text{ sensitivities} = 17,496$ combinations.
 - Validates the core mathematical invariant: **No combination where cultural permission or file licence is negative can ever evaluate to `permitted`.**
+
+---
+
+## 7. Author Submissions & Cultural Steward Routing Specification
+
+To maintain cultural authenticity without central gatekeeping, Mudra separates submission from stewardship through a role-based, tag-routed architecture:
+
+```
+[ Author (/submit) ]
+      │  (Tag: Region + Category)
+      ▼
+[ Pending Draft ]
+      │  (Exact Match Filter)
+      ▼
+[ Verified Cultural Steward (/review) ]
+      ├── Approve  ──► Status: "approved" (Appends to SHA-256 Audit Chain)
+      ├── Revise   ──► Status: "needs_revision" (Saves revision_note -> Author Dashboard)
+      └── Deny     ──► Status: "removed"
+```
+
+### 1. Role-Based Access Control
+- Public sign-ups (`/login?mode=signup`) are automatically assigned the `author` role.
+- Submissions are restricted to verified authors; `/submit` is intercepted by Edge Middleware and verified in server actions against the active database state.
+
+### 2. Tag Matching & Steward Routing
+- Each submission requires a declared geographical `region` and cultural `category`.
+- When stewards access `/review`, pending drafts are filtered at the database level so stewards only review works within their cultural domain:
+  $$\text{Draft Filter: } \text{status} = \text{'pending'} \land \text{region} = \text{steward.region} \land \text{category} = \text{steward.category}$$
+
+### 3. Steward KYC Verification
+- Authors can apply to become verified stewards at `/apply-steward` by uploading identity documents.
+- Documents are saved in private, secure storage (never in public folders) and evaluated by admins on `/admin`.
+- Upon approval, the user's role is atomically updated to `steward` with their designated region and category.
+
+### 4. Asynchronous Feedback & Revision Loop
+- Rather than requiring real-time chat, stewards enter structured revision notes and set status to `needs_revision`.
+- The author sees the request on `/author/dashboard` and can reopen their draft at `/submit?edit=<id>`, make corrections, and resubmit directly back to `pending`.
