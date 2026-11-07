@@ -1,0 +1,170 @@
+/* Mudra Progressive Web App (PWA) Styling */
+
+.pwa-install-banner {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  max-width: 440px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, .55), 0 0 0 1px rgba(223, 183, 108, .28);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  animation: pwa-slide-up .35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pwa-slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Dark Theme Banner */
+:root[data-theme='dark'] .pwa-install-banner {
+  background: linear-gradient(135deg, rgba(3, 20, 16, .94) 0%, rgba(2, 14, 11, .96) 100%);
+  color: #f7eedf;
+}
+
+/* Light Theme Banner */
+:root:not([data-theme='dark']) .pwa-install-banner {
+  background: linear-gradient(135deg, rgba(255, 252, 245, .95) 0%, rgba(248, 240, 226, .97) 100%);
+  color: #1a332a;
+  box-shadow: 0 16px 36px rgba(18, 48, 38, .18), 0 0 0 1px rgba(184, 50, 38, .24);
+}
+
+.pwa-banner-main {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.pwa-banner-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, .25);
+}
+
+.pwa-banner-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.pwa-banner-title {
+  font-family: var(--font-display), 'Playfair Display', Georgia, serif;
+  font-size: .95rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: inherit;
+}
+
+.pwa-banner-desc {
+  font-size: .78rem;
+  line-height: 1.35;
+  opacity: .85;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.pwa-banner-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.pwa-install-btn {
+  padding: 8px 14px !important;
+  font-size: .84rem !important;
+  font-weight: 600 !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.pwa-dismiss-btn {
+  background: transparent;
+  border: 0;
+  padding: 6px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: inherit;
+  opacity: .65;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .15s ease, background .15s ease;
+}
+
+.pwa-dismiss-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, .1);
+}
+
+:root:not([data-theme='dark']) .pwa-dismiss-btn:hover {
+  background: rgba(0, 0, 0, .06);
+}
+
+/* Trigger Button (in menus / drawer) */
+.pwa-trigger-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  width: 100%;
+  text-align: left;
+  padding: 10px 14px;
+  border-radius: 10px;
+  transition: background .18s ease, color .18s ease;
+}
+
+.pwa-trigger-btn:hover {
+  background: rgba(223, 183, 108, .15);
+}
+
+/* Mobile Responsive */
+@media (max-width: 899px) {
+  .pwa-install-banner {
+    bottom: 76px;
+    left: 12px;
+    right: 12px;
+    max-width: none;
+    padding: 10px 14px;
+    gap: 10px;
+    border-radius: 16px;
+  }
+  .pwa-banner-icon {
+    width: 38px;
+    height: 38px;
+  }
+  .pwa-banner-title {
+    font-size: .88rem;
+  }
+  .pwa-banner-desc {
+    font-size: .74rem;
+  }
+  .pwa-install-btn {
+    padding: 7px 12px !important;
+    font-size: .8rem !important;
+  }
+}

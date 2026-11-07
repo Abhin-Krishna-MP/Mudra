@@ -13,6 +13,7 @@ import './kerala-light-backdrop.css';
 import './kerala-light-footer.css';
 import './home-light-teal.css';
 import './loader.css';
+import './pwa.css';
 import '@fontsource-variable/playfair-display';
 import '@fontsource-variable/playfair-display/wght-italic.css';
 import '@fontsource-variable/inter';
@@ -23,11 +24,28 @@ import type { Metadata, Viewport } from 'next';
 import { SITE_NAME } from '@/lib/copy';
 import { SiteFooter } from '@/components/SiteFooter';
 import { MudraLoader } from '@/components/MudraLoader';
+import { PwaRegister } from '@/components/PwaRegister';
 import { Motion } from '@/components/Motion';
 
 export const metadata: Metadata = {
   title: { default: `${SITE_NAME}`, template: `%s · Mudra` },
   description: 'Look up a cultural work, see who it comes from, and know what the creators and the licence say you may do with it, before you reuse it.',
+  manifest: '/manifest.webmanifest',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'Mudra',
+  },
+  icons: {
+    icon: [
+      { url: '/icons/favicon-32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icons/favicon-16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
 };
 export const viewport: Viewport = { width: 'device-width', initialScale: 1, themeColor: [{ media: '(prefers-color-scheme: light)', color: '#0c3d33' }, { media: '(prefers-color-scheme: dark)', color: '#0a0607' }] };
 
@@ -51,8 +69,16 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <link rel="preload" as="image" href="/mudra/bg-temple.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/theyyam.webp" fetchPriority="high" />
         <link rel="preload" as="image" href="/mudra/ribbon.webp" />
+        <link rel="manifest" href="/manifest.webmanifest" />
+        <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="Mudra" />
+        <meta name="application-name" content="Mudra" />
       </head>
       <body>
+        <PwaRegister />
         <MudraLoader />
         <a className="skip" href="#main">Skip to content</a>
         <div className="scroll-bar" aria-hidden="true" />
