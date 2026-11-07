@@ -137,8 +137,11 @@ mudra/
 │   └── sources.md                # Human-verified citations from GI Registry, Kerala Kalamandalam
 ├── docs/
 │   ├── PROJECT_REPORT.md         # Comprehensive technical specification (this document)
-│   ├── slides.md                 # 9-slide presentation deck matching 3-act narrative
-│   └── video-script.md           # 4:20 demo video walkthrough script
+│   ├── decisions.md              # Chronological architectural decision log (Nov 3 - Nov 7)
+│   ├── permissions-model.md      # Dual-layer permissions & W3C TDMRep specification
+│   ├── slides.md                 # 10-slide presentation deck matching full v2.0 architecture
+│   ├── video-script.md           # 4:30 demo video walkthrough script (v2.0)
+│   └── screenshots/              # Alternating Light/Dark theme production captures (01-09)
 ├── public/
 │   ├── fonts/                    # Self-hosted OFL fonts (Playfair Display, Inter, Noto Serif)
 │   ├── icons/                    # PWA heritage icons (16px to 512px, maskable, apple-touch)
