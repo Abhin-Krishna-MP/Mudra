@@ -1,0 +1,10 @@
+{
+  "tdm-reservation": 1,
+  "tdm-policy": "/developers#tdm-policy",
+  "description": "Text and Data Mining reservation signal published per W3C TDMRep Community Group specifications. All cultural images and records on this platform are reserved and legally opted out of AI training without explicit community consent.",
+  "policies": [
+    {
+      "tdm-reservation": 1
+    }
+  ]
+}

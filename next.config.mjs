@@ -4,6 +4,13 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: '/uploads/:path*',
+        headers: [
+          { key: 'tdm-reservation', value: '1' },
+          { key: 'tdm-policy', value: '/developers#tdm-policy' },
+        ],
+      },
+      {
         source: '/:path*',
         headers: [
           { key: 'X-Frame-Options', value: 'DENY' },

@@ -1,12 +1,13 @@
 'use server';
+import { createHash } from 'node:crypto';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
 import { getDb } from '@/lib/db';
-import { createRecord, submitFlag, reviewAction, type CreateInput, type FlagInput, type ReviewInput } from '@/lib/repo';
+import { createRecord, submitFlag, reviewAction, updateDraft, type CreateInput, type FlagInput, type ReviewInput } from '@/lib/repo';
 import { processImage } from '@/lib/imagehash';
-import { storeUpload } from '@/lib/storage';
+import { storeUpload, storeSecureKyc } from '@/lib/storage';
 import { signingKey } from '@/lib/signing';
-import { AuthError, checkPassword } from '@/lib/auth';
+import { AuthError, checkPassword, hashPassword } from '@/lib/auth';
 import { getActor, startSession, endSession } from '@/lib/session';
 import type { ActionResult } from '@/lib/contracts';
 import type { Capability, CulturalState } from '@/lib/permissions';
@@ -16,7 +17,13 @@ const str = (f: FormData, k: string) => String(f.get(k) ?? '');
 
 /* ---------------------------------------------------------------- submit */
 export async function createRecordAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+  const actor = await getActor();
+  if (!actor || (actor.role !== 'author' && actor.role !== 'admin')) {
+    redirect('/login?error=Unauthorized');
+  }
+
   const db = await getDb();
+  const draftId = str(f, 'draftId');
   const file = f.get('image');
   let asset: CreateInput['asset'] | undefined;
   if (file instanceof File && file.size > 0) {
@@ -30,16 +37,47 @@ export async function createRecordAction(_prev: ActionResult | null, f: FormData
   }
   const credits = [0, 1, 2, 3].map((i) => ({ name: str(f, `credit_name_${i}`), role: str(f, `credit_role_${i}`), collective: f.get(`credit_collective_${i}`) === 'on' }));
   const perm = (k: string) => (str(f, `perm_${k}`) || 'unspecified') as CulturalState;
+  const category = (str(f, 'category') || str(f, 'workType')).trim();
+  const workType = (str(f, 'workType') || category).trim();
+
+  if (draftId) {
+    // Re-submission of an edited draft flagged for revision
+    const input: Partial<CreateInput> = {
+      title: str(f, 'title'),
+      region: str(f, 'region'),
+      category,
+      workType,
+      language: str(f, 'language'),
+      culturalContext: str(f, 'culturalContext'),
+      contextSources: str(f, 'contextSources').split('\n').map((s) => s.trim()).filter(Boolean),
+      sourceUrl: str(f, 'sourceUrl'),
+      sensitivity: str(f, 'sensitivity') as CreateInput['sensitivity'],
+      submissionBasis: str(f, 'submissionBasis') as CreateInput['submissionBasis'],
+      licence: str(f, 'licence') as CreateInput['licence'],
+      licenceSourceNote: str(f, 'licenceSourceNote'),
+      attributionRequired: f.get('attributionRequired') === 'on',
+      custodian: str(f, 'custodian'),
+      credits,
+      permissions: { share: perm('share'), commercial: perm('commercial'), adapt: perm('adapt'), ai_training: perm('ai_training') } as Record<Capability, CulturalState>,
+    };
+    const res = await updateDraft(db, draftId, input, actor, { key: signingKey() });
+    if (!res.ok) return res;
+    revalidatePath('/author/dashboard');
+    revalidatePath('/review');
+    redirect(`/author/dashboard?resubmitted=${encodeURIComponent(draftId)}`);
+  }
+
   const input: CreateInput = {
-    title: str(f, 'title'), workType: str(f, 'workType'), region: str(f, 'region'), language: str(f, 'language'),
+    title: str(f, 'title'), workType, region: str(f, 'region'), category, language: str(f, 'language'),
     culturalContext: str(f, 'culturalContext'), contextSources: str(f, 'contextSources').split('\n').map((s) => s.trim()).filter(Boolean),
     sourceUrl: str(f, 'sourceUrl'), sensitivity: str(f, 'sensitivity') as CreateInput['sensitivity'],
     submissionBasis: str(f, 'submissionBasis') as CreateInput['submissionBasis'], licence: str(f, 'licence') as CreateInput['licence'],
     licenceSourceNote: str(f, 'licenceSourceNote'), attributionRequired: f.get('attributionRequired') === 'on', custodian: str(f, 'custodian'),
     permissions: { share: perm('share'), commercial: perm('commercial'), adapt: perm('adapt'), ai_training: perm('ai_training') } as Record<Capability, CulturalState>,
     credits, asset: asset as CreateInput['asset'], honeypot: str(f, 'website'),
+    authorId: actor.id,
   };
-  const res = await createRecord(db, input, { role: 'public', name: 'Submitter' }, { key: signingKey() });
+  const res = await createRecord(db, input, actor, { key: signingKey() });
   if (!res.ok) return res;
   redirect(`/submit?done=${encodeURIComponent(res.id!)}`);
 }
@@ -56,8 +94,10 @@ export async function submitFlagAction(_prev: ActionResult | null, f: FormData):
 
 /* ---------------------------------------------------------------- review */
 const hits = new Map<string, { n: number; t: number }>();
+
 export async function loginAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
   const email = str(f, 'email').trim().toLowerCase();
+  const redirectTo = str(f, 'redirect');
   const h = hits.get(email) ?? { n: 0, t: Date.now() };
   if (Date.now() - h.t > 15 * 60_000) { h.n = 0; h.t = Date.now(); }
   if (h.n >= 8) return { ok: false, error: 'Too many attempts. Try again in a few minutes.' }; // best-effort limiter
@@ -68,18 +108,67 @@ export async function loginAction(_prev: ActionResult | null, f: FormData): Prom
     return { ok: false, error: 'Email or password is not right.' };
   }
   await startSession({ id: Number(u.id), name: u.name, role: u.role });
+
+  if (redirectTo && redirectTo.startsWith('/')) {
+    redirect(redirectTo);
+  }
+  if (u.role === 'author') {
+    redirect('/author/dashboard');
+  }
+  if (u.role === 'admin') {
+    redirect('/admin');
+  }
   redirect('/review');
 }
-export async function logoutAction() { await endSession(); redirect('/review'); }
+
+export async function signupAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+  const email = str(f, 'email').trim().toLowerCase();
+  const name = str(f, 'name').trim();
+  const password = str(f, 'password');
+  const region = str(f, 'region').trim();
+  const category = str(f, 'category').trim();
+  const redirectTo = str(f, 'redirect');
+
+  if (!email || !email.includes('@')) return { ok: false, error: 'Please enter a valid email address.' };
+  if (!name || name.length < 2) return { ok: false, error: 'Please enter your name.' };
+  if (!password || password.length < 8) return { ok: false, error: 'Password must be at least 8 characters.' };
+
+  const db = await getDb();
+  const existing = (await db.execute('SELECT id FROM users WHERE email = ?', [email])).rows[0];
+  if (existing) return { ok: false, error: 'An account with that email already exists. Please sign in.' };
+
+  const pwHash = hashPassword(password);
+  // Default role is author for any new signups per Step 1 specification
+  const res = await db.execute(
+    'INSERT INTO users (email, name, role, password_hash, region, category) VALUES (?, ?, ?, ?, ?, ?) RETURNING id',
+    [email, name, 'author', pwHash, region, category],
+  );
+  const userId = Number(res.rows[0]?.id);
+  await startSession({ id: userId, name, role: 'author' });
+
+  if (redirectTo && redirectTo.startsWith('/')) {
+    redirect(redirectTo);
+  }
+  redirect('/submit');
+}
+
+export async function logoutAction() { await endSession(); redirect('/login'); }
 
 export async function reviewFormAction(f: FormData) {
   const recordId = str(f, 'recordId');
   const action = str(f, 'action');
   let input: ReviewInput;
-  if (action === 'verify') input = { recordId, action, evidence: { source: str(f, 'source'), url: str(f, 'url'), note: str(f, 'note') } };
-  else if (action === 'resolveFlag') input = { recordId, action, flagId: str(f, 'flagId'), note: str(f, 'note') };
-  else if (action === 'approve' || action === 'needsChanges' || action === 'remove') input = { recordId, action, note: str(f, 'note') };
-  else redirect('/review?msg=Unknown+action');
+  if (action === 'verify') {
+    input = { recordId, action, evidence: { source: str(f, 'source'), url: str(f, 'url'), note: str(f, 'note') } };
+  } else if (action === 'resolveFlag') {
+    input = { recordId, action, flagId: str(f, 'flagId'), note: str(f, 'note') };
+  } else if (action === 'approve' || action === 'needsChanges' || action === 'remove') {
+    input = { recordId, action, note: str(f, 'note') };
+  } else if (action === 'requestRevision' || action === 'needsRevision') {
+    input = { recordId, action: 'requestRevision', note: str(f, 'note') };
+  } else {
+    redirect('/review?msg=Unknown+action');
+  }
   let msg = 'Done.';
   try {
     const res = await reviewAction(await getDb(), await getActor(), input!, signingKey());
@@ -90,7 +179,85 @@ export async function reviewFormAction(f: FormData) {
   }
   revalidatePath('/');
   revalidatePath(`/r/${recordId}`);
+  revalidatePath('/author/dashboard');
   redirect(`/review?msg=${encodeURIComponent(msg)}`);
+}
+
+/* ------------------------------------------------- steward applications (KYC) */
+export async function applyStewardAction(_prev: ActionResult | null, f: FormData): Promise<ActionResult> {
+  const actor = await getActor();
+  if (!actor || !actor.id) redirect('/login?error=Unauthorized&redirect=/apply-steward');
+
+  const file = f.get('idDocument');
+  if (!(file instanceof File) || file.size === 0) {
+    return { ok: false, error: 'Please upload a photo of your identity document.' };
+  }
+  const region = str(f, 'region').trim();
+  const category = str(f, 'category').trim();
+  if (!region || !category) {
+    return { ok: false, error: 'Please specify both your region and cultural category of expertise.' };
+  }
+
+  try {
+    const buf = Buffer.from(await file.arrayBuffer());
+    const sha256 = createHash('sha256').update(buf).digest('hex');
+    const location = await storeSecureKyc(buf, sha256, file.type || 'image/jpeg');
+
+    const db = await getDb();
+    const now = new Date().toISOString();
+    await db.execute(
+      `INSERT INTO steward_applications (user_id, id_document_url, region, category, status, created_at)
+       VALUES (?, ?, ?, ?, 'pending', ?)`,
+      [actor.id, location, region, category, now],
+    );
+  } catch (e) {
+    return { ok: false, error: `Could not submit application: ${(e as Error).message}` };
+  }
+
+  revalidatePath('/apply-steward');
+  redirect('/apply-steward?done=1');
+}
+
+export async function approveStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  if (!actor || actor.role !== 'admin') redirect('/login?error=Unauthorized');
+
+  const appId = Number(f.get('applicationId'));
+  const db = await getDb();
+  const app = (await db.execute('SELECT * FROM steward_applications WHERE id = ?', [appId])).rows[0];
+  if (!app) redirect('/admin?msg=Application+not+found');
+
+  const now = new Date().toISOString();
+  // Approve application and change role in users table to steward
+  await db.execute(
+    "UPDATE steward_applications SET status = 'approved', reviewed_at = ? WHERE id = ?",
+    [now, appId],
+  );
+  await db.execute(
+    "UPDATE users SET role = 'steward', region = ?, category = ? WHERE id = ?",
+    [String(app.region || ''), String(app.category || ''), app.user_id],
+  );
+
+  revalidatePath('/admin');
+  revalidatePath('/admin/stewards');
+  redirect('/admin?msg=Application+approved.+User+upgraded+to+Steward.');
+}
+
+export async function rejectStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  if (!actor || actor.role !== 'admin') redirect('/login?error=Unauthorized');
+
+  const appId = Number(f.get('applicationId'));
+  const db = await getDb();
+  const now = new Date().toISOString();
+  await db.execute(
+    "UPDATE steward_applications SET status = 'rejected', reviewed_at = ? WHERE id = ?",
+    [now, appId],
+  );
+
+  revalidatePath('/admin');
+  revalidatePath('/admin/stewards');
+  redirect('/admin?msg=Application+rejected.');
 }
 
 /* ------------------------------------------------- permission requests */
