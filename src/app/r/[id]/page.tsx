@@ -14,7 +14,7 @@ import { Gallery, type GalleryItem } from '@/components/Gallery';
 import { ShareButton } from '@/components/ShareButton';
 import './passport.css';
 import { Tabs } from '@/components/Tabs';
-import { Icon } from '@/components/Icons';
+import { Icon, type IconName } from '@/components/Icons';
 import { Seal } from '@/components/Seal';
 import { getStewardsForRecord } from '@/lib/repo-grants';
 import { RequestStatusTab } from '@/components/RequestStatusTab';
@@ -108,11 +108,45 @@ export default async function Passport({ params, searchParams }: { params: Promi
       </div>
     ) },
     { id: 'creators', label: 'Creators', icon: 'users' as const, content: (
-      <>
-        <ul>{v.credits.map((c) => <li key={c.name + c.role}><strong>{c.name}</strong> — {c.role}{c.collective ? ' (collective)' : ''}</li>)}</ul>
+      <div className="pp-creators-list">
+        {v.credits.map((c) => {
+          const roleLower = c.role.toLowerCase();
+          const iconName: IconName =
+            c.collective || /tradition|bearer|exponent|community|lineage/i.test(roleLower)
+              ? 'users'
+              : /photo|camera|image/i.test(roleLower)
+              ? 'camera'
+              : /art|design|illustrat/i.test(roleLower)
+              ? 'palette'
+              : 'user';
+
+          return (
+            <div key={c.name + c.role} className="pp-creator-card">
+              <span className="pp-creator-icon-box">
+                <Icon name={iconName} size={18} />
+              </span>
+              <span className="pp-creator-sep" aria-hidden="true">|</span>
+              <div className="pp-creator-text">
+                <strong>{c.name}</strong>
+                <span className="pp-creator-role"> — {c.role}{c.collective ? ' (collective)' : ''}</span>
+              </div>
+            </div>
+          );
+        })}
         {v.credits.length === 0 && <p className="muted">Creators are not yet credited.</p>}
-        {v.custodian && <p><strong>Stated custodian to contact:</strong> {v.custodian}</p>}
-      </>
+        {v.custodian && (
+          <div className="pp-creator-card pp-custodian-card">
+            <span className="pp-creator-icon-box pp-custodian-icon-box">
+              <Icon name="handshake" size={18} />
+            </span>
+            <span className="pp-creator-sep" aria-hidden="true">|</span>
+            <div className="pp-creator-text">
+              <strong>Stated custodian to contact:</strong>
+              <span className="pp-creator-role"> {v.custodian}</span>
+            </div>
+          </div>
+        )}
+      </div>
     ) },
     { id: 'permissions', label: 'Permissions', icon: 'shield' as const, content: (
       <>
@@ -211,9 +245,6 @@ export default async function Passport({ params, searchParams }: { params: Promi
 
           <div className="pp-actions-bar">
             <div className="pp-actions-main">
-              <a className="btn pp-primary" href="#studio-h">
-                <Icon name="refresh" size={18} /> Check Reuse Permissions
-              </a>
               <CopyButton text={credit.plain} label="Copy Credit Line" icon="quote" />
               <ShareButton title={v.title} />
               {v.asset?.displayUrl && <a className="btn secondary" href={`/api/records/${v.id}/card.png`} download={`${v.id}-credit-card.png`}><Icon name="download" size={16} /> Download Credit Card</a>}
