@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useTransition } from 'react';
 import { Icon } from '@/components/Icons';
 import { assignStewardAction, createOrPromoteStewardAction } from '@/app/actions';
 
@@ -29,8 +29,38 @@ interface Props {
 export default function AddStewardSection({ users, records }: Props) {
   const [isOpen, setIsOpen] = useState(false);
   const [mode, setMode] = useState<'create' | 'assign'>('create');
+  const [isPending, startTransition] = useTransition();
+  const [pendingAction, setPendingAction] = useState<string | null>(null);
 
   const stewardsList = users.filter((u) => u.role === 'steward' || u.role === 'reviewer' || u.role === 'admin');
+
+  const handleAssignSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPendingAction('assign');
+    const fd = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await assignStewardAction(fd);
+        setIsOpen(false);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
+
+  const handleCreateSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPendingAction('create');
+    const fd = new FormData(e.currentTarget);
+    startTransition(async () => {
+      try {
+        await createOrPromoteStewardAction(fd);
+        setIsOpen(false);
+      } finally {
+        setPendingAction(null);
+      }
+    });
+  };
 
   return (
     <div style={{ margin: '18px 0 24px' }}>
@@ -123,7 +153,7 @@ export default function AddStewardSection({ users, records }: Props) {
 
           {/* Mode 1: Assign Existing Steward to Record */}
           {mode === 'assign' && (
-            <form action={assignStewardAction} style={{ marginTop: 16 }}>
+            <form onSubmit={handleAssignSubmit} style={{ marginTop: 16 }}>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 16 }}>
                 <div>
                   <label htmlFor="assign-record-select" style={{ fontWeight: 600, display: 'block', marginBottom: 6, fontSize: '0.88rem', color: 'var(--rc-ink)' }}>
@@ -185,10 +215,12 @@ export default function AddStewardSection({ users, records }: Props) {
               <div className="btn-row" style={{ marginTop: 20 }}>
                 <button
                   type="submit"
+                  disabled={isPending}
                   className="btn pp-btn-maroon"
                   style={{ minHeight: 44, padding: '0 24px', fontWeight: 700, borderRadius: 10 }}
                 >
-                  <Icon name="check" size={16} /> Link Steward to Record
+                  <Icon name="check" size={16} />
+                  <span>{pendingAction === 'assign' ? 'Linking…' : 'Link Steward to Record'}</span>
                 </button>
               </div>
             </form>
@@ -196,7 +228,7 @@ export default function AddStewardSection({ users, records }: Props) {
 
           {/* Mode 2: Register New Steward */}
           {mode === 'create' && (
-            <form action={createOrPromoteStewardAction} style={{ marginTop: 16 }}>
+            <form onSubmit={handleCreateSubmit} style={{ marginTop: 16 }}>
               {/* 2x2 Grid for Onboarding Form (Two inputs per row, stacked) */}
               <div className="rc-steward-grid-2x2">
                 <div>
@@ -298,12 +330,13 @@ export default function AddStewardSection({ users, records }: Props) {
                     minHeight: 44,
                     padding: '8px 12px',
                     borderRadius: 10,
+                    fontSize: '0.92rem',
                     background: 'var(--rc-card, #ffffff)',
                     color: 'var(--rc-ink, #2b1810)',
                     border: '1.5px solid var(--rc-panel-border, #d5c3b0)',
                   }}
                 >
-                  <option value="">— Do not link to a record yet —</option>
+                  <option value="">— Link to a record later (leave empty) —</option>
                   {records.map((r) => (
                     <option key={r.id} value={r.id}>
                       {r.title} ({r.id})
@@ -315,10 +348,12 @@ export default function AddStewardSection({ users, records }: Props) {
               <div className="btn-row" style={{ marginTop: 20 }}>
                 <button
                   type="submit"
+                  disabled={isPending}
                   className="btn pp-btn-maroon"
                   style={{ minHeight: 44, padding: '0 24px', fontWeight: 700, borderRadius: 10 }}
                 >
-                  <Icon name="check" size={16} /> Register & Activate Steward
+                  <Icon name="check" size={16} />
+                  <span>{pendingAction === 'create' ? 'Registering…' : 'Register & Activate Steward'}</span>
                 </button>
               </div>
             </form>

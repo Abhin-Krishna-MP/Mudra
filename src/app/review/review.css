@@ -703,4 +703,252 @@ body:has(.review-console-page) .site-header::after {
   color: #a5d6a7;
 }
 
+/* =========================================================================
+   Instant Tap & Button Feedback (0ms touch latency & active press)
+   ========================================================================= */
+.review-console-page button,
+.review-console-page .btn,
+.review-console-page .rc-tab-btn,
+.review-console-page select,
+.review-console-page summary,
+.review-console-page .chip {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+.review-console-page button:active,
+.review-console-page .btn:active,
+.review-console-page .rc-tab-btn:active {
+  transform: scale(0.97);
+  transition: transform 0.05s ease;
+}
+
+/* =========================================================================
+   Mobile View Enhancements (< 768px and < 480px)
+   ========================================================================= */
+@media (max-width: 768px) {
+  .review-console-page {
+    padding: 10px 0 36px;
+  }
+  .review-console-page .sheet {
+    border-radius: 20px !important;
+    margin: 0 auto;
+  }
+  .review-console-page .sheet-head.has-depth {
+    min-height: 180px !important;
+    padding: 24px 18px 24px !important;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .review-console-page .sheet-head-text {
+    max-width: 100% !important;
+  }
+  .review-console-page .sheet-head h1 {
+    font-size: 1.7rem !important;
+    line-height: 1.2;
+  }
+  .review-console-page .sheet-head .sheet-action {
+    align-self: flex-start;
+    margin-top: 4px;
+  }
+  .review-console-page .signout-btn {
+    min-height: 36px;
+    padding: 6px 14px;
+    font-size: 0.82rem;
+  }
+  .review-console-page .sheet-body {
+    padding: 16px 14px 28px !important;
+  }
+
+  /* Stats Row */
+  .rc-stats-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .rc-stat-card {
+    padding: 14px 16px;
+    gap: 14px;
+    border-radius: 14px;
+  }
+  .rc-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 11px;
+  }
+  .rc-stat-num {
+    font-size: 2.2rem;
+    min-width: 32px;
+  }
+  .rc-stat-label {
+    font-size: 0.9rem;
+  }
+  .rc-stat-text {
+    font-size: 0.82rem;
+  }
+
+  /* Section Headings */
+  .rc-section-block {
+    margin-top: 24px;
+  }
+  .rc-section-header-wrap {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .rc-section-heading {
+    font-size: 1.25rem;
+    gap: 8px;
+  }
+  .rc-section-tag {
+    font-size: 0.74rem;
+    padding: 2px 10px;
+  }
+
+  /* Record Management Cards */
+  .rc-record-card {
+    padding: 14px;
+    border-radius: 14px;
+    margin-bottom: 14px;
+  }
+  .rc-record-top {
+    gap: 12px;
+  }
+  .rc-record-thumb {
+    width: 58px;
+    height: 58px;
+    border-radius: 10px;
+  }
+  .rc-record-title {
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+  .rc-record-chips {
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .rc-record-chips .chip {
+    font-size: 0.76rem;
+    padding: 3px 8px;
+  }
+
+  /* Tabs Bar */
+  .rc-tab-container {
+    margin-top: 14px;
+  }
+  .rc-tab-bar {
+    gap: 4px;
+    padding: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .rc-tab-bar::-webkit-scrollbar {
+    display: none;
+  }
+  .rc-tab-btn {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+    gap: 5px;
+    border-radius: 10px 10px 0 0;
+  }
+  .rc-tab-content {
+    padding: 14px 12px;
+    border-radius: 0 0 14px 14px;
+  }
+
+  /* Full-width touch targets for action buttons */
+  .rc-record-card .btn-row,
+  .rc-section-block .btn-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 100%;
+  }
+  .rc-record-card .btn-row .btn,
+  .rc-record-card .btn-row button,
+  .rc-section-block .btn-row .btn,
+  .rc-section-block .btn-row button {
+    width: 100%;
+    min-height: 44px;
+    justify-content: center;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  /* Mobile text input sizing prevents iOS safari zoom */
+  .rc-edit-note-input,
+  .review-console-page input[type='text'],
+  .review-console-page input[type='email'],
+  .review-console-page input[type='date'],
+  .review-console-page select,
+  .review-console-page textarea {
+    font-size: 16px !important;
+    min-height: 44px;
+  }
+
+  /* Request Grid */
+  .rc-req-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .rc-req-cell {
+    justify-content: space-between;
+    font-size: 0.85rem;
+  }
+
+  /* Past Requests Item */
+  .rc-past-req-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 0;
+  }
+  .rc-past-req-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .rc-btn-view-grant {
+    flex: 1;
+    justify-content: center;
+    min-height: 38px;
+  }
+  .rc-revoke-form {
+    position: static;
+    width: 100%;
+    margin-top: 8px;
+    box-shadow: none;
+  }
+
+  /* System Stewards Management */
+  .rc-steward-trigger-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .rc-steward-trigger-row button {
+    width: 100%;
+    justify-content: center;
+    min-height: 44px;
+  }
+  .rc-steward-panel {
+    padding: 16px 14px !important;
+    border-radius: 14px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .rc-date-range-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+  .rc-date-arrow {
+    display: none;
+  }
+}
+
+
 

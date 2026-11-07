@@ -187,7 +187,6 @@ export async function reviewFormAction(f: FormData) {
   if (errorMsg) {
     redirect(`/review?error=${encodeURIComponent(errorMsg)}`);
   }
-  redirect('/review');
 }
 
 /* ------------------------------------------------- steward applications (KYC) */
@@ -312,7 +311,6 @@ export async function grantDecisionAction(f: FormData): Promise<void> {
 
   revalidatePath('/review');
   if (!res.ok) redirect(`/review?error=${encodeURIComponent(res.error)}`);
-  redirect('/review');
 }
 
 export async function revokeGrantAction(f: FormData): Promise<void> {
@@ -321,7 +319,6 @@ export async function revokeGrantAction(f: FormData): Promise<void> {
   const note = String(f.get('note') ?? 'Revoked by reviewer.');
   await revokeGrant(await getDb(), actor, requestId, note, signingKey());
   revalidatePath('/review');
-  redirect('/review');
 }
 
 export async function assignStewardAction(f: FormData): Promise<void> {
@@ -329,7 +326,7 @@ export async function assignStewardAction(f: FormData): Promise<void> {
   const recordId = String(f.get('recordId') ?? '').trim();
   const userId = Number(f.get('userId'));
   if (!recordId || !userId || isNaN(userId)) {
-    redirect('/review');
+    return;
   }
   const db = await getDb();
   await assignSteward(db, actor, recordId, userId);
@@ -342,7 +339,6 @@ export async function assignStewardAction(f: FormData): Promise<void> {
 
   revalidatePath(`/review`);
   revalidatePath(`/r/${recordId}`);
-  redirect('/review');
 }
 
 export async function unassignStewardAction(f: FormData): Promise<void> {
@@ -353,9 +349,7 @@ export async function unassignStewardAction(f: FormData): Promise<void> {
     await removeSteward(await getDb(), actor, recordId, userId);
     revalidatePath(`/review`);
     revalidatePath(`/r/${recordId}`);
-    redirect('/review');
   }
-  redirect('/review');
 }
 
 export async function createOrPromoteStewardAction(f: FormData): Promise<void> {
@@ -370,7 +364,7 @@ export async function createOrPromoteStewardAction(f: FormData): Promise<void> {
   const recordId = String(f.get('recordId') ?? '').trim();
 
   if (!name || !email) {
-    redirect('/review');
+    return;
   }
 
   const db = await getDb();
@@ -400,7 +394,6 @@ export async function createOrPromoteStewardAction(f: FormData): Promise<void> {
 
   revalidatePath('/review');
   if (recordId) revalidatePath(`/r/${recordId}`);
-  redirect('/review');
 }
 
 /* --------------------------------------------------- sandbox tamper simulation */
