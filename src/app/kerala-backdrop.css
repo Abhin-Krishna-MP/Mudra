@@ -14,20 +14,20 @@
 /* ---------- The fixed artwork layer ----------
    A fixed pseudo-element (not background-attachment: fixed) so it stays put on iOS / Android
    and never zooms or jitters while the address bar collapses. */
-html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .loading-page-wrap)),
+html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap)),
 html:root:root[data-theme='dark'] body:has(.about-page) {
   background-color: #0a0607;
   background-image: none;
   background-attachment: scroll;
 }
-html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .loading-page-wrap))::before,
+html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap))::before,
 html:root:root[data-theme='dark'] body:has(.about-page)::before {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   height: 100vh; height: 100lvh;
   background: var(--cb-bg) center / cover no-repeat, #0a0607;
 }
 /* a soft vignette keeps the sheet edges calm and lets the lamp and the sunset glow */
-html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .loading-page-wrap))::after,
+html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap))::after,
 html:root:root[data-theme='dark'] body:has(.about-page)::after {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   height: 100vh; height: 100lvh;
@@ -40,7 +40,7 @@ html:root:root[data-theme='dark'] body:has(.about-page)::after {
 
 /* phones and small tablets: portrait composition (also used by the Catalogue on phones) */
 @media (max-width: 760px) {
-  html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .loading-page-wrap))::before,
+  html:root:root body:has(:is(.reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap))::before,
   html:root:root[data-theme='dark'] body:has(.about-page)::before,
   html:root:root[data-theme='dark'] body:has(.cat-page)::before {
     background: var(--cb-bg-mobile) center bottom / cover no-repeat, #0a0607;
@@ -58,7 +58,7 @@ html:root:root[data-theme='dark'] body:has(.about-page)::after {
 html:root:root .site-header.padippura-header,
 html:root:root body .site-header.padippura-header,
 html:root:root body:not(:has(.hero)) .site-header.padippura-header,
-html:root:root body:has(:is(.about-page, .reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .loading-page-wrap)) .site-header.padippura-header {
+html:root:root body:has(:is(.about-page, .reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap)) .site-header.padippura-header {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -68,7 +68,7 @@ html:root:root body:has(:is(.about-page, .reuse-page, .check-page, .submit-page,
 }
 html:root:root .site-header.padippura-header::after,
 html:root:root body .site-header.padippura-header::after,
-html:root:root body:has(:is(.about-page, .reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .loading-page-wrap)) .site-header::after {
+html:root:root body:has(:is(.about-page, .reuse-page, .check-page, .submit-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap)) .site-header::after {
   display: none !important;
   content: none !important;
 }

@@ -16,23 +16,23 @@
 }
 
 /* ---------- The fixed artwork layer (same technique as the dark one) ---------- */
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap)) {
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap)) {
   background-color: #0b4a3f;
   background-image: none;
   background-attachment: scroll;
 }
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap))::before {
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap))::before {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   height: 100vh; height: 100lvh;
   background: var(--cbl-bg) center / cover no-repeat, #0b4a3f;
 }
-html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap))::after {
+html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap))::after {
   content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
   height: 100vh; height: 100lvh;
   background: radial-gradient(120% 90% at 50% 45%, transparent 65%, rgba(2, 20, 16, .3) 100%);
 }
 @media (max-width: 760px) {
-  html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .loading-page-wrap))::before {
+  html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .submit-page, .about-page, .cat-page, .passport-page, .review-console-page, .loading-page-wrap))::before {
     background: var(--cbl-bg-mobile) center bottom / cover no-repeat, #0b4a3f;
   }
 }
@@ -41,7 +41,7 @@ html:root:root:not([data-theme='dark']) body:has(:is(.reuse-page, .check-page, .
 html:root:root:not([data-theme='dark']) .site-header.padippura-header,
 html:root:root:not([data-theme='dark']) body .site-header.padippura-header,
 html:root:root:not([data-theme='dark']) body:not(:has(.hero)) .site-header.padippura-header,
-html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page, .loading-page-wrap)) .site-header.padippura-header {
+html:root:root:not([data-theme='dark']) body:has(:is(.about-page, .cat-page, .passport-page, .reuse-page, .check-page, .submit-page, .review-console-page, .loading-page-wrap)) .site-header.padippura-header {
   background: transparent !important;
   background-color: transparent !important;
   background-image: none !important;
@@ -83,27 +83,27 @@ html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-pa
 }
 
 /* ----- sheet + Kathakali banner (same as the Catalogue) ----- */
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet {
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet {
   border: 1.5px solid transparent; border-radius: 28px;
   background: linear-gradient(180deg, #fbf5e8, #f7eddb) padding-box, var(--lp-rim) border-box;
   -webkit-backdrop-filter: none; backdrop-filter: none;
   box-shadow: 0 26px 60px rgba(0, 18, 14, .45);
 }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .hero-stage .lt { display: block !important; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .hero-stage .dk { display: none !important; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth { min-height: 240px; padding: 40px 44px 54px; align-items: center; border-bottom: 0; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth::before {
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .hero-stage .lt { display: block !important; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .hero-stage .dk { display: none !important; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head.has-depth { min-height: 240px; padding: 40px 44px 54px; align-items: center; border-bottom: 0; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head.has-depth::before {
   background:
     linear-gradient(90deg, var(--sheet-head-fade) 0%, var(--sheet-head-fade) 30%, transparent 78%),
     linear-gradient(0deg, var(--panel-bg) 0%, color-mix(in srgb, var(--panel-bg) 70%, transparent) 22%, transparent 55%);
 }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head.has-depth::after { display: none; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head-text { max-width: 560px; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .eyebrow-sm { color: var(--primary); }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-head h1 { color: var(--ink); text-shadow: none; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .lede-sm { color: var(--ink); opacity: .92; }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .lede-sm::after { height: 3px; background: linear-gradient(90deg, var(--primary), transparent); }
-html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page) .sheet-body { padding-top: 6px; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head.has-depth::after { display: none; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head-text { max-width: 560px; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .eyebrow-sm { color: var(--primary); }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-head h1 { color: var(--ink); text-shadow: none; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .lede-sm { color: var(--ink); opacity: .92; }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .lede-sm::after { height: 3px; background: linear-gradient(90deg, var(--primary), transparent); }
+html:root:root:not([data-theme='dark']) :is(.reuse-page, .check-page, .submit-page, .review-console-page) .sheet-body { padding-top: 6px; }
 
 /* ----- cream cards with a gold rim ----- */
 html:root:root:not([data-theme='dark']) :is(.rs-card, .ck-how, .vf-card, .vf-info, .si-card, .rs-how, .submit-page fieldset.panel, .check-page .ck-results .panel, .reuse-page .studio ~ .panel) {
