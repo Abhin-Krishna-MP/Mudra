@@ -4,8 +4,8 @@ import { Icon, type IconName } from '@/components/Icons';
 
 const COLS: { head: string; icon: IconName; links: { href: string; label: string }[] }[] = [
   { head: 'Explore', icon: 'grid', links: [{ href: '/catalogue', label: 'Cultural Passport' }, { href: '/reuse', label: 'Reuse Studio' }] },
-  { head: 'Tools', icon: 'tools', links: [{ href: '/verify', label: 'Verify a Record' }, { href: '/check', label: 'Check an Image' }, { href: '/submit', label: 'Submit a Work' }] },
-  { head: 'About', icon: 'info', links: [{ href: '/review', label: 'Reviewers' }, { href: '/about', label: 'About & Guidelines' }] },
+  { head: 'Tools', icon: 'tools', links: [{ href: '/verify', label: 'Verify a Record' }, { href: '/check', label: 'Check an Image' }, { href: '/submit', label: 'Submit a Work' }, { href: '/author/dashboard', label: 'Author Dashboard' }] },
+  { head: 'About', icon: 'info', links: [{ href: '/review', label: 'Stewards & Reviewers' }, { href: '/login', label: 'Sign In / Register' }, { href: '/about', label: 'About & Guidelines' }] },
 ];
 
 export function SiteFooter() {

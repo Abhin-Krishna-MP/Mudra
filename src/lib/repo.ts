@@ -4,7 +4,7 @@ import { GENESIS, newEvent, verifyChain, type AuditRow, type VerifyResult } from
 import { requireRole } from './auth';
 import { LICENCE_IDS, CAPABILITIES, type Capability, type CulturalState, type LicenceId, type Sensitivity } from './permissions';
 import type {
-  Actor, ActionResult, Basis, RecordSummary, RecordView, Status, TimelineItem,
+  Actor, ActionResult, Basis, RecordSummary, RecordView, Status, TimelineItem, DraftItem,
 } from './contracts';
 import { hamming, classify } from './imagehash';
 
@@ -33,6 +33,9 @@ export interface CreateInput {
   credits: Array<{ name: string; role: string; collective?: boolean }>;
   asset: { location: string; mime: string; alt: string; sourceNote?: string; sha256: string; dhash: string; width: number; height: number; bytes: number };
   honeypot?: string;
+  category?: string;
+  authorId?: number;
+  revisionNote?: string;
 }
 
 const STATES: CulturalState[] = ['permitted', 'not_permitted', 'unspecified'];
@@ -42,8 +45,9 @@ const BASES: Basis[] = ['creator_submitted', 'custodian_submitted', 'compiled_fr
 export function validateCreate(i: CreateInput): Record<string, string> {
   const e: Record<string, string> = {};
   const t = (s: unknown) => (typeof s === 'string' ? s.trim() : '');
+  const categoryOrType = t(i.category) || t(i.workType);
   if (t(i.title).length < 3 || t(i.title).length > 160) e.title = 'Please enter a title between 3 and 160 characters.';
-  if (!t(i.workType)) e.workType = 'Please select a cultural expression category.';
+  if (!categoryOrType) e.workType = 'Please select a cultural expression category.';
   if (!t(i.region)) e.region = 'Please enter the cultural or geographical region.';
   if (t(i.culturalContext).length < 20) e.culturalContext = 'Please provide at least 20 characters of cultural description and context in your own words.';
   if (i.submissionBasis === 'compiled_from_public_sources' && !(i.contextSources ?? []).some((s) => t(s)))
@@ -105,13 +109,16 @@ export async function createRecord(
   const publish = !!opts.publishAs;
   const credits = input.credits.filter((c) => c.name.trim() && c.role.trim());
   const p = input.permissions;
+  const category = (input.category || input.workType).trim();
+  const authorId = input.authorId ?? (actor.id ? Number(actor.id) : null);
 
   const stmts: Stmt[] = [
     {
       sql: `INSERT INTO records (id,title,work_type,region,language,cultural_context,context_sources_json,source_url,sensitivity,submission_basis,
               status,verification_level,disputed,attribution_required,licence,licence_source_note,
-              perm_share,perm_commercial,perm_adapt,perm_ai_training,custodian,is_demo,created_at,published_at)
-            VALUES (?,?,?,?,?,?,?,?,?,?,?, 'unverified',0,?,?,?,?,?,?,?,?,?,?,?)`,
+              perm_share,perm_commercial,perm_adapt,perm_ai_training,custodian,is_demo,created_at,published_at,
+              category,revision_note,author_id)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?, 'unverified',0,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
       args: [
         id, input.title.trim(), input.workType.trim(), input.region.trim(), (input.language ?? '').trim(),
         input.culturalContext.trim(), JSON.stringify(input.contextSources.filter((s) => s.trim())), (input.sourceUrl ?? '').trim(),
@@ -119,6 +126,20 @@ export async function createRecord(
         input.attributionRequired ? 1 : 0, input.licence, input.licenceSourceNote.trim(),
         p.share, p.commercial, p.adapt, p.ai_training, (input.custodian ?? '').trim(),
         opts.isDemo ? 1 : 0, now, publish ? now : null,
+        category, '', authorId,
+      ],
+    },
+    {
+      sql: `INSERT INTO drafts (id,user_id,title,region,category,work_type,cultural_context,language,sensitivity,submission_basis,licence,licence_source_note,attribution_required,custodian,context_sources_json,source_url,credits_json,permissions_json,asset_json,status,revision_note,record_id,created_at)
+            VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)`,
+      args: [
+        id, authorId, input.title.trim(), input.region.trim(),
+        category, input.workType.trim(), input.culturalContext.trim(), (input.language ?? '').trim(),
+        input.sensitivity, input.submissionBasis, input.licence, input.licenceSourceNote.trim(),
+        input.attributionRequired ? 1 : 0, (input.custodian ?? '').trim(),
+        JSON.stringify(input.contextSources.filter((s) => s.trim())), (input.sourceUrl ?? '').trim(),
+        JSON.stringify(credits), JSON.stringify(p), JSON.stringify(input.asset ?? {}),
+        publish ? 'published' : 'pending', '', id, now,
       ],
     },
     ...credits.map((c, idx): Stmt => ({
@@ -167,12 +188,12 @@ export async function submitFlag(db: Db, i: FlagInput, key: Key = null): Promise
 /* -------------------------------------------------------------- review */
 
 export type ReviewInput =
-  | { recordId: string; action: 'approve' | 'needsChanges' | 'remove'; note?: string }
+  | { recordId: string; action: 'approve' | 'needsChanges' | 'remove' | 'needsRevision' | 'requestRevision'; note?: string }
   | { recordId: string; action: 'verify'; evidence: { source: string; url?: string; note: string } }
   | { recordId: string; action: 'resolveFlag'; flagId: string; note: string; outcome?: 'resolved' | 'dismissed' };
 
 export async function reviewAction(db: Db, actor: (Actor) | null, i: ReviewInput, key: Key = null): Promise<ActionResult> {
-  const who = requireRole(actor, ['reviewer', 'admin']); // throws AuthError 401/403
+  const who = requireRole(actor, ['reviewer', 'admin', 'steward']); // throws AuthError 401/403
   const rec = await db.execute('SELECT id, status FROM records WHERE id = ?', [i.recordId]);
   if (!rec.rows[0]) return { ok: false, error: 'Record not found.' };
   const now = new Date().toISOString();
@@ -184,8 +205,26 @@ export async function reviewAction(db: Db, actor: (Actor) | null, i: ReviewInput
       const status: Status = i.action === 'approve' ? 'published' : i.action === 'remove' ? 'removed' : 'needs_changes';
       await applyWithEvents(
         db, i.recordId,
-        [{ sql: 'UPDATE records SET status = ?, published_at = COALESCE(published_at, ?) WHERE id = ?', args: [status, status === 'published' ? now : null, i.recordId] }],
+        [
+          { sql: 'UPDATE records SET status = ?, published_at = COALESCE(published_at, ?) WHERE id = ?', args: [status, status === 'published' ? now : null, i.recordId] },
+          { sql: 'UPDATE drafts SET status = ? WHERE record_id = ? OR id = ?', args: [status, i.recordId, i.recordId] },
+        ],
         [{ actor: who, action: i.action === 'approve' ? 'approve' : i.action === 'remove' ? 'remove' : 'needs_changes', diff: { status } }],
+        key,
+      );
+      return { ok: true };
+    }
+    case 'needsRevision':
+    case 'requestRevision': {
+      const note = (i.note ?? '').trim();
+      if (!note) return { ok: false, error: 'Please describe the required edits.' };
+      await applyWithEvents(
+        db, i.recordId,
+        [
+          { sql: "UPDATE records SET status = 'needs_revision', revision_note = ? WHERE id = ?", args: [note, i.recordId] },
+          { sql: "UPDATE drafts SET status = 'needs_revision', revision_note = ? WHERE record_id = ? OR id = ?", args: [note, i.recordId, i.recordId] },
+        ],
+        [{ actor: who, action: 'request_revision', diff: { status: 'needs_revision', note } }],
         key,
       );
       return { ok: true };
@@ -245,6 +284,8 @@ export async function listRecords(db: Db, opts: { reviewer?: boolean } = {}): Pr
       primaryCredit: cs[0]?.name ?? '', parties: cs.map((c) => c.name as string),
       thumbUrl: a && !hidden ? `/api/assets/${a.id}` : null, alt: a?.alt ?? '',
       permissions: permsOf(r), verificationLevel: r.verification_level,
+      category: (r.category as string) || (r.work_type as string),
+      revisionNote: (r.revision_note as string) || '',
     };
   });
 }
@@ -267,7 +308,134 @@ export async function getRecordView(db: Db, id: string, opts: { reviewer?: boole
     permissions: permsOf(r),
     asset: a ? { displayUrl: hidden ? null : `/api/assets/${a.id}`, alt: a.alt, sourceNote: a.source_note, hidden } : null,
     latestAuditHash: last.seq ? last.hash : null, publishedAt: r.published_at, isDemo: !!r.is_demo,
+    revisionNote: (r.revision_note as string) || '',
+    category: (r.category as string) || (r.work_type as string),
   };
+}
+
+export async function getDraft(db: Db, id: string) {
+  const d = (await db.execute('SELECT * FROM drafts WHERE id = ? OR record_id = ?', [id, id])).rows[0];
+  if (d) return d;
+  return (await db.execute('SELECT * FROM records WHERE id = ?', [id])).rows[0] ?? null;
+}
+
+export async function listDraftsForAuthor(db: Db, userId: number): Promise<DraftItem[]> {
+  const rows = (await db.execute(
+    `SELECT d.id, d.user_id, d.title, d.region, d.category, d.work_type, d.cultural_context, d.status, d.revision_note, d.created_at, d.updated_at
+     FROM drafts d WHERE d.user_id = ?
+     UNION
+     SELECT r.id, r.author_id as user_id, r.title, r.region, COALESCE(NULLIF(r.category, ''), r.work_type) as category,
+            r.work_type, r.cultural_context, r.status, r.revision_note, r.created_at, r.created_at as updated_at
+     FROM records r WHERE r.author_id = ?
+     ORDER BY created_at DESC`,
+    [userId, userId],
+  )).rows;
+
+  const map = new Map<string, DraftItem>();
+  for (const r of rows) {
+    if (!map.has(String(r.id))) {
+      map.set(String(r.id), {
+        id: String(r.id),
+        userId: Number(r.user_id),
+        title: String(r.title),
+        region: String(r.region),
+        category: String(r.category || r.work_type),
+        workType: String(r.work_type),
+        culturalContext: String(r.cultural_context),
+        status: r.status as Status,
+        revisionNote: String(r.revision_note || ''),
+        createdAt: String(r.created_at),
+        updatedAt: r.updated_at ? String(r.updated_at) : undefined,
+      });
+    }
+  }
+  return Array.from(map.values());
+}
+
+export async function listPendingDraftsForSteward(db: Db, steward: { region: string; category: string }): Promise<DraftItem[]> {
+  const reg = (steward.region || '').trim();
+  const cat = (steward.category || '').trim();
+
+  const rows = (await db.execute(
+    `SELECT id, user_id, title, region, category, work_type, cultural_context, status, revision_note, created_at, updated_at
+     FROM drafts
+     WHERE status = 'pending' AND region = ? AND (category = ? OR work_type = ?)
+     ORDER BY created_at DESC`,
+    [reg, cat, cat],
+  )).rows;
+
+  const recRows = (await db.execute(
+    `SELECT id, author_id as user_id, title, region, category, work_type, cultural_context, status, revision_note, created_at
+     FROM records
+     WHERE status = 'pending' AND region = ? AND (category = ? OR work_type = ?)
+     ORDER BY created_at DESC`,
+    [reg, cat, cat],
+  )).rows;
+
+  const map = new Map<string, DraftItem>();
+  for (const r of [...rows, ...recRows]) {
+    if (!map.has(String(r.id))) {
+      map.set(String(r.id), {
+        id: String(r.id),
+        userId: r.user_id ? Number(r.user_id) : undefined,
+        title: String(r.title),
+        region: String(r.region),
+        category: String(r.category || r.work_type),
+        workType: String(r.work_type),
+        culturalContext: String(r.cultural_context),
+        status: r.status as Status,
+        revisionNote: String(r.revision_note || ''),
+        createdAt: String(r.created_at),
+        updatedAt: r.updated_at ? String(r.updated_at) : undefined,
+      });
+    }
+  }
+  return Array.from(map.values());
+}
+
+export async function updateDraft(
+  db: Db, draftOrRecordId: string, input: Partial<CreateInput>, actor: Actor,
+  opts: { key?: Key } = {},
+): Promise<ActionResult> {
+  const who = requireRole(actor, ['author', 'admin', 'reviewer', 'steward']);
+  const rec = (await db.execute('SELECT * FROM records WHERE id = ?', [draftOrRecordId])).rows[0]
+    || (await db.execute('SELECT * FROM drafts WHERE id = ?', [draftOrRecordId])).rows[0];
+  if (!rec) return { ok: false, error: 'Draft not found.' };
+
+  const id = String(rec.id);
+  const now = new Date().toISOString();
+  const title = input.title !== undefined ? input.title.trim() : String(rec.title);
+  const region = input.region !== undefined ? input.region.trim() : String(rec.region);
+  const category = input.category !== undefined ? input.category.trim() : (input.workType || String(rec.category || rec.work_type));
+  const workType = input.workType !== undefined ? input.workType.trim() : category;
+  const culturalContext = input.culturalContext !== undefined ? input.culturalContext.trim() : String(rec.cultural_context);
+  const sensitivity = input.sensitivity ?? (rec.sensitivity as Sensitivity);
+  const submissionBasis = input.submissionBasis ?? (rec.submission_basis as Basis);
+  const licence = input.licence ?? (rec.licence as LicenceId);
+  const licenceSourceNote = input.licenceSourceNote !== undefined ? input.licenceSourceNote.trim() : String(rec.licence_source_note || '');
+
+  const stmts: Stmt[] = [
+    {
+      sql: `UPDATE records SET title = ?, region = ?, category = ?, work_type = ?, cultural_context = ?,
+            sensitivity = ?, submission_basis = ?, licence = ?, licence_source_note = ?,
+            status = 'pending', revision_note = '' WHERE id = ?`,
+      args: [title, region, category, workType, culturalContext, sensitivity, submissionBasis, licence, licenceSourceNote, id],
+    },
+    {
+      sql: `UPDATE drafts SET title = ?, region = ?, category = ?, work_type = ?, cultural_context = ?,
+            sensitivity = ?, submission_basis = ?, licence = ?, licence_source_note = ?,
+            status = 'pending', revision_note = '', updated_at = ? WHERE id = ? OR record_id = ?`,
+      args: [title, region, category, workType, culturalContext, sensitivity, submissionBasis, licence, licenceSourceNote, now, id, id],
+    },
+  ];
+
+  await applyWithEvents(
+    db, id,
+    stmts,
+    [{ actor: who, action: 'resubmit', diff: { status: 'pending', title } }],
+    opts.key ?? null,
+  );
+  return { ok: true, id };
 }
 
 export async function getAsset(db: Db, assetId: string, opts: { reviewer?: boolean } = {}) {

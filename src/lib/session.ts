@@ -10,7 +10,12 @@ export async function getSession() {
 export async function getActor(): Promise<Actor | null> {
   const jar = await cookies();
   const s = readSession(jar.get(COOKIE)?.value, secret());
-  return s ? { role: s.role, name: s.name } : null;
+  return s ? { id: s.uid, role: s.role, name: s.name } : null;
+}
+export async function getSessionUser(): Promise<{ id: number; name: string; role: string } | null> {
+  const jar = await cookies();
+  const s = readSession(jar.get(COOKIE)?.value, secret());
+  return s ? { id: s.uid, name: s.name, role: s.role } : null;
 }
 export async function startSession(u: { id: number; name: string; role: string }) {
   const jar = await cookies();

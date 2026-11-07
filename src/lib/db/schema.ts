@@ -16,7 +16,8 @@ export const SCHEMA = [
     perm_adapt TEXT NOT NULL DEFAULT 'unspecified',
     perm_ai_training TEXT NOT NULL DEFAULT 'unspecified',
     custodian TEXT NOT NULL DEFAULT '', is_demo INTEGER NOT NULL DEFAULT 0,
-    created_at TEXT NOT NULL, published_at TEXT
+    created_at TEXT NOT NULL, published_at TEXT,
+    category TEXT NOT NULL DEFAULT '', revision_note TEXT NOT NULL DEFAULT '', author_id INTEGER
   )`,
 
   `CREATE TABLE IF NOT EXISTS credits (
@@ -50,8 +51,53 @@ export const SCHEMA = [
 
   `CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT, email TEXT NOT NULL UNIQUE, name TEXT NOT NULL,
-    role TEXT NOT NULL DEFAULT 'author', password_hash TEXT NOT NULL
+    role TEXT NOT NULL DEFAULT 'author', password_hash TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '', category TEXT NOT NULL DEFAULT ''
   )`,
+
+  `CREATE TABLE IF NOT EXISTS drafts (
+    id TEXT PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    title TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT '',
+    work_type TEXT NOT NULL DEFAULT '',
+    cultural_context TEXT NOT NULL DEFAULT '',
+    language TEXT NOT NULL DEFAULT '',
+    sensitivity TEXT NOT NULL DEFAULT 'public',
+    submission_basis TEXT NOT NULL DEFAULT 'creator_submitted',
+    licence TEXT NOT NULL DEFAULT 'CC-BY-4.0',
+    licence_source_note TEXT NOT NULL DEFAULT '',
+    attribution_required INTEGER NOT NULL DEFAULT 1,
+    custodian TEXT NOT NULL DEFAULT '',
+    context_sources_json TEXT NOT NULL DEFAULT '[]',
+    source_url TEXT NOT NULL DEFAULT '',
+    credits_json TEXT NOT NULL DEFAULT '[]',
+    permissions_json TEXT NOT NULL DEFAULT '{}',
+    asset_json TEXT NOT NULL DEFAULT '{}',
+    status TEXT NOT NULL DEFAULT 'pending',
+    revision_note TEXT NOT NULL DEFAULT '',
+    record_id TEXT,
+    created_at TEXT NOT NULL,
+    updated_at TEXT
+  )`,
+
+  `CREATE TABLE IF NOT EXISTS steward_applications (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL REFERENCES users(id),
+    id_document_url TEXT NOT NULL,
+    region TEXT NOT NULL DEFAULT '',
+    category TEXT NOT NULL DEFAULT '',
+    status TEXT NOT NULL DEFAULT 'pending',
+    created_at TEXT NOT NULL,
+    reviewed_at TEXT
+  )`,
+
+  `CREATE INDEX IF NOT EXISTS idx_drafts_user ON drafts(user_id)`,
+  `CREATE INDEX IF NOT EXISTS idx_drafts_status ON drafts(status)`,
+  `CREATE INDEX IF NOT EXISTS idx_drafts_routing ON drafts(status, region, category)`,
+  `CREATE INDEX IF NOT EXISTS idx_steward_applications_status ON steward_applications(status)`,
+  `CREATE INDEX IF NOT EXISTS idx_steward_applications_user ON steward_applications(user_id)`,
 
   `CREATE INDEX IF NOT EXISTS idx_credits_record ON credits(record_id)`,
   `CREATE INDEX IF NOT EXISTS idx_flags_record ON flags(record_id)`,
@@ -108,4 +154,25 @@ export const SCHEMA = [
 
 export async function migrate(db: Db) {
   for (const s of SCHEMA) await db.execute(s);
+
+  // Safe idempotent column additions for existing deployments
+  const safeAlters = [
+    "ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'author'",
+    "ALTER TABLE users ADD COLUMN region TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE users ADD COLUMN category TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE records ADD COLUMN category TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE records ADD COLUMN revision_note TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE records ADD COLUMN author_id INTEGER",
+    "ALTER TABLE drafts ADD COLUMN revision_note TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE drafts ADD COLUMN region TEXT NOT NULL DEFAULT ''",
+    "ALTER TABLE drafts ADD COLUMN category TEXT NOT NULL DEFAULT ''",
+  ];
+
+  for (const alter of safeAlters) {
+    try {
+      await db.execute(alter);
+    } catch {
+      // Column already exists or table structure already current
+    }
+  }
 }
