@@ -12,7 +12,7 @@ import { getSubmitter, UNAUTHORIZED_URL } from '@/lib/authz';
 import { getActor, startSession, endSession } from '@/lib/session';
 import type { ActionResult, Actor } from '@/lib/contracts';
 import type { Capability, CulturalState } from '@/lib/permissions';
-import { createPermissionRequest, decideRequest, revokeGrant, assignSteward, type RequestInput, type DecisionInput } from '@/lib/repo-grants';
+import { createPermissionRequest, decideRequest, revokeGrant, assignSteward, removeSteward, type RequestInput, type DecisionInput } from '@/lib/repo-grants';
 
 const str = (f: FormData, k: string) => String(f.get(k) ?? '');
 
@@ -307,11 +307,73 @@ export async function revokeGrantAction(f: FormData): Promise<void> {
 
 export async function assignStewardAction(f: FormData): Promise<void> {
   const actor = await getActor();
-  const recordId = String(f.get('recordId') ?? '');
+  const recordId = String(f.get('recordId') ?? '').trim();
   const userId = Number(f.get('userId'));
+  if (!recordId || !userId || isNaN(userId)) {
+    redirect('/review?msg=Please+select+both+a+record+and+a+steward.');
+  }
   await assignSteward(await getDb(), actor, recordId, userId);
   revalidatePath(`/review`);
-  redirect('/review?msg=Steward+assigned.');
+  revalidatePath(`/r/${recordId}`);
+  redirect('/review?msg=Steward+assigned+successfully.');
+}
+
+export async function unassignStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  const recordId = String(f.get('recordId') ?? '').trim();
+  const userId = Number(f.get('userId'));
+  if (recordId && userId && !isNaN(userId)) {
+    await removeSteward(await getDb(), actor, recordId, userId);
+    revalidatePath(`/review`);
+    revalidatePath(`/r/${recordId}`);
+    redirect('/review?msg=Steward+unassigned+successfully.');
+  }
+  redirect('/review?msg=Unable+to+unassign+steward.');
+}
+
+export async function createOrPromoteStewardAction(f: FormData): Promise<void> {
+  const actor = await getActor();
+  if (!actor || !['reviewer', 'admin', 'steward'].includes(actor.role)) {
+    throw new Error('Unauthorized');
+  }
+  const name = String(f.get('name') ?? '').trim();
+  const email = String(f.get('email') ?? '').trim().toLowerCase();
+  const region = String(f.get('region') ?? '').trim();
+  const category = String(f.get('category') ?? '').trim();
+  const recordId = String(f.get('recordId') ?? '').trim();
+
+  if (!name || !email) {
+    redirect('/review?msg=Name+and+email+are+required+to+add+a+steward.');
+  }
+
+  const db = await getDb();
+  const existing = (await db.execute('SELECT id, role FROM users WHERE email = ?', [email])).rows[0];
+  let stewardUserId: number;
+
+  if (existing) {
+    stewardUserId = Number(existing.id);
+    await db.execute(
+      "UPDATE users SET role = 'steward', name = ?, region = ?, category = ? WHERE id = ?",
+      [name, region, category, stewardUserId],
+    );
+  } else {
+    // Generate a default demo password hash for new steward
+    const passHash = 'scrypt:32768:8:1:demo-hash';
+    await db.execute(
+      "INSERT INTO users (name, email, role, password_hash, region, category) VALUES (?, ?, 'steward', ?, ?, ?)",
+      [name, email, passHash, region, category],
+    );
+    const created = (await db.execute('SELECT id FROM users WHERE email = ?', [email])).rows[0];
+    stewardUserId = Number(created?.id);
+  }
+
+  if (recordId && stewardUserId) {
+    await assignSteward(db, actor, recordId, stewardUserId);
+  }
+
+  revalidatePath('/review');
+  if (recordId) revalidatePath(`/r/${recordId}`);
+  redirect('/review?msg=Steward+added+successfully.');
 }
 
 /* --------------------------------------------------- sandbox tamper simulation */

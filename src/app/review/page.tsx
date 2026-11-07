@@ -7,6 +7,7 @@ import {
   reviewFormAction,
   logoutAction,
   assignStewardAction,
+  unassignStewardAction,
 } from '@/app/actions';
 
 import '../reuse/reuse.css';
@@ -14,6 +15,7 @@ import './signin.css';
 
 import LoginForm from './LoginForm';
 import RequestsSection from './RequestsSection';
+import AddStewardSection from './AddStewardSection';
 import { PageSheet } from '@/components/PageSheet';
 import { Icon } from '@/components/Icons';
 
@@ -111,15 +113,31 @@ export default async function Review({
   const flags = await listFlags(db, actor);
   const requests = await listRequestsForSteward(db, actor);
 
-  // Load users for steward assignment.
+  // Load users with roles and regions for steward assignment.
   const users = (
     await db.execute(
-      'SELECT id, name, email FROM users ORDER BY name',
+      "SELECT id, name, email, role, region, category FROM users ORDER BY (role = 'steward') DESC, (role = 'reviewer') DESC, name ASC",
     )
   ).rows.map((u) => ({
     id: Number(u.id),
     name: String(u.name),
     email: String(u.email),
+    role: String(u.role),
+    region: String(u.region || ''),
+    category: String(u.category || ''),
+  }));
+
+  // Load active records for standalone steward management.
+  const recordOptions = (
+    await db.execute(
+      "SELECT id, title, region, category, status FROM records WHERE status != 'removed' ORDER BY (status = 'pending') DESC, created_at DESC",
+    )
+  ).rows.map((rec) => ({
+    id: String(rec.id),
+    title: String(rec.title),
+    region: String(rec.region || ''),
+    category: String(rec.category || ''),
+    status: String(rec.status),
   }));
 
   // Load currently assigned stewards.
@@ -285,6 +303,14 @@ export default async function Review({
           </>
         )}
 
+        {/* Dedicated Steward Management (Add / Assign Steward) */}
+        <AddStewardSection users={users} records={recordOptions} />
+
+        {/* Steward requests for active stewards */}
+        {isSteward && requests.length > 0 && (
+          <RequestsSection requests={requests} />
+        )}
+
         {/* Records / Pending drafts */}
         <h2>
           {isSteward
@@ -344,18 +370,47 @@ export default async function Review({
                 ) : null}
 
                 {linkedStewards.length > 0 ? (
-                  <li className="chip verified">
-                    Steward:{' '}
-                    {linkedStewards
-                      .map((s) => s.name)
-                      .join(', ')}
+                  <li className="chip verified" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <Icon name="shield" size={13} />
+                    <span>Steward: {linkedStewards.map((s) => s.name).join(', ')}</span>
                   </li>
                 ) : (
-                  <li className="chip">
-                    No steward
+                  <li className="chip muted" style={{ display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+                    <Icon name="shield" size={13} />
+                    <span>No steward</span>
                   </li>
                 )}
               </ul>
+
+              {linkedStewards.length > 0 && (
+                <div style={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', gap: 6, margin: '8px 0 12px' }}>
+                  <span className="muted" style={{ fontSize: '0.8rem' }}>Assigned:</span>
+                  {linkedStewards.map((s) => (
+                    <form key={s.id} action={unassignStewardAction} style={{ display: 'inline', margin: 0 }}>
+                      <input type="hidden" name="recordId" value={r.id} />
+                      <input type="hidden" name="userId" value={s.id} />
+                      <button
+                        type="submit"
+                        title={`Unlink ${s.name} from this record`}
+                        className="chip"
+                        style={{
+                          cursor: 'pointer',
+                          background: 'rgba(180, 40, 30, 0.15)',
+                          borderColor: 'rgba(180, 40, 30, 0.35)',
+                          color: '#e57373',
+                          fontSize: '0.8rem',
+                          padding: '2px 8px',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 4,
+                        }}
+                      >
+                        {s.name} <span aria-hidden="true" style={{ fontWeight: 700 }}>✕</span>
+                      </button>
+                    </form>
+                  ))}
+                </div>
+              )}
 
               {/* Revision note */}
               {r.revision_note && (
@@ -472,57 +527,6 @@ export default async function Review({
                   <div className="btn-row">
                     <button type="submit">
                       Mark verified
-                    </button>
-                  </div>
-                </form>
-              </details>
-
-              {/* Assign steward */}
-              <details
-                className="evidence"
-                style={{ marginTop: 8 }}
-              >
-                <summary>
-                  Assign steward
-                </summary>
-
-                <form
-                  action={assignStewardAction}
-                  style={{ marginTop: 8 }}
-                >
-                  <input
-                    type="hidden"
-                    name="recordId"
-                    value={r.id}
-                  />
-
-                  <label htmlFor={`u-sel-${r.id}`}>
-                    Select reviewer / steward to link
-                  </label>
-
-                  <select
-                    id={`u-sel-${r.id}`}
-                    name="userId"
-                  >
-                    {users.map((u) => (
-                      <option
-                        key={u.id}
-                        value={u.id}
-                      >
-                        {u.name} ({u.email})
-                      </option>
-                    ))}
-                  </select>
-
-                  <div
-                    className="btn-row"
-                    style={{ marginTop: 8 }}
-                  >
-                    <button
-                      type="submit"
-                      className="secondary"
-                    >
-                      Link as steward
                     </button>
                   </div>
                 </form>

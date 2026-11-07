@@ -39,7 +39,7 @@ export async function getStewardsForRecord(db: Db, recordId: string) {
 }
 
 export async function assignSteward(db: Db, actor: Actor | null, recordId: string, userId: number) {
-  requireRole(actor, ['reviewer', 'admin']);
+  requireRole(actor, ['reviewer', 'admin', 'steward']);
   await db.execute(
     `INSERT OR IGNORE INTO record_stewards (record_id, user_id) VALUES (?,?)`,
     [recordId, userId],
@@ -47,7 +47,7 @@ export async function assignSteward(db: Db, actor: Actor | null, recordId: strin
 }
 
 export async function removeSteward(db: Db, actor: Actor | null, recordId: string, userId: number) {
-  requireRole(actor, ['reviewer', 'admin']);
+  requireRole(actor, ['reviewer', 'admin', 'steward']);
   await db.execute(`DELETE FROM record_stewards WHERE record_id = ? AND user_id = ?`, [recordId, userId]);
 }
 
