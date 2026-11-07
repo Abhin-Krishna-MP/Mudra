@@ -11,9 +11,9 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const actor = await getActor();
-  // Strictly enforce admin role
-  if (!actor || actor.role !== 'admin') {
-    return new NextResponse('Unauthorized: Admin access required', { status: 403 });
+  // Enforce governance role (admin, reviewer, or steward)
+  if (!actor || !['admin', 'reviewer', 'steward'].includes(actor.role)) {
+    return new NextResponse('Unauthorized: Reviewer or Admin access required', { status: 403 });
   }
 
   const { id } = await params;
